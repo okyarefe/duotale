@@ -18,7 +18,7 @@ export const generateChatResponse = async (prompt) => {
         role: "user",
         content:
           prompt +
-          "I want to hear the same story in English and Finnish in a daily used vocabulary.",
+          "I want to hear the same story in English and Finnish in a daily used vocabulary.In the format of English: [story] Finnish: [story]",
       },
     ],
     max_tokens: 1000,

@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.highlight {
+  background-color: white;
+  font-size: 1.5em;
+  transition: all 0.3s ease-in-out;
+  color: black;
+  /* make circular  */
+  border-radius: 9px;
+}
+
+/*Prompt background */
+
+.color-white-100 {
+  color: white !important;
+}
+
+/* Sidebar*/
+.bg-blue-100 {
+  background-color: #676dd8 !important;
+}
+/* content background */
+.bg-base-200 {
+  background-color: #a6aaeb !important;
+}
+
+.bg-green-100 {
+  background-color: black !important;
+}
+
+.bg-gray-100 {
+  background-color: white !important;
+}
