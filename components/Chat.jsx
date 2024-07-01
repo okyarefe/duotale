@@ -3,11 +3,15 @@
 import { useState, useEffect } from "react";
 import { generateChatResponse } from "../utils/actions";
 import { splitTextIntoSentences } from "../utils/helper";
+import PopupComponent from "./Popup";
 
 const Chat = () => {
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
+  const [popupPosition, setPopupPosition] = useState(null);
+  const [highlightedSentences, setHighlightedSentences] = useState([]);
+
   const maxCharacters = 100;
 
   // Retrieve stored responses when component mounts
@@ -18,6 +22,18 @@ const Chat = () => {
       setEnglishSentences(splitTextIntoSentences(storedEnglishMessage));
     if (storedFinnishMessage)
       setFinnishSentences(splitTextIntoSentences(storedFinnishMessage));
+  }, []);
+
+  useEffect(() => {
+    // Attach click event listener to document to handle clicks outside the popup
+    const handleDocumentClick = (e) => {
+      console.log("CLOSEST", e.target.closest);
+      if (!e.target.closest(".popup")) {
+        setPopupPosition(null); // Close popup if click is outside the popup
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -36,6 +52,8 @@ const Chat = () => {
   };
 
   const handleMouseOver = (index) => {
+    setHighlightedSentences([...highlightedSentences, index]);
+    console.log("Highlighting sentence", index);
     document
       .getElementById(`english-sentence-${index}`)
       .classList.add("highlight");
@@ -53,9 +71,16 @@ const Chat = () => {
       .classList.remove("highlight");
   };
 
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    setPopupPosition({ x: e.pageX, y: e.pageY }); // Store mouse coordinates
+    console.log("Right clicking");
+  };
+
   return (
     <div className="p-6 space-y-4">
       {/* Prompt Div */}
+
       <div className="bg-gray-100 p-4 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
           <textarea
@@ -76,7 +101,7 @@ const Chat = () => {
       </div>
 
       {/* Stories Div */}
-      <div className="flex space-x-4">
+      <div className="flex space-x-4" onContextMenu={handleContextMenu}>
         {/* English Story Div */}
         <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-bold mb-2">English Story</h2>
@@ -110,6 +135,9 @@ const Chat = () => {
           </p>
         </div>
       </div>
+      {popupPosition && (
+        <PopupComponent x={popupPosition.x} y={popupPosition.y} />
+      )}
     </div>
   );
 };
