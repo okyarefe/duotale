@@ -2,11 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { generateChatResponse } from "../utils/actions";
-
-// Helper function to split text into sentences
-const splitTextIntoSentences = (text) => {
-  return text.split(/(?<=[.?!])\s+/);
-};
+import { splitTextIntoSentences } from "../utils/helper";
 
 const Chat = () => {
   const [text, setText] = useState("");
