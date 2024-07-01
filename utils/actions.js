@@ -1,6 +1,7 @@
 "use server";
 
 import OpenAI from "openai";
+import { supabase } from "../app/_lib/supabase";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -25,14 +26,11 @@ export const generateChatResponse = async (prompt) => {
   });
 
   const result = response.choices[0].message.content;
-  console.log("RESULT", result);
 
   const englishStory = result
     .match(/English:\s*(.*?)\s*Finnish:/s)?.[1]
     ?.trim();
   const finnishStory = result.match(/Finnish:\s*(.*)/s)?.[1]?.trim();
-  console.log("FINNISH STORY", finnishStory);
-  console.log("ENGLISH STORY", englishStory);
 
   // console.log("RESPONSE", response);
 

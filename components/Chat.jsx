@@ -5,12 +5,13 @@ import { generateChatResponse } from "../utils/actions";
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 
-const Chat = () => {
+const Chat = ({ token }) => {
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
   const [popupPosition, setPopupPosition] = useState(null);
-  const [highlightedSentences, setHighlightedSentences] = useState([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const maxCharacters = 100;
 
@@ -27,17 +28,20 @@ const Chat = () => {
   useEffect(() => {
     // Attach click event listener to document to handle clicks outside the popup
     const handleDocumentClick = (e) => {
-      console.log("CLOSEST", e.target.closest);
       if (!e.target.closest(".popup")) {
         setPopupPosition(null); // Close popup if click is outside the popup
+        setIsPopupOpen(false); // Reset the popup state
+        setHighlightedIndex(null); // Reset the highlighted sentence
       }
     };
 
     document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
   }, []);
 
   const handleSubmit = async (e) => {
-    console.log("Text:", text);
     e.preventDefault();
     try {
       const { englishStory, finnishStory } = await generateChatResponse(text);
@@ -52,35 +56,27 @@ const Chat = () => {
   };
 
   const handleMouseOver = (index) => {
-    setHighlightedSentences([...highlightedSentences, index]);
-    console.log("Highlighting sentence", index);
-    document
-      .getElementById(`english-sentence-${index}`)
-      .classList.add("highlight");
-    document
-      .getElementById(`finnish-sentence-${index}`)
-      .classList.add("highlight");
+    if (!isPopupOpen) {
+      setHighlightedIndex(index);
+    }
   };
 
   const handleMouseOut = (index) => {
-    document
-      .getElementById(`english-sentence-${index}`)
-      .classList.remove("highlight");
-    document
-      .getElementById(`finnish-sentence-${index}`)
-      .classList.remove("highlight");
+    if (!isPopupOpen) {
+      setHighlightedIndex(null);
+    }
   };
 
-  const handleContextMenu = (e) => {
+  const handleContextMenu = (e, index) => {
     e.preventDefault();
     setPopupPosition({ x: e.pageX, y: e.pageY }); // Store mouse coordinates
-    console.log("Right clicking");
+    setIsPopupOpen(true);
+    setHighlightedIndex(index); // Lock the highlighted sentence
   };
 
   return (
     <div className="p-6 space-y-4">
       {/* Prompt Div */}
-
       <div className="bg-gray-100 p-4 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
           <textarea
@@ -94,6 +90,7 @@ const Chat = () => {
           <div className="text-right text-sm text-gray-500">
             {text.length}/{maxCharacters} characters
           </div>
+          <h1 className="special">YOU HAVE {token} TOKENS LEFT</h1>
           <button type="submit" className="btn btn-primary self-end">
             Submit
           </button>
@@ -101,7 +98,10 @@ const Chat = () => {
       </div>
 
       {/* Stories Div */}
-      <div className="flex space-x-4" onContextMenu={handleContextMenu}>
+      <div
+        className="flex space-x-4"
+        onContextMenu={(e) => handleContextMenu(e, highlightedIndex)}
+      >
         {/* English Story Div */}
         <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-bold mb-2">English Story</h2>
@@ -112,6 +112,7 @@ const Chat = () => {
                 id={`english-sentence-${index}`}
                 onMouseOver={() => handleMouseOver(index)}
                 onMouseOut={() => handleMouseOut(index)}
+                className={highlightedIndex === index ? "highlight" : ""}
               >
                 {sentence + " "}
               </span>
@@ -128,6 +129,7 @@ const Chat = () => {
                 id={`finnish-sentence-${index}`}
                 onMouseOver={() => handleMouseOver(index)}
                 onMouseOut={() => handleMouseOut(index)}
+                className={highlightedIndex === index ? "highlight" : ""}
               >
                 {sentence + " "}
               </span>
@@ -135,6 +137,7 @@ const Chat = () => {
           </p>
         </div>
       </div>
+
       {popupPosition && (
         <PopupComponent x={popupPosition.x} y={popupPosition.y} />
       )}

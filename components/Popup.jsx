@@ -1,7 +1,7 @@
 const PopupComponent = ({ x, y }) => {
   return (
     <div
-      class="popup"
+      className="popup"
       style={{
         position: "fixed",
         left: `${x}px`,

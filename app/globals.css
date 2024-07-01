@@ -33,3 +33,7 @@
 .bg-gray-100 {
   background-color: white !important;
 }
+
+.special {
+  color: black;
+}
