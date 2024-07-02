@@ -8,6 +8,7 @@
   transition: all 0.3s ease-in-out;
   color: black;
   /* make circular  */
+  border: 1px solid #d8312f;
   border-radius: 9px;
 }
 
@@ -19,20 +20,23 @@
 
 /* Sidebar*/
 .bg-blue-100 {
-  /* background-color: #676dd8 !important; */
-  background-color: #820300;
+  background-color: #2772db63;
+}
+
+.color-red-100 {
+  color: #d8312f !important;
 }
 /* content background */
 .bg-base-200 {
-  background-color: #ff9800 !important;
+  background-color: whitesmoke !important;
 }
 
 .bg-green-100 {
-  background-color: black !important;
+  background-color: white !important;
 }
 
 .bg-gray-100 {
-  background-color: #e6b9a6 !important;
+  background-color: #2772db63 !important;
 }
 
 .special {
@@ -40,7 +44,48 @@
 }
 
 .story {
-  color: white;
+  color: black;
   text-align: center;
-  text-transform: capitalize;
+}
+
+.storydivs {
+  border: 1px solid black;
+}
+
+.story-right-border {
+  border-right: 1px solid black;
+}
+
+.story-left-border {
+  border-left: 1px solid black;
+}
+/* hover affect for buttons */
+
+.btn {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+  background-color: white;
+  color: black;
+}
+
+.twinheading {
+  color: white;
+  font-size: 2em;
+}
+
+.stories-color {
+  color: black;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

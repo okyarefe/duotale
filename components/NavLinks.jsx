@@ -15,7 +15,7 @@ const NavLinks = () => {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="capitalize story transition duration-300 ease-in-out hover:bg-gray-200 hover:text-black"
+              className="capitalize transition duration-300 ease-in-out hover:bg-gray-200 hover:text-black"
             >
               {link.label}
             </Link>

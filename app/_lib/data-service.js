@@ -14,7 +14,7 @@ export const createUser = async (userData) => {
   const { clerkId, email } = userData;
   const { data, error } = await supabase
     .from("users")
-    .insert([{ id: clerkId, email: email }])
+    .insert([{ id: clerkId, email: email, token: 5000 }])
     .select();
 
   if (error) {
@@ -40,7 +40,7 @@ export const getUserTokenById = async (userId) => {
     .eq("id", userId);
 
   if (error) throw error;
-  console.log("DATA FROM DATABASE", data);
+  console.log("DATA FROM DATABASE", data[0]);
   return data[0].token;
 };
 

@@ -6,6 +6,7 @@ import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CircleLoader } from "react-spinners";
 
 const Chat = ({ token, userId }) => {
   const [text, setText] = useState("");
@@ -15,6 +16,7 @@ const Chat = ({ token, userId }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userToken, setUserToken] = useState(token);
+  const [isLoading, setIsLoading] = useState(false);
   const estimatedTokenCost = 1000;
 
   const maxCharacters = 100;
@@ -52,6 +54,7 @@ const Chat = ({ token, userId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (userToken > estimatedTokenCost) {
+      setIsLoading(true);
       try {
         const { englishStory, finnishStory, tokenUsed } =
           await generateChatResponse(text);
@@ -67,6 +70,7 @@ const Chat = ({ token, userId }) => {
 
         toast.info(`You have used ${tokenUsed} tokens.`);
         toast.info(`You have ${newTokenAmount} tokens left.`);
+        setIsLoading(false);
         return null;
       } catch (error) {
         console.error("Error generating response:", error);
@@ -96,7 +100,7 @@ const Chat = ({ token, userId }) => {
   };
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-4 ">
       {/* Prompt Div */}
       <ToastContainer
         position="top-center"
@@ -108,7 +112,7 @@ const Chat = ({ token, userId }) => {
         draggable
         theme="colored"
       />
-      <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+      <div className="bg-gray-100 p-4 rounded-lg shadow-md ">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
           <textarea
             maxLength={maxCharacters}
@@ -118,59 +122,70 @@ const Chat = ({ token, userId }) => {
             className="textarea textarea-bordered w-full"
             placeholder="Enter your prompt here..."
           />
-          <div className="text-right text-sm text-gray-500">
+          <div className="text-right text-sm text-gray-500 ">
             {text.length}/{maxCharacters} characters
           </div>
-          <h1 className="special">YOU HAVE {userToken} TOKENS LEFT</h1>
+          <h1 className="special">
+            You have <span className="color-red-100">{userToken}</span> tokens
+            left
+          </h1>
           <button
             type="submit"
-            className="btn btn-primary self-end bg-blue-100"
+            className="btn btn-primary self-end bg-blue-100 btn"
           >
             Submit
           </button>
         </form>
       </div>
-
+      {isLoading ? (
+        <div>
+          <div className="loader-container">
+            <CircleLoader />
+          </div>
+          <div className="loader-container">Please wait...</div>
+        </div>
+      ) : (
+        <div
+          className="flex space-x-4 storydivs"
+          onContextMenu={(e) => handleContextMenu(e, highlightedIndex)}
+        >
+          {/* English Story Div */}
+          <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-right-border">
+            <h2 className="text-lg font-bold mb-2 story">English Story</h2>
+            <p className="stories-color">
+              {englishSentences.map((sentence, index) => (
+                <span
+                  key={index}
+                  id={`english-sentence-${index}`}
+                  onMouseOver={() => handleMouseOver(index)}
+                  onMouseOut={() => handleMouseOut(index)}
+                  className={highlightedIndex === index ? "highlight" : ""}
+                >
+                  {sentence + " "}
+                </span>
+              ))}
+            </p>
+          </div>
+          {/* Finnish Story Div */}
+          <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-left-border">
+            <h2 className="text-lg font-bold mb-2 story">Finnish Story</h2>
+            <p className="stories-color">
+              {finnishSentences.map((sentence, index) => (
+                <span
+                  key={index}
+                  id={`finnish-sentence-${index}`}
+                  onMouseOver={() => handleMouseOver(index)}
+                  onMouseOut={() => handleMouseOut(index)}
+                  className={highlightedIndex === index ? "highlight" : ""}
+                >
+                  {sentence + " "}
+                </span>
+              ))}
+            </p>
+          </div>
+        </div>
+      )}
       {/* Stories Div */}
-      <div
-        className="flex space-x-4"
-        onContextMenu={(e) => handleContextMenu(e, highlightedIndex)}
-      >
-        {/* English Story Div */}
-        <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold mb-2 story">English Story</h2>
-          <p className="color-white-100">
-            {englishSentences.map((sentence, index) => (
-              <span
-                key={index}
-                id={`english-sentence-${index}`}
-                onMouseOver={() => handleMouseOver(index)}
-                onMouseOut={() => handleMouseOut(index)}
-                className={highlightedIndex === index ? "highlight" : ""}
-              >
-                {sentence + " "}
-              </span>
-            ))}
-          </p>
-        </div>
-        {/* Finnish Story Div */}
-        <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold mb-2 story">Finnish Story</h2>
-          <p className="color-white-100">
-            {finnishSentences.map((sentence, index) => (
-              <span
-                key={index}
-                id={`finnish-sentence-${index}`}
-                onMouseOver={() => handleMouseOver(index)}
-                onMouseOut={() => handleMouseOut(index)}
-                className={highlightedIndex === index ? "highlight" : ""}
-              >
-                {sentence + " "}
-              </span>
-            ))}
-          </p>
-        </div>
-      </div>
 
       {popupPosition && (
         <PopupComponent x={popupPosition.x} y={popupPosition.y} />
