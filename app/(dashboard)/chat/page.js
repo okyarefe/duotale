@@ -11,7 +11,7 @@ const ChatPage = async () => {
   console.log("type", typeof userToken);
   return (
     <div>
-      <Chat token={userToken}></Chat>
+      <Chat token={userToken} userId={userId}></Chat>
     </div>
   );
 };

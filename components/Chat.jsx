@@ -5,13 +5,14 @@ import { generateChatResponse } from "../utils/actions";
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 
-const Chat = ({ token }) => {
+const Chat = ({ token, userId }) => {
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
   const [popupPosition, setPopupPosition] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const estimatedTokenCost = 1000;
 
   const maxCharacters = 100;
 
@@ -43,15 +44,19 @@ const Chat = ({ token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { englishStory, finnishStory } = await generateChatResponse(text);
-      setEnglishSentences(splitTextIntoSentences(englishStory));
-      setFinnishSentences(splitTextIntoSentences(finnishStory));
-      // Store the responses in local storage
-      localStorage.setItem("englishMessage", englishStory);
-      localStorage.setItem("finnishMessage", finnishStory);
-    } catch (error) {
-      console.error("Error generating response:", error);
+    if (token > estimatedTokenCost) {
+      try {
+        const { englishStory, finnishStory, tokenUsed } =
+          await generateChatResponse(text);
+        setEnglishSentences(splitTextIntoSentences(englishStory));
+        setFinnishSentences(splitTextIntoSentences(finnishStory));
+
+        // Store the responses in local storage
+        localStorage.setItem("englishMessage", englishStory);
+        localStorage.setItem("finnishMessage", finnishStory);
+      } catch (error) {
+        console.error("Error generating response:", error);
+      }
     }
   };
 

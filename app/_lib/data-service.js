@@ -43,3 +43,14 @@ export const getUserTokenById = async (userId) => {
   console.log("DATA FROM DATABASE", data);
   return data[0].token;
 };
+
+export const decreaseUserToken = async (userId, tokenUsed) => {
+  const token = await getUserTokenById(userId);
+  console.log("TOKEN USED IS", tokenUsed);
+  const newToken = token - tokenUsed;
+  const { data, error } = await supabase
+    .from("users")
+    .update({ token: newToken })
+    .eq("id", userId)
+    .select();
+};

@@ -2,6 +2,9 @@
 
 import OpenAI from "openai";
 import { supabase } from "../app/_lib/supabase";
+import { decreaseUserToken } from "../app/_lib/data-service";
+
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -26,6 +29,7 @@ export const generateChatResponse = async (prompt) => {
   });
 
   const result = response.choices[0].message.content;
+  const tokenUsed = response.usage.total_tokens;
 
   const englishStory = result
     .match(/English:\s*(.*?)\s*Finnish:/s)?.[1]
@@ -33,6 +37,14 @@ export const generateChatResponse = async (prompt) => {
   const finnishStory = result.match(/Finnish:\s*(.*)/s)?.[1]?.trim();
 
   // console.log("RESPONSE", response);
+  try {
+    // decrease token count
+    const user = await currentUser();
+    const userId = user.id;
+    await decreaseUserToken(userId, tokenUsed);
+  } catch (error) {
+    console.log("ERROR DECREASING TOKENS", error);
+  }
 
-  return { englishStory, finnishStory };
+  return { englishStory, finnishStory, tokenUsed };
 };
