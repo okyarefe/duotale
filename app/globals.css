@@ -14,16 +14,17 @@
 /*Prompt background */
 
 .color-white-100 {
-  color: white !important;
+  color: #5f8670 !important;
 }
 
 /* Sidebar*/
 .bg-blue-100 {
-  background-color: #676dd8 !important;
+  /* background-color: #676dd8 !important; */
+  background-color: #820300;
 }
 /* content background */
 .bg-base-200 {
-  background-color: #a6aaeb !important;
+  background-color: #ff9800 !important;
 }
 
 .bg-green-100 {
@@ -31,9 +32,15 @@
 }
 
 .bg-gray-100 {
-  background-color: white !important;
+  background-color: #e6b9a6 !important;
 }
 
 .special {
   color: black;
+}
+
+.story {
+  color: white;
+  text-align: center;
+  text-transform: capitalize;
 }

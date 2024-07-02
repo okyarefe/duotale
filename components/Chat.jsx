@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { generateChatResponse } from "../utils/actions";
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Chat = ({ token, userId }) => {
   const [text, setText] = useState("");
@@ -12,6 +14,7 @@ const Chat = ({ token, userId }) => {
   const [popupPosition, setPopupPosition] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [userToken, setUserToken] = useState(token);
   const estimatedTokenCost = 1000;
 
   const maxCharacters = 100;
@@ -24,6 +27,10 @@ const Chat = ({ token, userId }) => {
       setEnglishSentences(splitTextIntoSentences(storedEnglishMessage));
     if (storedFinnishMessage)
       setFinnishSentences(splitTextIntoSentences(storedFinnishMessage));
+  }, []);
+
+  useEffect(() => {
+    console.log("Token received in Chat component:", userToken);
   }, []);
 
   useEffect(() => {
@@ -44,20 +51,29 @@ const Chat = ({ token, userId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (token > estimatedTokenCost) {
+    if (userToken > estimatedTokenCost) {
       try {
         const { englishStory, finnishStory, tokenUsed } =
           await generateChatResponse(text);
         setEnglishSentences(splitTextIntoSentences(englishStory));
         setFinnishSentences(splitTextIntoSentences(finnishStory));
-
+        let newTokenAmount = token - tokenUsed;
+        console.log("NEW TOKEN AMOUNT", newTokenAmount);
         // Store the responses in local storage
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", finnishStory);
+        setUserToken((prev) => prev - tokenUsed);
+        toast.success("Your story has been generated!");
+
+        toast.info(`You have used ${tokenUsed} tokens.`);
+        toast.info(`You have ${newTokenAmount} tokens left.`);
+        return null;
       } catch (error) {
         console.error("Error generating response:", error);
       }
     }
+    console.log("NOT ENOUGH TOKENS");
+    toast.error("Not enough tokens");
   };
 
   const handleMouseOver = (index) => {
@@ -82,6 +98,16 @@ const Chat = ({ token, userId }) => {
   return (
     <div className="p-6 space-y-4">
       {/* Prompt Div */}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        draggable
+        theme="colored"
+      />
       <div className="bg-gray-100 p-4 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
           <textarea
@@ -95,8 +121,11 @@ const Chat = ({ token, userId }) => {
           <div className="text-right text-sm text-gray-500">
             {text.length}/{maxCharacters} characters
           </div>
-          <h1 className="special">YOU HAVE {token} TOKENS LEFT</h1>
-          <button type="submit" className="btn btn-primary self-end">
+          <h1 className="special">YOU HAVE {userToken} TOKENS LEFT</h1>
+          <button
+            type="submit"
+            className="btn btn-primary self-end bg-blue-100"
+          >
             Submit
           </button>
         </form>
@@ -109,7 +138,7 @@ const Chat = ({ token, userId }) => {
       >
         {/* English Story Div */}
         <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold mb-2">English Story</h2>
+          <h2 className="text-lg font-bold mb-2 story">English Story</h2>
           <p className="color-white-100">
             {englishSentences.map((sentence, index) => (
               <span
@@ -126,7 +155,7 @@ const Chat = ({ token, userId }) => {
         </div>
         {/* Finnish Story Div */}
         <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold mb-2">Finnish Story</h2>
+          <h2 className="text-lg font-bold mb-2 story">Finnish Story</h2>
           <p className="color-white-100">
             {finnishSentences.map((sentence, index) => (
               <span

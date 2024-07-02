@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const links = [
-  { href: "/chat", label: "chat" },
-  { href: "/dialogs", label: "dialogs" },
+  { href: "/chat", label: "CHAT" },
+  { href: "/dialogs", label: "DIALOGS" },
 
-  { href: "/profile", label: "profile" },
+  { href: "/profile", label: "PROFILE" },
 ];
 
 const NavLinks = () => {
@@ -13,7 +13,10 @@ const NavLinks = () => {
       {links.map((link) => {
         return (
           <li key={link.href}>
-            <Link href={link.href} className="capitalize color-white-100 ">
+            <Link
+              href={link.href}
+              className="capitalize story transition duration-300 ease-in-out hover:bg-gray-200 hover:text-black"
+            >
               {link.label}
             </Link>
           </li>

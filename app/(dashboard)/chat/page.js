@@ -7,8 +7,8 @@ const ChatPage = async () => {
   const user = await currentUser();
   const userId = user.id;
   const userToken = await getUserTokenById(userId);
-  console.log("USER HAS TOKEN", userToken);
-  console.log("type", typeof userToken);
+  console.log("TOKEN AT SERVER SIDE", userToken);
+
   return (
     <div>
       <Chat token={userToken} userId={userId}></Chat>
