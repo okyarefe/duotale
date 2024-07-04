@@ -54,3 +54,41 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
     .eq("id", userId)
     .select();
 };
+
+export const saveStory = async (userId, englishStory, finnishStory) => {
+  const { data, error } = await supabase.from("stories").insert([
+    {
+      user_id: userId,
+      english_story: englishStory,
+      finnish_story: finnishStory,
+    },
+  ]);
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const getStories = async (userId) => {
+  const { data, error } = await supabase
+    .from("stories")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) {
+    throw error;
+  }
+  // console.log("RETURNED STORIES", data);
+  return data;
+};
+
+export const getStoryById = async (id) => {
+  const { data, error } = await supabase
+    .from("stories")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};

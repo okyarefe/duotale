@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { generateChatResponse } from "../utils/actions";
+
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CircleLoader } from "react-spinners";
+
+import { generateChatResponse } from "../utils/actions";
 
 const Chat = ({ token, userId }) => {
   const [text, setText] = useState("");
@@ -159,7 +161,9 @@ const Chat = ({ token, userId }) => {
                   id={`english-sentence-${index}`}
                   onMouseOver={() => handleMouseOver(index)}
                   onMouseOut={() => handleMouseOut(index)}
-                  className={highlightedIndex === index ? "highlight" : ""}
+                  className={`mb-2 cursor-pointer  ${
+                    highlightedIndex === index ? "bg-yellow-200 " : ""
+                  }`}
                 >
                   {sentence + " "}
                 </span>
@@ -176,7 +180,9 @@ const Chat = ({ token, userId }) => {
                   id={`finnish-sentence-${index}`}
                   onMouseOver={() => handleMouseOver(index)}
                   onMouseOut={() => handleMouseOut(index)}
-                  className={highlightedIndex === index ? "highlight" : ""}
+                  className={`mb-2 cursor-pointer ${
+                    highlightedIndex === index ? "bg-yellow-200 " : ""
+                  }`}
                 >
                   {sentence + " "}
                 </span>

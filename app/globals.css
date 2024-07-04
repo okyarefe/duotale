@@ -47,9 +47,9 @@
   color: black;
   text-align: center;
 }
-
 .storydivs {
   border: 1px solid black;
+  font-size: 1.2rem;
 }
 
 .story-right-border {
@@ -89,3 +89,7 @@
   justify-content: center;
   align-items: center;
 }
+
+/*Give me a css class that makes the characters a littie bit bigger */
+
+/*Give me a css class that makes the characters a littie bit bigger */

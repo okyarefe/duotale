@@ -1,5 +1,5 @@
 import Chat from "../../../components/Chat";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { getUserTokenById } from "../../_lib/data-service";
 
 const ChatPage = async () => {
