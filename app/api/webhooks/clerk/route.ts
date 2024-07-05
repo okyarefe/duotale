@@ -4,6 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 
 import { createUser } from "../../../_lib/data-service"; // Example import for createUser
 import { deleteUser } from "../../../_lib/data-service"; // Example imports for updateUser and deleteUser
+import { create } from "domain";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -59,19 +60,19 @@ export async function POST(req: Request) {
 
   try {
     if (evt.type === "user.created") {
-      console.log("CREATED USER****");
-
       // Create a new user
-      await createUser({
+      const createdUser = await createUser({
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
       });
+      console.log("USER CREATED", createdUser);
     } else if (evt.type === "user.deleted") {
       // Delete user
-      console.log("DELETING USER");
-      await deleteUser({
+
+      const deletedUser = await deleteUser({
         clerkId: evt.data.id,
       });
+      console.log("DELETING USER", deletedUser);
     }
 
     return new Response("", { status: 200 });

@@ -6,13 +6,13 @@ import { decreaseUserToken } from "../app/_lib/data-service";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { saveStory } from "../app/_lib/data-service";
+import { revalidatePath } from "next/cache";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export const generateChatResponse = async (prompt) => {
-  console.log("SERVER ACTION?");
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -37,20 +37,19 @@ export const generateChatResponse = async (prompt) => {
     .match(/English:\s*(.*?)\s*Finnish:/s)?.[1]
     ?.trim();
   const finnishStory = result.match(/Finnish:\s*(.*)/s)?.[1]?.trim();
-  console.log("RESPONSE OF CHAT GPT", result);
-  console.log("RESPONSE OF CHAT GPT", response);
 
   // console.log("RESPONSE", response);
   try {
     // decrease token count
     const user = await currentUser();
     const userId = user.id;
-    await decreaseUserToken(userId, tokenUsed);
+
     // save story to database
     await saveStory(userId, englishStory, finnishStory);
+    await decreaseUserToken(userId, tokenUsed);
+    revalidatePath("/dialogs");
+    return { englishStory, finnishStory, tokenUsed };
   } catch (error) {
-    console.log("ERROR DECREASING TOKENS", error);
+    throw new Error("Error saving story to database");
   }
-
-  return { englishStory, finnishStory, tokenUsed };
 };

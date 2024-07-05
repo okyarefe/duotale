@@ -1,3 +1,4 @@
+"use server";
 import { supabase } from "./supabase";
 
 export const getUsers = async () => {
@@ -56,29 +57,29 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
 };
 
 export const saveStory = async (userId, englishStory, finnishStory) => {
-  const { data, error } = await supabase.from("stories").insert([
-    {
-      user_id: userId,
-      english_story: englishStory,
-      finnish_story: finnishStory,
-    },
-  ]);
-  if (error) {
-    throw error;
+  try {
+    const { data, error } = await supabase.from("stories").insert([
+      {
+        user_id: userId,
+        english_story: englishStory,
+        finnish_story: finnishStory,
+      },
+    ]);
+  } catch (error) {
+    throw new Error("FAILED TO SAVE STORY");
   }
-  return data;
 };
 
 export const getStories = async (userId) => {
-  const { data, error } = await supabase
-    .from("stories")
-    .select("*")
-    .eq("user_id", userId);
-  if (error) {
-    throw error;
+  try {
+    const { data, error } = await supabase
+      .from("stories")
+      .select("*")
+      .eq("user_id", userId);
+    return data;
+  } catch (error) {
+    throw new Error("FAILED TO GET USER STORIES");
   }
-  // console.log("RETURNED STORIES", data);
-  return data;
 };
 
 export const getStoryById = async (id) => {

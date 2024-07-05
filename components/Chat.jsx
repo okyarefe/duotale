@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
+import ErrorComponent from "./ErrorComponent";
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,6 +19,7 @@ const Chat = ({ token, userId }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userToken, setUserToken] = useState(token);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const estimatedTokenCost = 1000;
 
   const maxCharacters = 100;
@@ -31,10 +32,6 @@ const Chat = ({ token, userId }) => {
       setEnglishSentences(splitTextIntoSentences(storedEnglishMessage));
     if (storedFinnishMessage)
       setFinnishSentences(splitTextIntoSentences(storedFinnishMessage));
-  }, []);
-
-  useEffect(() => {
-    console.log("Token received in Chat component:", userToken);
   }, []);
 
   useEffect(() => {
@@ -57,6 +54,7 @@ const Chat = ({ token, userId }) => {
     e.preventDefault();
     if (userToken > estimatedTokenCost) {
       setIsLoading(true);
+
       try {
         const { englishStory, finnishStory, tokenUsed } =
           await generateChatResponse(text);
@@ -75,11 +73,10 @@ const Chat = ({ token, userId }) => {
         setIsLoading(false);
         return null;
       } catch (error) {
-        console.error("Error generating response:", error);
+        toast.warn("An error occurred while saving the story.");
+        setIsError(true);
       }
     }
-    console.log("NOT ENOUGH TOKENS");
-    toast.error("Not enough tokens");
   };
 
   const handleMouseOver = (index) => {
@@ -100,8 +97,13 @@ const Chat = ({ token, userId }) => {
     setIsPopupOpen(true);
     setHighlightedIndex(index); // Lock the highlighted sentence
   };
+  if (isError) {
+    return <ErrorComponent />;
+  }
 
   return (
+    // Error component
+    // <Error error={error} reset={reset} />
     <div className="p-6 space-y-4 ">
       {/* Prompt Div */}
       <ToastContainer
@@ -134,6 +136,7 @@ const Chat = ({ token, userId }) => {
           <button
             type="submit"
             className="btn btn-primary self-end bg-blue-100 btn"
+            disabled={isLoading}
           >
             Submit
           </button>
