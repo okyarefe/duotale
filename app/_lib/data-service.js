@@ -1,5 +1,8 @@
 "use server";
+import "server-only";
 import { supabase } from "./supabase";
+import NodeCache from "node-cache";
+const cache = new NodeCache({ stdTTL: 600 }); // Cache TTL set to 10 minutes
 
 export const getUsers = async () => {
   let { data: users, error } = await supabase.from("users").select("*");
@@ -41,13 +44,13 @@ export const getUserTokenById = async (userId) => {
     .eq("id", userId);
 
   if (error) throw error;
-  console.log("DATA FROM DATABASE", data[0]);
+
   return data[0].token;
 };
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
   const token = await getUserTokenById(userId);
-  console.log("TOKEN USED IS", tokenUsed);
+
   const newToken = token - tokenUsed;
   const { data, error } = await supabase
     .from("users")
@@ -70,17 +73,47 @@ export const saveStory = async (userId, englishStory, finnishStory) => {
   }
 };
 
-export const getStories = async (userId) => {
+export const getStories = async (userId, paginationStart, paginationEnd) => {
+  const cacheKey = `${userId}-${paginationStart}-${paginationEnd}`;
+  const cachedStories = cache.get(cacheKey);
+
+  if (cachedStories) {
+    console.log("***** RETURNING CACHED STORIES *****");
+    return cachedStories;
+  }
+
   try {
     const { data, error } = await supabase
       .from("stories")
       .select("*")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .range(paginationStart, paginationEnd);
+
+    if (error) {
+      throw new Error("FAILED TO GET USER STORIES");
+    }
+    console.log("***** STORIES FROM DATABASE *****");
+    cache.set(cacheKey, data);
     return data;
   } catch (error) {
     throw new Error("FAILED TO GET USER STORIES");
   }
 };
+
+// export const getStories = async (userId, paginationStart, paginationEnd) => {
+//   console.log("***** GET STORIES *****");
+//   try {
+//     const { data, error } = await supabase
+//       .from("stories")
+//       .select("*")
+//       .eq("user_id", userId)
+//       .range(paginationStart, paginationEnd);
+
+//     return data;
+//   } catch (error) {
+//     throw new Error("FAILED TO GET USER STORIES");
+//   }
+// };
 
 export const getStoryById = async (id) => {
   const { data, error } = await supabase

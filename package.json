@@ -16,6 +16,7 @@
     "@tanstack/react-query-devtools": "^5.8.1",
     "axios": "^1.6.1",
     "next": "14.2.4",
+    "node-cache": "^5.1.2",
     "openai": "^4.14.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -24,6 +25,7 @@
     "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.5",
     "sbd": "^1.0.19",
+    "server-only": "^0.0.1",
     "svix": "^1.24.0"
   },
   "devDependencies": {

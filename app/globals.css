@@ -93,3 +93,40 @@
 /*Give me a css class that makes the characters a littie bit bigger */
 
 /*Give me a css class that makes the characters a littie bit bigger */
+/* Define button styles */
+.story-btn {
+  display: inline-block;
+  padding: 2px 4px;
+  margin: 3px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.story-btn:hover {
+  background-color: #005bb5;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.story-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.story-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.5);
+}
+
+.pn-button {
+  padding: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #0070f3;
+}

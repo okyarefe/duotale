@@ -1,5 +1,5 @@
 "use server";
-
+import "server-only";
 import OpenAI from "openai";
 
 import { decreaseUserToken } from "../app/_lib/data-service";

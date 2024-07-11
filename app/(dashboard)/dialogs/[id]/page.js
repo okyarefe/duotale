@@ -7,17 +7,7 @@ const StoryDetailPage = async ({ params }) => {
 
   const story = await getStoryById(storyId);
 
-  return (
-    <SingleStoryF story={story} />
-    // <div>
-    //   <h1>Story Detail Page</h1>
-
-    //   <h2>English Story:</h2>
-    //   <p>{story.english_story}</p>
-    //   <h2>Finnish Story:</h2>
-    //   <p>{story.finnish_story}</p>
-    // </div>
-  );
+  return <SingleStoryF story={story} />;
 };
 
 export default StoryDetailPage;

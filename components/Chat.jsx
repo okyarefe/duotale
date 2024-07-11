@@ -61,7 +61,7 @@ const Chat = ({ token, userId }) => {
         setEnglishSentences(splitTextIntoSentences(englishStory));
         setFinnishSentences(splitTextIntoSentences(finnishStory));
         let newTokenAmount = token - tokenUsed;
-        console.log("NEW TOKEN AMOUNT", newTokenAmount);
+
         // Store the responses in local storage
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", finnishStory);
