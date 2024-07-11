@@ -17,13 +17,13 @@ const Stories = ({ initialStories, userId }) => {
 
   const handleNext = async () => {
     const newPaginationStart = paginationEnd + 1;
-    const newPaginationEnd = paginationEnd + 4;
+    const newPaginationEnd = paginationEnd + 5;
     await loadStories(newPaginationStart, newPaginationEnd);
   };
 
   const handlePrevious = async () => {
     const newPaginationEnd = paginationStart - 1;
-    const newPaginationStart = Math.max(0, newPaginationEnd - 3);
+    const newPaginationStart = Math.max(0, newPaginationEnd - 4);
     await loadStories(newPaginationStart, newPaginationEnd);
   };
 
@@ -36,7 +36,7 @@ const Stories = ({ initialStories, userId }) => {
               <li key={story.id}>
                 <Link href={`/dialogs/${story.id}`}>
                   <button className="story-btn">
-                    {story.english_story.slice(0, 20)}...
+                    {story.english_story.slice(0, 80)}...
                   </button>
                 </Link>
               </li>

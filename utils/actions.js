@@ -4,7 +4,7 @@ import OpenAI from "openai";
 
 import { decreaseUserToken } from "../app/_lib/data-service";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { saveStory } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
 

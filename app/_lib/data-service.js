@@ -2,6 +2,8 @@
 import "server-only";
 import { supabase } from "./supabase";
 import NodeCache from "node-cache";
+import { currentUser } from "@clerk/nextjs/server";
+import { clear } from "console";
 const cache = new NodeCache({ stdTTL: 600 }); // Cache TTL set to 10 minutes
 
 export const getUsers = async () => {
@@ -87,40 +89,31 @@ export const getStories = async (userId, paginationStart, paginationEnd) => {
       .from("stories")
       .select("*")
       .eq("user_id", userId)
-      .range(paginationStart, paginationEnd);
+      .range(paginationStart, paginationEnd)
+      .order("created_at", { ascending: false });
 
     if (error) {
       throw new Error("FAILED TO GET USER STORIES");
     }
     console.log("***** STORIES FROM DATABASE *****");
     cache.set(cacheKey, data);
+
     return data;
   } catch (error) {
     throw new Error("FAILED TO GET USER STORIES");
   }
 };
 
-// export const getStories = async (userId, paginationStart, paginationEnd) => {
-//   console.log("***** GET STORIES *****");
-//   try {
-//     const { data, error } = await supabase
-//       .from("stories")
-//       .select("*")
-//       .eq("user_id", userId)
-//       .range(paginationStart, paginationEnd);
-
-//     return data;
-//   } catch (error) {
-//     throw new Error("FAILED TO GET USER STORIES");
-//   }
-// };
-
 export const getStoryById = async (id) => {
+  const user = await currentUser();
+  const userId = user.id;
   const { data, error } = await supabase
     .from("stories")
     .select("*")
+    .eq("user_id", userId)
     .eq("id", id)
     .single();
+
   if (error) {
     throw error;
   }

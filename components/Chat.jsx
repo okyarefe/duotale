@@ -10,7 +10,7 @@ import { CircleLoader } from "react-spinners";
 
 import { generateChatResponse } from "../utils/actions";
 
-const Chat = ({ token, userId }) => {
+const Chat = ({ token }) => {
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
@@ -70,6 +70,7 @@ const Chat = ({ token, userId }) => {
 
         toast.info(`You have used ${tokenUsed} tokens.`);
         toast.info(`You have ${newTokenAmount} tokens left.`);
+
         setIsLoading(false);
         return null;
       } catch (error) {

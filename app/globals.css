@@ -90,28 +90,27 @@
   align-items: center;
 }
 
-/*Give me a css class that makes the characters a littie bit bigger */
-
-/*Give me a css class that makes the characters a littie bit bigger */
 /* Define button styles */
 .story-btn {
   display: inline-block;
-  padding: 2px 4px;
+  padding: 12px 14px;
   margin: 3px 0;
   font-size: 16px;
   font-weight: 400;
   color: #ffffff;
-  background-color: #0070f3;
+  background-color: #005bb5;
   border: none;
   border-radius: 3px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
+  opacity: 0.8;
 }
 
 .story-btn:hover {
   background-color: #005bb5;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  opacity: 1;
 }
 
 .story-btn:active {
@@ -129,4 +128,9 @@
   margin-right: 10px;
   border-radius: 5px;
   border: 1px solid #0070f3;
+}
+
+.sheading {
+  color: black;
+  font-size: 2em;
 }
