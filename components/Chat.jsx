@@ -7,7 +7,6 @@ import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CircleLoader } from "react-spinners";
-
 import { generateChatResponse } from "../utils/actions";
 
 const Chat = ({ token }) => {
@@ -16,6 +15,7 @@ const Chat = ({ token }) => {
   const [finnishSentences, setFinnishSentences] = useState([]);
   const [popupPosition, setPopupPosition] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(null);
+  const [selectedSentence, setSelectedSentence] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userToken, setUserToken] = useState(token);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +41,7 @@ const Chat = ({ token }) => {
         setPopupPosition(null); // Close popup if click is outside the popup
         setIsPopupOpen(false); // Reset the popup state
         setHighlightedIndex(null); // Reset the highlighted sentence
+        setSelectedSentence(""); // Reset the selected sentence
       }
     };
 
@@ -92,21 +93,27 @@ const Chat = ({ token }) => {
     }
   };
 
-  const handleContextMenu = (e, index) => {
+  const handleContextMenu = (e, index, sentence) => {
     e.preventDefault();
     setPopupPosition({ x: e.pageX, y: e.pageY }); // Store mouse coordinates
+    setSelectedSentence(sentence); // Store the selected sentence
     setIsPopupOpen(true);
     setHighlightedIndex(index); // Lock the highlighted sentence
   };
+
+  const handleClosePopup = () => {
+    setPopupPosition(null);
+    setIsPopupOpen(false);
+    setHighlightedIndex(null);
+    setSelectedSentence("");
+  };
+
   if (isError) {
     return <ErrorComponent />;
   }
 
   return (
-    // Error component
-    // <Error error={error} reset={reset} />
-    <div className="p-6 space-y-4 ">
-      {/* Prompt Div */}
+    <div className="p-6 space-y-4">
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -117,7 +124,7 @@ const Chat = ({ token }) => {
         draggable
         theme="colored"
       />
-      <div className="bg-gray-100 p-4 rounded-lg shadow-md ">
+      <div className="bg-gray-100 p-4 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
           <textarea
             maxLength={maxCharacters}
@@ -127,7 +134,7 @@ const Chat = ({ token }) => {
             className="textarea textarea-bordered w-full"
             placeholder="Enter your prompt here..."
           />
-          <div className="text-right text-sm text-gray-500 ">
+          <div className="text-right text-sm text-gray-500">
             {text.length}/{maxCharacters} characters
           </div>
           <h1 className="special">
@@ -151,11 +158,7 @@ const Chat = ({ token }) => {
           <div className="loader-container">Please wait...</div>
         </div>
       ) : (
-        <div
-          className="flex space-x-4 storydivs"
-          onContextMenu={(e) => handleContextMenu(e, highlightedIndex)}
-        >
-          {/* English Story Div */}
+        <div className="flex space-x-4 storydivs">
           <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-right-border">
             <h2 className="text-lg font-bold mb-2 story">English Story</h2>
             <p className="stories-color">
@@ -165,7 +168,8 @@ const Chat = ({ token }) => {
                   id={`english-sentence-${index}`}
                   onMouseOver={() => handleMouseOver(index)}
                   onMouseOut={() => handleMouseOut(index)}
-                  className={`mb-2 cursor-pointer  ${
+                  onContextMenu={(e) => handleContextMenu(e, index, sentence)}
+                  className={`mb-2 cursor-pointer ${
                     highlightedIndex === index ? "bg-yellow-200 " : ""
                   }`}
                 >
@@ -174,7 +178,6 @@ const Chat = ({ token }) => {
               ))}
             </p>
           </div>
-          {/* Finnish Story Div */}
           <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-left-border">
             <h2 className="text-lg font-bold mb-2 story">Finnish Story</h2>
             <p className="stories-color">
@@ -184,6 +187,7 @@ const Chat = ({ token }) => {
                   id={`finnish-sentence-${index}`}
                   onMouseOver={() => handleMouseOver(index)}
                   onMouseOut={() => handleMouseOut(index)}
+                  onContextMenu={(e) => handleContextMenu(e, index, sentence)}
                   className={`mb-2 cursor-pointer ${
                     highlightedIndex === index ? "bg-yellow-200 " : ""
                   }`}
@@ -195,10 +199,13 @@ const Chat = ({ token }) => {
           </div>
         </div>
       )}
-      {/* Stories Div */}
-
       {popupPosition && (
-        <PopupComponent x={popupPosition.x} y={popupPosition.y} />
+        <PopupComponent
+          x={popupPosition.x}
+          y={popupPosition.y}
+          sentence={selectedSentence}
+          onClose={handleClosePopup}
+        />
       )}
     </div>
   );

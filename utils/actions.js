@@ -1,9 +1,12 @@
 "use server";
 import "server-only";
 import OpenAI from "openai";
+import fs from "fs";
+import path from "path";
+
+const speechFile = path.resolve("./public/speech.mp3");
 
 import { decreaseUserToken } from "../app/_lib/data-service";
-
 import { currentUser } from "@clerk/nextjs/server";
 import { saveStory } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
@@ -53,3 +56,14 @@ export const generateChatResponse = async (prompt) => {
     throw new Error("Error saving story to database");
   }
 };
+
+export async function fetchAudio(text) {
+  const mp3 = await openai.audio.speech.create({
+    model: "tts-1",
+    voice: "alloy",
+    input: text,
+  });
+
+  const buffer = Buffer.from(await mp3.arrayBuffer());
+  await fs.promises.writeFile(speechFile, buffer);
+}
