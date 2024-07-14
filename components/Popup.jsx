@@ -10,10 +10,8 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
   const handleOnClick = async () => {
     try {
       setIsLoading(true);
-      console.log("Button clicked", sentence);
 
       const mp3 = await fetchAudio(sentence);
-      console.log("MP3", mp3);
 
       const audio = new Audio(`/speech.mp3?timestamp=${new Date().getTime()}`);
       audio.play();
