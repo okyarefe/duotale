@@ -108,12 +108,25 @@ const Chat = ({ token }) => {
     setSelectedSentence("");
   };
 
+  const handlePopupButtonClick = () => {
+    try {
+      // Handle button click logic here
+      // For example, fetch audio or perform any action
+
+      // After performing the action, close the popup
+      setPopupPosition(null);
+      setIsPopupOpen(false);
+    } catch (error) {
+      console.error("Error handling button click:", error);
+    }
+  };
+
   if (isError) {
     return <ErrorComponent />;
   }
 
   return (
-    <div className="p-6 space-y-4">
+    <div>
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -205,6 +218,7 @@ const Chat = ({ token }) => {
           y={popupPosition.y}
           sentence={selectedSentence}
           onClose={handleClosePopup}
+          handlePopupButtonClick={handlePopupButtonClick}
         />
       )}
     </div>

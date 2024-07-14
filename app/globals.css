@@ -49,6 +49,7 @@
 }
 .storydivs {
   border: 1px solid black;
+
   font-size: 1.2rem;
 }
 
@@ -133,4 +134,9 @@
 .sheading {
   color: black;
   font-size: 2em;
+}
+
+.voice {
+  color: black;
+  font-size: 1.1em;
 }

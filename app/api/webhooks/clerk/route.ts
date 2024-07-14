@@ -4,7 +4,6 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 
 import { createUser } from "../../../_lib/data-service"; // Example import for createUser
 import { deleteUser } from "../../../_lib/data-service"; // Example imports for updateUser and deleteUser
-import { create } from "domain";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint

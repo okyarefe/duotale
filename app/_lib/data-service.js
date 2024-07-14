@@ -3,7 +3,7 @@ import "server-only";
 import { supabase } from "./supabase";
 import NodeCache from "node-cache";
 import { currentUser } from "@clerk/nextjs/server";
-import { clear } from "console";
+
 const cache = new NodeCache({ stdTTL: 600 }); // Cache TTL set to 10 minutes
 
 export const getUsers = async () => {
@@ -62,6 +62,7 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
 };
 
 export const saveStory = async (userId, englishStory, finnishStory) => {
+  console.log("SAVING STORY TO DATABASE");
   try {
     const { data, error } = await supabase.from("stories").insert([
       {
