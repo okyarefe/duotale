@@ -15,10 +15,11 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
 
       const audio = new Audio(`/speech.mp3?timestamp=${new Date().getTime()}`);
       audio.play();
+
       setIsLoading(false);
       handlePopupButtonClick();
     } catch (error) {
-      console.error("Error in handleOnClick:", error);
+      console.error("Error in handleOnClick:", error.digest);
     }
   };
 
