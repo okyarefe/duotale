@@ -8,7 +8,7 @@ import { deleteUser } from "../../../_lib/data-service"; // Example imports for 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-
+  console.log("WEBHOOOK RUNNING");
   if (!WEBHOOK_SECRET) {
     throw new Error(
       "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
@@ -60,6 +60,8 @@ export async function POST(req: Request) {
   try {
     if (evt.type === "user.created") {
       // Create a new user
+
+      console.log("WEB HOOK USER CREATED !");
       const createdUser = await createUser({
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
