@@ -6,6 +6,7 @@ const ChatPage = async () => {
   // get user id
   const user = await currentUser();
   const userId = user.id;
+  if (!userId) return <h1>Not authorized</h1>;
   const userToken = await getUserTokenById(userId);
   console.log("TOKEN AT SERVER SIDE", userToken);
 
