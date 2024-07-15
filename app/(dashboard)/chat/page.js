@@ -9,6 +9,12 @@ const ChatPage = async () => {
   if (!userId) return <h1>Not authorized</h1>;
 
   const userTokenObj = await getUserTokenById(userId);
+
+  if (!userTokenObj || userTokenObj.length === 0 || !userTokenObj[0].token) {
+    console.error("Token not found for user ID:", userId);
+    return <h1>User token not found</h1>;
+  }
+
   const userToken = userTokenObj[0].token;
 
   return (
