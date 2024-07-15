@@ -40,14 +40,16 @@ export const deleteUser = async (userData) => {
 };
 
 export const getUserTokenById = async (userId) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("token")
-    .eq("id", userId);
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("token")
+      .eq("id", userId);
 
-  if (error) throw error;
-
-  return data[0].token;
+    return data;
+  } catch (error) {
+    console.log("ERROR", error);
+  }
 };
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
