@@ -19,7 +19,7 @@ const Chat = ({ token }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userToken, setUserToken] = useState(token);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+
   const estimatedTokenCost = 1000;
 
   const maxCharacters = 100;
@@ -76,7 +76,6 @@ const Chat = ({ token }) => {
         return null;
       } catch (error) {
         toast.warn("An error occurred while saving the story.");
-        setIsError(true);
       }
     }
   };
@@ -120,10 +119,6 @@ const Chat = ({ token }) => {
       console.error("Error handling button click:", error);
     }
   };
-
-  if (isError) {
-    return <ErrorComponent />;
-  }
 
   return (
     <div>

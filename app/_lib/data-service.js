@@ -17,6 +17,7 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (userData) => {
+  console.log("CREATING USER with this data", userData);
   const { clerkId, email } = userData;
   const { data, error } = await supabase
     .from("users")
@@ -40,13 +41,15 @@ export const deleteUser = async (userData) => {
 };
 
 export const getUserTokenById = async (userId) => {
+  console.log("GETTING USER TOKEN BY ID");
   try {
     const { data, error } = await supabase
       .from("users")
       .select("token")
       .eq("id", userId);
 
-    return data;
+    console.log("***** DATA TOKEN FROM DATABASE *****", data[0].token);
+    return data[0].token;
   } catch (error) {
     console.log("ERROR", error);
   }
@@ -54,8 +57,11 @@ export const getUserTokenById = async (userId) => {
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
   const token = await getUserTokenById(userId);
+  console.log("USER TOKEN", token);
+  console.log("TOKEN USED", tokenUsed);
 
   const newToken = token - tokenUsed;
+  console.log("REMANING TOKENS", newToken);
   const { data, error } = await supabase
     .from("users")
     .update({ token: newToken })
@@ -64,7 +70,8 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
 };
 
 export const saveStory = async (userId, englishStory, finnishStory) => {
-  console.log("SAVING STORY TO DATABASE");
+  console.log("Saved story to database");
+
   try {
     const { data, error } = await supabase.from("stories").insert([
       {
