@@ -4,7 +4,7 @@ const SignInPage = () => {
   return (
     <div className="min-h-screen flex justify-center items-center">
       {" "}
-      <SignIn></SignIn>;
+      <SignIn></SignIn>
     </div>
   );
 };
