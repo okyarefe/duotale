@@ -1,4 +1,3 @@
-// app/chat/page.tsx or page.js
 import Chat from "../../../components/Chat";
 import { currentUser } from "@clerk/nextjs/server";
 import { getUserTokenById } from "../../_lib/data-service";
@@ -16,7 +15,6 @@ const ChatPage = async () => {
 
     // Get the user token
     const userToken = await getUserTokenById(userId);
-    console.log("USER CURRENTLY HAS TOKEN:", userToken);
 
     if (!userToken) {
       return <h1>User token not found</h1>;

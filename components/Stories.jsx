@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { getStories } from "@/app/_lib/data-service";
+import { getStories } from "../app/_lib/data-service";
 import Spinner from "../components/Spinner";
 
 const Stories = ({ initialStories, userId }) => {
