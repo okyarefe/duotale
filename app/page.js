@@ -9,7 +9,7 @@ const HomePage = () => {
           <p className="py-6 text-lg leading-loose ">
             Learn languages by stories you are interested in!
           </p>
-          <Link href="/sign-up" className="btn btn-secondary">
+          <Link href="/chat" className="btn btn-secondary">
             Get Started
           </Link>
         </div>
