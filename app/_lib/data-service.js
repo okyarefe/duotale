@@ -17,7 +17,6 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (userData) => {
-  console.log("CREATING USER with this data", userData);
   const { clerkId, email } = userData;
   const { data, error } = await supabase
     .from("users")
@@ -27,7 +26,7 @@ export const createUser = async (userData) => {
   if (error) {
     console.log(error);
   }
-
+  console.log("User Created", data);
   return data;
 };
 
@@ -48,8 +47,9 @@ export const getUserTokenById = async (userId) => {
       .select("token")
       .eq("id", userId);
 
-    console.log("***** DATA TOKEN FROM DATABASE *****", data[0].token);
-    return data[0].token;
+    console.log("***** DATA TOKEN FROM DATABASE *****", data);
+    const token = data[0].token;
+    return token;
   } catch (error) {
     console.log("ERROR", error);
   }

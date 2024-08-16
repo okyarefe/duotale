@@ -5,6 +5,7 @@ import { getUserTokenById } from "../../_lib/data-service";
 const ChatPage = async () => {
   try {
     // Get the current user
+    // User from clerk
     const user = await currentUser();
 
     if (!user || !user.id) {
@@ -14,12 +15,15 @@ const ChatPage = async () => {
     const userId = user.id;
 
     // Get the user token
+    // userToken from database
     let userToken = await getUserTokenById(userId);
 
     if (!userToken) {
       console.log("Token not found, retrying...");
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 1 second
       userToken = await getUserTokenById(userId);
+
+      console.log("Token found", userToken);
     }
 
     return (

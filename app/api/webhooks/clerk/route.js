@@ -55,13 +55,13 @@ export async function POST(req) {
   const { id } = evt.data;
   const eventType = evt.type;
 
-  console.log(`Webhook with an ID of ${id} and type of ${eventType}`);
+  // console.log(`Webhook with an ID of ${id} and type of ${eventType}`);
 
   try {
     if (evt.type === "user.created") {
       // Create a new user
 
-      console.log("WEB HOOK USER CREATED !");
+      // console.log("WEB HOOK USER CREATED !");
       const createdUser = await createUser({
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
