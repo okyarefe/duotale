@@ -14,10 +14,12 @@ const ChatPage = async () => {
     const userId = user.id;
 
     // Get the user token
-    const userToken = await getUserTokenById(userId);
+    let userToken = await getUserTokenById(userId);
 
     if (!userToken) {
-      return <h1>User token not found</h1>;
+      console.log("Token not found, retrying...");
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+      userToken = await getUserTokenById(userId);
     }
 
     return (
