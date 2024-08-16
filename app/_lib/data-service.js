@@ -130,3 +130,27 @@ export const getStoryById = async (id) => {
   }
   return data;
 };
+
+export const createUserIfNotExists = async (user) => {
+  const { id: userId, email } = user;
+
+  const { data: existingUser } = await supabase
+    .from("users")
+    .select("id")
+    .eq("id", userId)
+    .single();
+
+  if (!existingUser) {
+    await supabase.from("users").insert([{ id: userId, email, token: 5000 }]);
+  }
+};
+
+export const checkIfUserExists = async (userId) => {
+  const { data: user } = await supabase
+    .from("users")
+    .select("id")
+    .eq("id", userId)
+    .single();
+
+  return !!user;
+};

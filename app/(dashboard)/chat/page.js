@@ -1,6 +1,10 @@
 import Chat from "../../../components/Chat";
 import { currentUser } from "@clerk/nextjs/server";
-import { getUserTokenById } from "../../_lib/data-service";
+import {
+  getUserTokenById,
+  checkIfUserExists,
+  createUserIfNotExists,
+} from "../../_lib/data-service";
 
 const ChatPage = async () => {
   try {
@@ -14,6 +18,9 @@ const ChatPage = async () => {
     }
 
     const userId = user.id;
+
+    // Check if user exists in database, if not create the user
+    await createUserIfNotExists(user); // Implement this function
 
     // Get the user token
     // userToken from database
