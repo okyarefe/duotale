@@ -141,7 +141,9 @@ export const createUserIfNotExists = async (user) => {
     .single();
 
   if (!existingUser) {
-    await supabase.from("users").insert([{ id: userId, email, token: 5000 }]);
+    await supabase
+      .from("users")
+      .insert([{ id: userId, email: email, token: 5000 }]);
   }
 };
 
