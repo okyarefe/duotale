@@ -9,6 +9,7 @@ const ChatPage = async () => {
     const user = await currentUser();
 
     if (!user || !user.id) {
+      console.log("There is no CURRENT USER");
       return <h1>Not authorized</h1>;
     }
 
@@ -17,6 +18,7 @@ const ChatPage = async () => {
     // Get the user token
     // userToken from database
     let userToken = await getUserTokenById(userId);
+    console.log("USER CURRETLY HAVE TOKEN", userToken);
 
     if (!userToken) {
       console.log("Token not found, retrying...");

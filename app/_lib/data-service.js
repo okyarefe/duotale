@@ -47,8 +47,9 @@ export const getUserTokenById = async (userId) => {
       .select("token")
       .eq("id", userId);
 
-    console.log("***** DATA TOKEN FROM DATABASE *****", data);
+    // console.log("***** DATA TOKEN FROM DATABASE *****", data);
     const token = data[0].token;
+    // console.log("------TOKE-------", token);
     return token;
   } catch (error) {
     console.log("ERROR", error);

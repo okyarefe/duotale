@@ -61,7 +61,6 @@ export async function POST(req) {
     if (evt.type === "user.created") {
       // Create a new user
 
-      // console.log("WEB HOOK USER CREATED !");
       const createdUser = await createUser({
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
