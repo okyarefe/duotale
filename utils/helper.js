@@ -43,3 +43,9 @@ const splitTextIntoSentences = (text) => {
 };
 
 export { splitTextIntoSentences };
+
+export const languagesList = [
+  "English - Finnish",
+  "English - Turkish",
+  "English - Spanish",
+];

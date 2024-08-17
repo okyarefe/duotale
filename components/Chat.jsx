@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ErrorComponent from "./ErrorComponent";
-import { splitTextIntoSentences } from "../utils/helper";
+import { languagesList, splitTextIntoSentences } from "../utils/helper";
+
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CircleLoader } from "react-spinners";
 import { generateChatResponse } from "../utils/actions";
+import Dropdown from "./Dropdown";
+import Chooselanguage from "./Chooselanguage";
 
 const Chat = ({ token }) => {
+  const [translateTo, setTranslateTo] = useState("");
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
@@ -51,21 +54,26 @@ const Chat = ({ token }) => {
     };
   }, []);
 
+  const languageToTranslate = (lang) => {
+    console.log("Translating to:", lang);
+    setTranslateTo(lang);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (userToken > estimatedTokenCost) {
       setIsLoading(true);
 
       try {
-        const { englishStory, finnishStory, tokenUsed } =
-          await generateChatResponse(text);
+        const { englishStory, translatedStory, tokenUsed } =
+          await generateChatResponse(text, translateTo);
         setEnglishSentences(splitTextIntoSentences(englishStory));
-        setFinnishSentences(splitTextIntoSentences(finnishStory));
+        setFinnishSentences(splitTextIntoSentences(translatedStory));
         let newTokenAmount = token - tokenUsed;
 
         // Store the responses in local storage
         localStorage.setItem("englishMessage", englishStory);
-        localStorage.setItem("finnishMessage", finnishStory);
+        localStorage.setItem("finnishMessage", translatedStory);
         setUserToken((prev) => prev - tokenUsed);
         toast.success("Your story has been generated!");
 
@@ -147,6 +155,16 @@ const Chat = ({ token }) => {
           <div className="text-right text-sm text-gray-500">
             {text.length}/{maxCharacters} characters
           </div>
+          {/* DROPDOWN COMPONENT */}
+          <Chooselanguage translateTo={translateTo}>
+            <Dropdown
+              label={"CHOOSE A LANGUAGE AND GENERATE STORY IN - "}
+              items={languagesList}
+              onSelect={languageToTranslate}
+            ></Dropdown>
+          </Chooselanguage>
+
+          {/* TOKEN TEXT*/}
           <h1 className="special">
             You have <span className="color-red-100">{userToken}</span> tokens
             left
@@ -189,7 +207,7 @@ const Chat = ({ token }) => {
             </p>
           </div>
           <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-left-border">
-            <h2 className="text-lg font-bold mb-2 story">Finnish Story</h2>
+            <h2 className="text-lg font-bold mb-2 story">Translated Story</h2>
             <p className="stories-color">
               {finnishSentences.map((sentence, index) => (
                 <span

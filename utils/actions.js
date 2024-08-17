@@ -15,7 +15,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const generateChatResponse = async (prompt) => {
+export const generateChatResponse = async (prompt, translateTo) => {
   console.log("GENERATING REPONSE!");
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
@@ -26,9 +26,8 @@ export const generateChatResponse = async (prompt) => {
       },
       {
         role: "user",
-        content:
-          prompt +
-          "I want to hear the same story in English and Finnish in a daily used vocabulary.The format should be like this. English:[story itself]. Finnish:[story itself].First give me the English story completely, then same story in Finnish. Do not mix any content !",
+        content: `${prompt} +
+          I  want to hear the same story in English and ${translateTo} in a daily used vocabulary.The format should be like this. English:[story itself]. ${translateTo}:[story itself].First give me the English story completely, then same story in ${translateTo}. Do not mix any content!Number of sentences in each translation must be the same and there should be at least 7 sentences.`,
       },
     ],
     max_tokens: 950,
@@ -37,10 +36,22 @@ export const generateChatResponse = async (prompt) => {
   const result = response.choices[0].message.content;
   const tokenUsed = response.usage.total_tokens;
 
+  // const englishStory = result
+  //   .match(/English:\s*(.*?)\s*Finnish:/s)?.[1]
+  //   ?.trim();
   const englishStory = result
-    .match(/English:\s*(.*?)\s*Finnish:/s)?.[1]
+    .match(new RegExp(`English:\\s*(.*?)\\s*${translateTo}:`, "s"))?.[1]
     ?.trim();
-  const finnishStory = result.match(/Finnish:\s*(.*)/s)?.[1]?.trim();
+
+  // const finnishStory = result.match(/Finnish:\s*(.*)/s)?.[1]?.trim();
+  // Create dynamic regex patterns
+  // const englishRegex = /English:\s*([\s\S]*?)(?=\s*[A-Z][a-z]|$)/s;
+  // const englishStory = result.match(englishRegex)?.[1]?.trim();
+
+  const translateRegex = new RegExp(`${translateTo}:\\s*([\\s\\S]*)`, "s");
+  const translatedStory = result.match(translateRegex)?.[1]?.trim();
+
+  // Extract stories using the regex patterns
 
   // console.log("RESPONSE", response);
   try {
@@ -49,12 +60,12 @@ export const generateChatResponse = async (prompt) => {
     const userId = user.id;
 
     // save story to database
-    await saveStory(userId, englishStory, finnishStory);
+    await saveStory(userId, englishStory, translatedStory);
     await decreaseUserToken(userId, tokenUsed);
     revalidatePath("/dialogs");
-    return { englishStory, finnishStory, tokenUsed };
+    return { englishStory, translatedStory, tokenUsed };
   } catch (error) {
-    throw new Error("Error saving story to database");
+    throw new Error(error);
   }
 };
 

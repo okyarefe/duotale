@@ -24,6 +24,7 @@ export const createUser = async (userData) => {
     .select();
 
   if (error) {
+    console.log("ERROR CREATING USER");
     console.log(error);
   }
   console.log("User Created", data);
