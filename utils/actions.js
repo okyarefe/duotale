@@ -34,6 +34,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
   });
 
   const result = response.choices[0].message.content;
+  // TOTAL TOKENS USED
   const tokenUsed = response.usage.total_tokens;
 
   // const englishStory = result
