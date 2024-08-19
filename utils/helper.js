@@ -1,4 +1,7 @@
 // List of common abbreviations
+
+import crypto from "crypto";
+import next from "next";
 const abbreviations = [
   "Dr",
   "Mr",
@@ -49,3 +52,7 @@ export const languagesList = [
   "English - Turkish",
   "English - Spanish",
 ];
+
+export function generateUniqueId(text) {
+  return crypto.createHash("md5").update(text).digest("hex");
+}

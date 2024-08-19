@@ -25,7 +25,6 @@ const ChatPage = async () => {
     // Get the user token
     // userToken from database
     let userToken = await getUserTokenById(userId);
-    console.log("USER CURRETLY HAVE TOKEN", userToken);
 
     if (!userToken) {
       console.log("Token not found, retrying...");
@@ -37,7 +36,7 @@ const ChatPage = async () => {
 
     return (
       <div>
-        <Chat token={userToken} />
+        <Chat token={userToken} userId={userId} />
       </div>
     );
   } catch (error) {

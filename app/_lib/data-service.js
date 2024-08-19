@@ -88,13 +88,13 @@ export const saveStory = async (userId, englishStory, finnishStory) => {
 };
 
 export const getStories = async (userId, paginationStart, paginationEnd) => {
-  const cacheKey = `${userId}-${paginationStart}-${paginationEnd}`;
-  const cachedStories = cache.get(cacheKey);
+  // const cacheKey = `${userId}-${paginationStart}-${paginationEnd}`;
+  // const cachedStories = cache.get(cacheKey);
 
-  if (cachedStories) {
-    console.log("***** RETURNING CACHED STORIES *****");
-    return cachedStories;
-  }
+  // if (cachedStories) {
+  //   console.log("***** RETURNING CACHED STORIES *****");
+  //   return cachedStories;
+  // }
 
   try {
     const { data, error } = await supabase
@@ -107,8 +107,8 @@ export const getStories = async (userId, paginationStart, paginationEnd) => {
     if (error) {
       throw new Error("FAILED TO GET USER STORIES");
     }
-    console.log("***** STORIES FROM DATABASE *****");
-    cache.set(cacheKey, data);
+    // console.log("***** STORIES FROM DATABASE *****");
+    // cache.set(cacheKey, data);
 
     return data;
   } catch (error) {
@@ -154,4 +154,19 @@ export const checkIfUserExists = async (userId) => {
     .single();
 
   return !!user;
+};
+
+export const saveTTSfileToS3 = async (buffer, fileName) => {
+  const { data, error } = await supabase.storage
+    .from("llearning_bucket")
+    .upload(fileName, buffer, {
+      contentType: "audio/mpeg",
+    });
+
+  if (error) {
+    console.log("ERROR SAVING FILE TO S3", error);
+    throw new Error("Failed to upload audio to supabase stroage");
+  }
+  console.log("FILE SAVED TO S3", data);
+  return data;
 };

@@ -12,7 +12,9 @@ const Chooselanguage = ({ children, translateTo }) => {
       {children}
       <span className="badge badge-lg badge-ghost">
         {" "}
-        <span className="translate-language">{translateLang}</span>
+        <span className="translate-language">
+          {translateLang || "Choose a language"}
+        </span>
       </span>
     </div>
   );

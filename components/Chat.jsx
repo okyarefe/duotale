@@ -5,6 +5,7 @@ import { languagesList, splitTextIntoSentences } from "../utils/helper";
 
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { CircleLoader } from "react-spinners";
 import { generateChatResponse } from "../utils/actions";
@@ -154,7 +155,7 @@ const Chat = ({ token }) => {
           {/* DROPDOWN COMPONENT */}
           <Chooselanguage translateTo={translateTo}>
             <Dropdown
-              label={"CHOOSE A LANGUAGE AND GENERATE STORY IN - "}
+              label={"Choose a language pair - Translate to "}
               items={languagesList}
               onSelect={languageToTranslate}
             ></Dropdown>
