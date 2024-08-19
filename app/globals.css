@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* General classes */
+
+.flex-div {
+  display: flex;
+}
 
 .highlight {
   background-color: white;
@@ -91,6 +96,12 @@
   align-items: center;
 }
 
+.button.disabled {
+  /* Pale color */
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Define button styles */
 .story-btn {
   display: inline-block;
@@ -139,6 +150,10 @@
 .voice {
   color: black;
   font-size: 1.1em;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Choose Language*/

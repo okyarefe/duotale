@@ -119,10 +119,6 @@ const Chat = ({ token }) => {
 
   const handlePopupButtonClick = () => {
     try {
-      // Handle button click logic here
-      // For example, fetch audio or perform any action
-
-      // After performing the action, close the popup
       setPopupPosition(null);
       setIsPopupOpen(false);
     } catch (error) {

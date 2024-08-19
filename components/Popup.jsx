@@ -39,9 +39,14 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
           zIndex: 1000, // Ensure it's above other content
         }}
       >
-        {isLoading ? <Spinner /> : null}
-        <button onClick={handleOnClick}>
-          <span className="voice">Voice</span>
+        <button
+          onClick={handleOnClick}
+          disabled={isLoading}
+          className={`button ${isLoading ? "disabled" : ""}`}
+        >
+          <span className="voice">
+            Voice {isLoading && <Spinner size={20} color="black" />}
+          </span>
         </button>
       </div>
     </>

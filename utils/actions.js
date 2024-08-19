@@ -37,17 +37,9 @@ export const generateChatResponse = async (prompt, translateTo) => {
   // TOTAL TOKENS USED
   const tokenUsed = response.usage.total_tokens;
 
-  // const englishStory = result
-  //   .match(/English:\s*(.*?)\s*Finnish:/s)?.[1]
-  //   ?.trim();
   const englishStory = result
     .match(new RegExp(`English:\\s*(.*?)\\s*${translateTo}:`, "s"))?.[1]
     ?.trim();
-
-  // const finnishStory = result.match(/Finnish:\s*(.*)/s)?.[1]?.trim();
-  // Create dynamic regex patterns
-  // const englishRegex = /English:\s*([\s\S]*?)(?=\s*[A-Z][a-z]|$)/s;
-  // const englishStory = result.match(englishRegex)?.[1]?.trim();
 
   const translateRegex = new RegExp(`${translateTo}:\\s*([\\s\\S]*)`, "s");
   const translatedStory = result.match(translateRegex)?.[1]?.trim();
