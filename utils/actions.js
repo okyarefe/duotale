@@ -76,6 +76,7 @@ export async function fetchAudio(text) {
   console.log("UNIQUE FILE NAME", uniqueFileName);
 
   const doesExist = await checkIfTTSexistInS3(uniqueFileName);
+
   if (doesExist) {
     console.log("TTS already exist in S3..downloading from S3");
     const existingTTSAudio = await getTTSfileFromS3(uniqueFileName);
