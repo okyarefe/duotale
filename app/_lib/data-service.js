@@ -200,3 +200,16 @@ export const checkIfTTSexistInS3 = async (fileName) => {
     return false; // Handle other potential errors
   }
 };
+
+export const getTTSfileFromS3 = async (fileName) => {
+  const { data, error } = await supabase.storage
+    .from("llearning_bucket")
+    .download(fileName);
+
+  if (error) {
+    console.error("Error downloading file from S3:", error);
+    throw error;
+  }
+
+  return data;
+};

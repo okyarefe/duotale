@@ -13,6 +13,7 @@ import {
   saveStory,
   saveTTSfileToS3,
   checkIfTTSexistInS3,
+  getTTSfileFromS3,
 } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
 
@@ -76,7 +77,12 @@ export async function fetchAudio(text) {
 
   const doesExist = await checkIfTTSexistInS3(uniqueFileName);
   if (doesExist) {
-    console.log("TTS already exist in S3");
+    console.log("TTS already exist in S3..downloading from S3");
+    const existingTTSAudio = await getTTSfileFromS3(uniqueFileName);
+    const buffer = Buffer.from(await existingTTSAudio.arrayBuffer());
+
+    await fs.promises.writeFile(speechFile, buffer);
+    console.log("Local file updated with the existing TTS file from S3");
     return;
   }
 

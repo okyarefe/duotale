@@ -15,6 +15,7 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
     try {
       setIsLoading(true);
       setIsError(false);
+
       // Fetch the audio file
       const mp3 = await fetchAudio(sentence);
 
