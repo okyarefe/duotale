@@ -170,3 +170,33 @@ export const saveTTSfileToS3 = async (buffer, fileName) => {
   console.log("FILE SAVED TO S3", data);
   return data;
 };
+
+export const checkIfTTSexistInS3 = async (fileName) => {
+  try {
+    // List the files in the bucket or folder
+    const { data, error } = await supabase.storage
+      .from("llearning_bucket")
+      .list("", {
+        search: fileName, // Optional: search by specific file name
+      });
+
+    if (error) {
+      console.error("Error listing files in bucket:", error);
+      return false; // If there's an error, assume file doesn't exist
+    }
+
+    // Check if the specific file is in the list
+    const fileExists = data.some((file) => file.name === fileName);
+
+    if (fileExists) {
+      console.log("File exists in S3 bucket:", fileName);
+      return true;
+    } else {
+      console.log("File does not exist in S3 bucket:", fileName);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error checking file existence in S3 bucket:", error);
+    return false; // Handle other potential errors
+  }
+};
