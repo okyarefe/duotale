@@ -24,7 +24,8 @@ const openai = new OpenAI({
 export const generateChatResponse = async (prompt, translateTo) => {
   console.log("GENERATING REPONSE!");
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    // model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",

@@ -13,7 +13,7 @@ import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
 const Chat = ({ token }) => {
-  const [translateTo, setTranslateTo] = useState("");
+  const [translateTo, setTranslateTo] = useState("Finnish");
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
