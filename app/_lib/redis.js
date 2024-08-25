@@ -30,6 +30,7 @@ export async function getValueFromCache(key) {
       // If the key exists, get the value
       console.log("******THE FILE EXISTS IN REDIS*******");
       const value = await client.get(key);
+
       return { exists: true, value };
     } else {
       // If the key does not exist

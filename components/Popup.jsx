@@ -3,9 +3,8 @@
 import { fetchAudio } from "../utils/actions";
 import Spinner from "../components/Spinner";
 import ErrorComponent from "./ErrorComponent";
-import { generateUniqueId } from "../utils/helper";
+
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
 
 const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
   const [isLoading, setIsLoading] = useState(false);

@@ -4,7 +4,7 @@ import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
 import { generateUniqueId } from "../utils/helper";
-
+import { getPublicUrlForMP3 } from "../app/_lib/supabase";
 const speechFile = path.resolve("./public/speech.mp3");
 import { getValueFromCache } from "../app/_lib/redis";
 import { decreaseUserToken } from "../app/_lib/data-service";
@@ -76,7 +76,13 @@ export async function fetchAudio(text) {
   const doesTTSexistsInCache = await getValueFromCache(uniqueFileName);
 
   if (doesTTSexistsInCache.exists === true) {
-    console.log("TTS already exist in Redis..downloading from Redis");
+    console.log("TTS already exist in Redis..Forming URL link");
+
+    // const supabaseBucketUrl = process.env.S3_ENDPOINT;
+    const mp3Link = doesTTSexistsInCache.value;
+    // HOW TO GET THE FILE FROM THE URL AND PLAY IT IN AUDIO
+    const publicUrl = await getPublicUrlForMP3(mp3Link);
+    console.log("Public URL IS:", publicUrl);
     return;
   } else {
     const doesExist = await checkIfTTSexistInS3(uniqueFileName);
@@ -98,7 +104,9 @@ export async function fetchAudio(text) {
     voice: "alloy",
     input: text,
   });
-  console.log("***** MAKING THE REQUEST TO THE OPENAI API *****");
+  console.log(
+    "*****//////////////////////// MAKING THE REQUEST TO THE OPENAI API ////////////////////*****"
+  );
 
   // Converting the audio to a buffer
   const buffer = Buffer.from(await mp3.arrayBuffer());
