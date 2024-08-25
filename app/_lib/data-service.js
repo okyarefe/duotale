@@ -3,7 +3,7 @@ import "server-only";
 import { supabase } from "./supabase";
 import NodeCache from "node-cache";
 import { currentUser } from "@clerk/nextjs/server";
-
+import { saveFileUrlToRedis } from "./redis";
 const cache = new NodeCache({ stdTTL: 600 }); // Cache TTL set to 10 minutes
 
 export const getUsers = async () => {
@@ -163,15 +163,20 @@ export const saveTTSfileToS3 = async (buffer, fileName) => {
       contentType: "audio/mpeg",
     });
 
+  await saveFileUrlToRedis(fileName, data.fullPath);
+
   if (error) {
     console.log("ERROR SAVING FILE TO S3", error);
     throw new Error("Failed to upload audio to supabase stroage");
   }
   console.log("FILE SAVED TO S3", data);
+  console.log("File is cached in Redis");
+  console.log("This is the data that is saved to the S3", data);
   return data;
 };
 
 export const checkIfTTSexistInS3 = async (fileName) => {
+  console.log("CHECKING S3 STORAGE - - - - ");
   try {
     // List the files in the bucket or folder
     const { data, error } = await supabase.storage
@@ -189,10 +194,10 @@ export const checkIfTTSexistInS3 = async (fileName) => {
     const fileExists = data.some((file) => file.name === fileName);
 
     if (fileExists) {
-      console.log("File exists in S3 bucket:", fileName);
+      console.log("File exists in S3 bucket:");
       return true;
     } else {
-      console.log("File does not exist in S3 bucket:", fileName);
+      console.log("File does not exist in S3 bucket");
       return false;
     }
   } catch (error) {

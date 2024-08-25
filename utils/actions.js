@@ -6,7 +6,7 @@ import path from "path";
 import { generateUniqueId } from "../utils/helper";
 
 const speechFile = path.resolve("./public/speech.mp3");
-
+import { getValueFromCache } from "../app/_lib/redis";
 import { decreaseUserToken } from "../app/_lib/data-service";
 import { currentUser } from "@clerk/nextjs/server";
 import {
@@ -70,22 +70,26 @@ export const generateChatResponse = async (prompt, translateTo) => {
 };
 
 export async function fetchAudio(text) {
-  console.log("THE TEXT TYPE IS ", typeof text);
-
   // Make a unique name for the file to save in S3bucket
   const uniqueFileName = `${generateUniqueId(text)}.mp3`;
-  console.log("UNIQUE FILE NAME", uniqueFileName);
 
-  const doesExist = await checkIfTTSexistInS3(uniqueFileName);
+  const doesTTSexistsInCache = await getValueFromCache(uniqueFileName);
 
-  if (doesExist) {
-    console.log("TTS already exist in S3..downloading from S3");
-    const existingTTSAudio = await getTTSfileFromS3(uniqueFileName);
-    const buffer = Buffer.from(await existingTTSAudio.arrayBuffer());
-
-    await fs.promises.writeFile(speechFile, buffer);
-    console.log("Local file updated with the existing TTS file from S3");
+  if (doesTTSexistsInCache.exists === true) {
+    console.log("TTS already exist in Redis..downloading from Redis");
     return;
+  } else {
+    const doesExist = await checkIfTTSexistInS3(uniqueFileName);
+
+    if (doesExist) {
+      console.log("TTS already exist in S3..downloading from S3");
+      const existingTTSAudio = await getTTSfileFromS3(uniqueFileName);
+      const buffer = Buffer.from(await existingTTSAudio.arrayBuffer());
+
+      await fs.promises.writeFile(speechFile, buffer);
+      console.log("Local file updated with the existing TTS file from S3");
+      return;
+    }
   }
 
   // Fetch the TTS audio from OpenAI
@@ -100,7 +104,6 @@ export async function fetchAudio(text) {
   const buffer = Buffer.from(await mp3.arrayBuffer());
 
   // Save the buffer to Supase storage
-
   await saveTTSfileToS3(buffer, uniqueFileName);
 
   //Writing the buffer to a file
