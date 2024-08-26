@@ -17,6 +17,10 @@ import {
 } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
 
+const textToSpeech = require("@google-cloud/text-to-speech");
+// Creates a client
+const client = new textToSpeech.TextToSpeechClient();
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -99,21 +103,41 @@ export async function fetchAudio(text) {
   }
 
   // Fetch the TTS audio from OpenAI
-  const mp3 = await openai.audio.speech.create({
-    model: "tts-1",
-    voice: "alloy",
-    input: text,
-  });
-  console.log(
-    "*****//////////////////////// MAKING THE REQUEST TO THE OPENAI API ////////////////////*****"
-  );
+  // const mp3 = await openai.audio.speech.create({
+  //   model: "tts-1",
+  //   voice: "alloy",
+  //   input: text,
+  // });
+  // console.log(
+  //   "*****//////////////////////// MAKING THE REQUEST TO THE OPENAI API ////////////////////*****"
+  // );
 
-  // Converting the audio to a buffer
-  const buffer = Buffer.from(await mp3.arrayBuffer());
+  // // Converting the audio to a buffer
+  // const buffer = Buffer.from(await mp3.arrayBuffer());
+  // // Save the buffer to Supase storage
+  // await saveTTSfileToS3(buffer, uniqueFileName);
 
-  // Save the buffer to Supase storage
+  // //Writing the buffer to a file
+  // await fs.promises.writeFile(speechFile, buffer);
+
+  const request = {
+    input: { text: text },
+    voice: {
+      languageCode: "en-US",
+      ssmlGender: "NEUTRAL",
+    },
+    audioConfig: { audioEncoding: "MP3" },
+  };
+
+  // Performs the Text-to-Speech request
+  const [response] = await client.synthesizeSpeech(request);
+
+  // Convert the response audio content to a buffer
+  const buffer = Buffer.from(response.audioContent, "binary");
+
+  //  Save the buffer to Supase storage
   await saveTTSfileToS3(buffer, uniqueFileName);
 
-  //Writing the buffer to a file
+  // Write the buffer to a file in the public directory
   await fs.promises.writeFile(speechFile, buffer);
 }
