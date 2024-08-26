@@ -16,6 +16,7 @@ import {
   getTTSfileFromS3,
 } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
+import { franc } from "franc-min";
 
 const textToSpeech = require("@google-cloud/text-to-speech");
 // Creates a client
@@ -38,7 +39,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
       {
         role: "user",
         content: `${prompt} +
-          I  want to hear the same story in English and ${translateTo} in a daily used vocabulary.The format should be like this. English:[story itself]. ${translateTo}:[story itself].First give me the English story completely, then same story in ${translateTo}. Do not mix any content!Number of sentences in each translation must be the same and there should be at least 7 sentences.`,
+          I  want to hear the same story in English and ${translateTo} in a daily used vocabulary.The format should be like this. English:[story itself]. ${translateTo}:[story itself].First give me the English story completely, then same story in ${translateTo}. Do not mix any content!Number of sentences in each translation must be the same and there should be at least 7 sentences.Do not include any ** in your sentences`,
       },
     ],
     max_tokens: 950,
@@ -71,6 +72,17 @@ export const generateChatResponse = async (prompt, translateTo) => {
   } catch (error) {
     throw new Error(error);
   }
+};
+
+const languageMap = {
+  eng: "en-US",
+  spa: "es-ES",
+  fra: "fr-FR",
+  deu: "de-DE",
+  ita: "it-IT",
+  fin: "fi-FI", // Finnish
+  tur: "tr-TR", // Turkish
+  // Add more language mappings as needed
 };
 
 export async function fetchAudio(text) {
@@ -120,10 +132,27 @@ export async function fetchAudio(text) {
   // //Writing the buffer to a file
   // await fs.promises.writeFile(speechFile, buffer);
 
+  const languageMap = {
+    eng: "en-US", // English
+    spa: "es-ES", // Spanish
+    fra: "fr-FR", // French
+    deu: "de-DE", // German
+    ita: "it-IT", // Italian
+    fin: "fi-FI", // Finnish
+    tur: "tr-TR", // Turkish
+    // Add more language mappings as needed
+  };
+  function detectLanguage(text) {
+    const langCode = franc(text); // Detect the language using franc
+
+    return languageMap[langCode] || "fi-FI"; // Map to Google Cloud language code, default to English
+  }
+  const languageCode = detectLanguage(text);
+
   const request = {
     input: { text: text },
     voice: {
-      languageCode: "en-US",
+      languageCode: languageCode,
       ssmlGender: "NEUTRAL",
     },
     audioConfig: { audioEncoding: "MP3" },
