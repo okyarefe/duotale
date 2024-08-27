@@ -16,11 +16,10 @@ import {
   getTTSfileFromS3,
 } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
-import { franc } from "franc-min";
-
 const textToSpeech = require("@google-cloud/text-to-speech");
 // Creates a client
 const client = new textToSpeech.TextToSpeechClient();
+import { franc } from "franc";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -74,17 +73,6 @@ export const generateChatResponse = async (prompt, translateTo) => {
   }
 };
 
-const languageMap = {
-  eng: "en-US",
-  spa: "es-ES",
-  fra: "fr-FR",
-  deu: "de-DE",
-  ita: "it-IT",
-  fin: "fi-FI", // Finnish
-  tur: "tr-TR", // Turkish
-  // Add more language mappings as needed
-};
-
 export async function fetchAudio(text) {
   // Make a unique name for the file to save in S3bucket
   const uniqueFileName = `${generateUniqueId(text)}.mp3`;
@@ -132,22 +120,24 @@ export async function fetchAudio(text) {
   // //Writing the buffer to a file
   // await fs.promises.writeFile(speechFile, buffer);
 
-  const languageMap = {
+  const francToGoogleLangMap = {
     eng: "en-US", // English
     spa: "es-ES", // Spanish
     fra: "fr-FR", // French
     deu: "de-DE", // German
     ita: "it-IT", // Italian
     fin: "fi-FI", // Finnish
-    tur: "tr-TR", // Turkish
-    // Add more language mappings as needed
+    // Add more mappings as needed
   };
-  function detectLanguage(text) {
-    const langCode = franc(text); // Detect the language using franc
 
-    return languageMap[langCode] || "fi-FI"; // Map to Google Cloud language code, default to English
+  function detectLanguage(text) {
+    const langCode = franc(text);
+    // console.log("Detected Language Code:", langCode);
+
+    return francToGoogleLangMap[langCode] || "en-US";
   }
   const languageCode = detectLanguage(text);
+  console.log("Language Code:", languageCode);
 
   const request = {
     input: { text: text },
