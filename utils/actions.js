@@ -86,11 +86,6 @@ export async function fetchAudio(text) {
     const signedUrl = doesTTSexistsInCache.urlCache;
     // console.log("SIGNED URL", signedUrl);
 
-    // I NEED TO GET THE PUBLIC URL FOR THE MP3 FILE
-    // AND PLAY IT IN THE BROWSER
-    // WE DO NOT MAKE ADDITIONAL API REQUEST FOR THE FILE SINCE ITS IN THE CACHE
-    // BUT I NEED TO GET THE PUBLIC URL FOR THE FILE AND UPDATE THE FRONTEND TO PLAY IT
-
     return signedUrl;
   } else {
     const doesExist = await checkIfTTSexistInS3(uniqueFileName);
