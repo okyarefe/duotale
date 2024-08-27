@@ -1,4 +1,6 @@
 import { createClient } from "redis";
+import { createSignedUrl } from "./supabase";
+import { url } from "inspector";
 const client = createClient({
   url: process.env.RENDER_REDIS_EXTERNAL_URL,
 });
@@ -30,8 +32,12 @@ export async function getValueFromCache(key) {
       // If the key exists, get the value
       console.log("******THE FILE EXISTS IN REDIS*******");
       const value = await client.get(key);
+      // console.log(" VALUE IN REDIS", value);
 
-      return { exists: true, value };
+      const urlCache = await createSignedUrl("llearning_bucket", value, 200);
+      // console.log("URL CACHE", urlCache);
+
+      return { exists: true, value, urlCache };
     } else {
       // If the key does not exist
       console.log("******THE FILE DOES NOT EXIST IN REDIS*******");

@@ -23,3 +23,23 @@ export const getPublicUrlForMP3 = (fileName) => {
   console.log("URL for the MP3 file:", url);
   return url;
 };
+
+export async function createSignedUrl(bucketName, filePath, expiresIn = 60) {
+  try {
+    // Generate the signed URL
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .createSignedUrl(filePath, expiresIn);
+
+    if (error) {
+      throw error; // If there's an error, throw it to be caught by the catch block
+    }
+
+    // Return the signed URL
+    return data.signedUrl;
+  } catch (error) {
+    console.error("Error creating signed URL:", error.message || error);
+    // Handle the error as needed (e.g., notify the user, retry, etc.)
+    return null; // Return null or handle as appropriate for your application
+  }
+}

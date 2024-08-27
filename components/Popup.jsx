@@ -17,10 +17,17 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
 
       // Fetch the audio file
       const mp3 = await fetchAudio(sentence);
+      if (mp3) {
+        const audio = new Audio(mp3);
+        audio.play();
+      } else {
+        const audio = new Audio(
+          `/speech.mp3?timestamp=${new Date().getTime()}`
+        );
+        audio.play();
+      }
 
       //Play the newly fetched audio
-      const audio = new Audio(`/speech.mp3?timestamp=${new Date().getTime()}`);
-      audio.play();
 
       setIsLoading(false);
 

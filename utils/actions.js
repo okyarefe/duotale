@@ -83,11 +83,15 @@ export async function fetchAudio(text) {
     console.log("TTS already exist in Redis..Forming URL link");
 
     // const supabaseBucketUrl = process.env.S3_ENDPOINT;
-    const mp3Link = doesTTSexistsInCache.value;
-    // HOW TO GET THE FILE FROM THE URL AND PLAY IT IN AUDIO
-    const publicUrl = await getPublicUrlForMP3(mp3Link);
-    console.log("Public URL IS:", publicUrl);
-    return;
+    const signedUrl = doesTTSexistsInCache.urlCache;
+    // console.log("SIGNED URL", signedUrl);
+
+    // I NEED TO GET THE PUBLIC URL FOR THE MP3 FILE
+    // AND PLAY IT IN THE BROWSER
+    // WE DO NOT MAKE ADDITIONAL API REQUEST FOR THE FILE SINCE ITS IN THE CACHE
+    // BUT I NEED TO GET THE PUBLIC URL FOR THE FILE AND UPDATE THE FRONTEND TO PLAY IT
+
+    return signedUrl;
   } else {
     const doesExist = await checkIfTTSexistInS3(uniqueFileName);
 
@@ -102,6 +106,9 @@ export async function fetchAudio(text) {
     }
   }
 
+  console.log(
+    "000000000000  MAKING  API   REQUEST   TO  TEXT TO SPEECH 0000000000000"
+  );
   // Fetch the TTS audio from OpenAI
   // const mp3 = await openai.audio.speech.create({
   //   model: "tts-1",

@@ -163,15 +163,17 @@ export const saveTTSfileToS3 = async (buffer, fileName) => {
       contentType: "audio/mpeg",
     });
 
-  await saveFileUrlToRedis(fileName, data.fullPath);
+  console.log("SAVING FILE TO BUCKKET", data);
+
+  await saveFileUrlToRedis(fileName, data.path);
 
   if (error) {
     console.log("ERROR SAVING FILE TO S3", error);
     throw new Error("Failed to upload audio to supabase stroage");
   }
-  console.log("FILE SAVED TO S3", data);
-  console.log("File is cached in Redis");
-  console.log("This is the data that is saved to the S3", data);
+  // console.log("FILE SAVED TO S3", data);
+  // console.log("File is cached in Redis");
+  // console.log("This is the data that is saved to the S3", data);
   return data;
 };
 
