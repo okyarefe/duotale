@@ -2,7 +2,7 @@ import { createClient } from "redis";
 import { createSignedUrl } from "./supabase";
 import { url } from "inspector";
 const client = createClient({
-  url: process.env.RENDER_REDIS_EXTERNAL_URL,
+  url: process.env.RENDER_REDIS_URL,
 });
 
 client.on("error", (err) => {
