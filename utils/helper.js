@@ -51,6 +51,9 @@ export const languagesList = [
   "English - Finnish",
   "English - Turkish",
   "English - Spanish",
+  "English - French",
+  "English - German",
+  "English - Italian",
 ];
 
 export function generateUniqueId(text) {
