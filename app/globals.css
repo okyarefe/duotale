@@ -170,7 +170,7 @@
 }
 
 /* VIDEO COMPONENT*/
-.video-container {
+/* .video-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,35 +183,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* .video-container {
-  position: relative;
-  width: 100%;
-  height: auto;
-  overflow: hidden;
-} */
-
 .video-container video {
   width: 100%;
   height: auto;
   object-fit: cover;
   transition: transform 0.5s ease, object-position 0.5s ease;
-}
+} */
 
 /* Apply a zoom for smaller screens like tablets */
-@media (max-width: 1024px) {
-  .video-container video {
-    transform: scale(1.6); /* Adjust this value to control the zoom level */
-    object-position: center center; /* Center the zoomed-in area */
-  }
-  .video-container {
-    width: 90%;
-  }
-}
 
-/* For even smaller screens like phones */
-@media (max-width: 768px) {
-  .video-container video {
-    transform: scale(1.8); /* Increase zoom level for smaller screens */
-    object-position: center top; /* Adjust the focus area */
-  }
+.walkthru {
 }

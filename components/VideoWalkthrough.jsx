@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import React from "react";
 
 const VideoWalkthrough = () => {
@@ -8,7 +7,7 @@ const VideoWalkthrough = () => {
         autoPlay
         loop
         className="video"
-        style={{ width: "80%", height: "90%" }}
+        style={{ width: "100%", height: "100%" }}
       >
         <source src="/walkthroughfinal2.mp4" type="video/mp4" />
         Your browser does not support the video tag.
