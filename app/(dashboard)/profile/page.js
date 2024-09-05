@@ -1,4 +1,4 @@
-import { UserProfile } from "@clerk/nextjs";
+import { SignIn, UserProfile } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ const ProfilePage = async () => {
     if (user) {
       return <UserProfile routing="hash"></UserProfile>;
     } else {
-      return <h1>LOG IN</h1>;
+      return <SignIn></SignIn>;
     }
   } catch (error) {
     <Link href="/"></Link>;

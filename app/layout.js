@@ -1,8 +1,24 @@
-import { Inter } from "next/font/google";
+import { Inter, Merienda } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-
+import { Bricolage_Grotesque } from "next/font/google";
+import { Space_Mono } from "next/font/google";
+import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
+
+const fontHeading = Bricolage_Grotesque({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-heading",
+  weight: "700",
+});
+
+const fontBody = Space_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
+  weight: "700",
+});
 
 export const metadata = {
   title: "Learn with fun stories",
@@ -15,7 +31,11 @@ export default function RootLayout({ children }) {
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body
+          className={cn("antialiased", fontHeading.variable, fontBody.variable)}
+        >
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
