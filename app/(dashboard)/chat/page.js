@@ -7,8 +7,6 @@ import {
 
 const ChatPage = async () => {
   try {
-    // Get the current user
-    // User from clerk
     const user = await currentUser();
 
     if (!user || !user.id) {
@@ -21,17 +19,30 @@ const ChatPage = async () => {
     // Check if user exists in database, if not create the user
     await createUserIfNotExists(user);
 
-    // Get the user token
-    // userToken from database
-    let userToken = await getUserTokenById(userId);
+    // Implement a retry mechanism with a maximum number of attempts
+    const maxAttempts = 5;
+    const retryDelay = 1000; // 1 second
+    let userToken = null;
 
-    if (!userToken) {
-      console.log("Token not found, retrying...");
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 1 second
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       userToken = await getUserTokenById(userId);
 
-      console.log("Token found", userToken);
+      if (userToken !== null && userToken !== undefined) {
+        break;
+      }
+
+      console.log(
+        `Token not found, retrying... (Attempt ${attempt + 1}/${maxAttempts})`
+      );
+      await new Promise((resolve) => setTimeout(resolve, retryDelay));
     }
+
+    if (!userToken) {
+      console.error("Failed to retrieve user token after multiple attempts");
+      return <h1>Error: Unable to retrieve user token</h1>;
+    }
+
+    console.log("Token found", userToken);
 
     return (
       <div>

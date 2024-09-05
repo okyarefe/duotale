@@ -85,6 +85,12 @@ const Chat = ({ token }) => {
         return null;
       } catch (error) {
         toast.warn("An error occurred while saving the story.");
+        setIsLoading(false);
+
+        toast.error("Failed to save the story. Please try again later.");
+        console.error("Error saving story:", error);
+
+        throw new Error("An error occurred while saving the story.");
       }
     } else {
       toast.warn("You do not have enough tokens to generate a story.");

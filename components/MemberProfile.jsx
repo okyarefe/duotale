@@ -7,7 +7,8 @@ const MemberProfile = async () => {
   const emailAddress = user.emailAddresses[0].emailAddress;
   return (
     <div className="px-4 flex items-center gap-2">
-      <UserButton />
+      <UserButton fallbackRedirectUrl="/" />
+
       {emailAddress}
     </div>
   );

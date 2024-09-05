@@ -1,10 +1,9 @@
 "use server";
 import "server-only";
 import { supabase } from "./supabase";
-import NodeCache from "node-cache";
+
 import { currentUser } from "@clerk/nextjs/server";
 import { saveFileUrlToRedis } from "./redis";
-const cache = new NodeCache({ stdTTL: 600 }); // Cache TTL set to 10 minutes
 
 export const getUsers = async () => {
   let { data: users, error } = await supabase.from("users").select("*");
@@ -17,17 +16,29 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (userData) => {
-  const { clerkId, email } = userData;
+  console.log("USER DATA FROM WEB HOOKS", userData);
+  let clerkId, email;
+
+  if (userData.id) {
+    // Handle the case when userData is a Clerk User object
+    clerkId = userData.id;
+    email = userData.emailAddresses[0].emailAddress;
+  } else {
+    // Handle the case when userData is the simplified object
+    clerkId = userData.clerkId;
+    email = userData.email;
+  }
+
   const { data, error } = await supabase
     .from("users")
-    .insert([{ id: clerkId, email: email, token: 5000 }])
+    .insert([{ id: clerkId, token: 5000, email: email }])
     .select();
 
   if (error) {
-    console.log("ERROR CREATING USER");
-    console.log(error);
+    console.error("ERROR CREATING USER TO DATABASE", error);
+    throw new Error("ERROR CREATING USER TO DATABASE");
   }
-  console.log("User Created", data);
+  console.log("User Created in Supabase", data);
   return data;
 };
 
@@ -41,19 +52,36 @@ export const deleteUser = async (userData) => {
 };
 
 export const getUserTokenById = async (userId) => {
+  // The getUserTokenById function looks mostly correct, but we can improve it:
+  // 1. Add error handling for when no user is found
+  // 2. Use optional chaining to safely access the token
+  // 3. Return null if there's an error or no user found
+  // Here's an improved version:
+
   console.log("GETTING USER TOKEN BY ID");
   try {
     const { data, error } = await supabase
       .from("users")
       .select("token")
-      .eq("id", userId);
+      .eq("id", userId)
+      .single();
 
-    // console.log("***** DATA TOKEN FROM DATABASE *****", data);
-    const token = data[0].token;
-    // console.log("------TOKE-------", token);
+    if (error) {
+      console.log("ERROR", error);
+      return null;
+    }
+
+    if (!data) {
+      console.log("No user found with id:", userId);
+      return null;
+    }
+
+    const token = data.token;
+    console.log("Token retrieved:", token);
     return token;
   } catch (error) {
     console.log("ERROR", error);
+    return null;
   }
 };
 
@@ -74,28 +102,22 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
 export const saveStory = async (userId, englishStory, finnishStory) => {
   console.log("Saved story to database");
 
-  try {
-    const { data, error } = await supabase.from("stories").insert([
-      {
-        user_id: userId,
-        english_story: englishStory,
-        finnish_story: finnishStory,
-      },
-    ]);
-  } catch (error) {
-    throw new Error("FAILED TO SAVE STORY");
+  const { data, error } = await supabase.from("stories").insert([
+    {
+      user_id: userId,
+      english_story: englishStory,
+      finnish_story: finnishStory,
+    },
+  ]);
+  if (error) {
+    console.log("ERROR SAVING STORY TO DATABASE", error);
+    throw new Error("ERROR SAVING STORY TO DATABASE");
   }
+
+  return data;
 };
 
 export const getStories = async (userId, paginationStart, paginationEnd) => {
-  // const cacheKey = `${userId}-${paginationStart}-${paginationEnd}`;
-  // const cachedStories = cache.get(cacheKey);
-
-  // if (cachedStories) {
-  //   console.log("***** RETURNING CACHED STORIES *****");
-  //   return cachedStories;
-  // }
-
   try {
     const { data, error } = await supabase
       .from("stories")
@@ -107,8 +129,6 @@ export const getStories = async (userId, paginationStart, paginationEnd) => {
     if (error) {
       throw new Error("FAILED TO GET USER STORIES");
     }
-    // console.log("***** STORIES FROM DATABASE *****");
-    // cache.set(cacheKey, data);
 
     return data;
   } catch (error) {
@@ -171,9 +191,7 @@ export const saveTTSfileToS3 = async (buffer, fileName) => {
     console.log("ERROR SAVING FILE TO S3", error);
     throw new Error("Failed to upload audio to supabase stroage");
   }
-  // console.log("FILE SAVED TO S3", data);
-  // console.log("File is cached in Redis");
-  // console.log("This is the data that is saved to the S3", data);
+
   return data;
 };
 
@@ -184,7 +202,7 @@ export const checkIfTTSexistInS3 = async (fileName) => {
     const { data, error } = await supabase.storage
       .from("llearning_bucket")
       .list("", {
-        search: fileName, // Optional: search by specific file name
+        search: fileName,
       });
 
     if (error) {

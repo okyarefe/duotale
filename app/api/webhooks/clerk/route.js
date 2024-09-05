@@ -61,12 +61,14 @@ export async function POST(req) {
   try {
     if (evt.type === "user.created") {
       // Create a new user
-
+      console.log("WEB HOOK EVENT IS - USER CREATED");
+      console.log("UserId", evt.data.id);
+      console.log("Email", evt.data.email_addresses[0]["email_address"]);
       const createdUser = await createUser({
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
       });
-      console.log("USER CREATED", createdUser);
+      console.log("user returned after saving to supabase", createdUser);
     } else if (evt.type === "user.deleted") {
       // Delete user
 
@@ -76,7 +78,7 @@ export async function POST(req) {
       console.log("DELETING USER", deletedUser);
     }
 
-    return new Response("", { status: 200 });
+    return new Response("Success", { status: 200 });
   } catch (error) {
     console.error("Error processing webhook event:", error);
     return new Response("Internal server error", { status: 500 });
