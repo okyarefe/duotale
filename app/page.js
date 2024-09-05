@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Component() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      <header className="px-4 lg:px-6 h-14 flex items-center ">
         <Link
           href="#"
           className="flex items-center justify-center"
@@ -18,28 +18,28 @@ export default function Component() {
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link
             href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
+            className="text-sm font-medium hover:underline underline-offset-4 text-foreground"
             prefetch={false}
           >
             Features
           </Link>
           <Link
             href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
+            className="text-sm font-medium hover:underline underline-offset-4 text-foreground"
             prefetch={false}
           >
             Pricing
           </Link>
           <Link
             href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
+            className="text-sm font-medium hover:underline underline-offset-4 text-foreground"
             prefetch={false}
           >
             About
           </Link>
           <Link
             href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
+            className="text-sm font-medium hover:underline underline-offset-4 text-foreground"
             prefetch={false}
           >
             Contact
@@ -52,7 +52,7 @@ export default function Component() {
             <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
               <div className="flex flex-col flex-1 justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-2xl lg:text-5xl xl:text-6xl">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-2xl lg:text-5xl xl:text-6xl text-foreground">
                     Learn languages the fun way!
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">

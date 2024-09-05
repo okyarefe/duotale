@@ -280,7 +280,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background font-body;
   }
 
   h1,
