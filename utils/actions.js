@@ -162,3 +162,29 @@ export async function fetchAudio(text) {
   // Write the buffer to a file in the public directory
   await fs.promises.writeFile(speechFile, buffer);
 }
+
+export const fetchTranslateWord = async (word) => {
+  console.log("TRANSLATING WORD FROM OPEN AI", word);
+  const response = await openai.chat.completions.create({
+    // model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content: "You are a dictionary",
+      },
+      {
+        role: "user",
+        content: `What does ${word} mean in English? just write the answer
+         `,
+      },
+    ],
+    max_tokens: 20,
+  });
+
+  const wordTranslation = response.choices[0].message.content;
+
+  const tokenUsed = response.usage.total_tokens;
+  console.log("Translating word" + wordTranslation + "costed" + tokenUsed);
+  return { wordTranslation, tokenUsed };
+};
