@@ -4,7 +4,7 @@ import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 import WordTranslationPopup from "./WordTranslationPopup";
 import { fetchTranslateWord } from "../utils/actions";
-
+import { ToastContainer, toast } from "react-toastify";
 const SingleStoryF = ({ story }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
@@ -110,7 +110,8 @@ const SingleStoryF = ({ story }) => {
       setWordTranslation(wordTranslation);
       // For example, you could update the WordTranslationPopup component to display the translation
     } catch (error) {
-      console.error("Error fetching word translation:", error);
+      toast.error("Error translating..Please try again later");
+      setWordPopup({ show: false, word: "", x: 0, y: 0 });
       // Handle the error appropriately, e.g., show an error message to the user
     }
   };
@@ -187,6 +188,16 @@ const SingleStoryF = ({ story }) => {
           handlePopupButtonClick={handleClosePopup}
         />
       )}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        draggable
+        theme="colored"
+      />
     </div>
   );
 };

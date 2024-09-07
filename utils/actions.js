@@ -104,23 +104,6 @@ export async function fetchAudio(text) {
   console.log(
     "000000000000  MAKING  API   REQUEST   TO  TEXT TO SPEECH 0000000000000"
   );
-  // Fetch the TTS audio from OpenAI
-  // const mp3 = await openai.audio.speech.create({
-  //   model: "tts-1",
-  //   voice: "alloy",
-  //   input: text,
-  // });
-  // console.log(
-  //   "*****//////////////////////// MAKING THE REQUEST TO THE OPENAI API ////////////////////*****"
-  // );
-
-  // // Converting the audio to a buffer
-  // const buffer = Buffer.from(await mp3.arrayBuffer());
-  // // Save the buffer to Supase storage
-  // await saveTTSfileToS3(buffer, uniqueFileName);
-
-  // //Writing the buffer to a file
-  // await fs.promises.writeFile(speechFile, buffer);
 
   const francToGoogleLangMap = {
     eng: "en-US", // English
@@ -165,26 +148,31 @@ export async function fetchAudio(text) {
 
 export const fetchTranslateWord = async (word) => {
   console.log("TRANSLATING WORD FROM OPEN AI", word);
-  const response = await openai.chat.completions.create({
-    // model: "gpt-3.5-turbo",
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: "You are a dictionary",
-      },
-      {
-        role: "user",
-        content: `What does ${word} mean in English? just write the answer
+  try {
+    const response = await openai.chat.completions.create({
+      // model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a dictionary",
+        },
+        {
+          role: "user",
+          content: `What does ${word} mean in English? just write the answer
          `,
-      },
-    ],
-    max_tokens: 20,
-  });
+        },
+      ],
+      max_tokens: 20,
+    });
 
-  const wordTranslation = response.choices[0].message.content;
+    const wordTranslation = response.choices[0].message.content;
 
-  const tokenUsed = response.usage.total_tokens;
-  console.log("Translating word" + wordTranslation + "costed" + tokenUsed);
-  return { wordTranslation, tokenUsed };
+    const tokenUsed = response.usage.total_tokens;
+    console.log("Translating word" + wordTranslation + "costed" + tokenUsed);
+    return { wordTranslation, tokenUsed };
+  } catch (error) {
+    // console.log("ERROR TRANSLATING WORD", error);
+    throw new Error(error);
+  }
 };
