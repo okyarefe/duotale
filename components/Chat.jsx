@@ -152,7 +152,7 @@ const Chat = ({ token }) => {
             value={text}
             required={true}
             onChange={(e) => setText(e.target.value)}
-            className="textarea textarea-bordered w-full"
+            className="textarea textarea-bordered w-full prompt-text-size"
             placeholder="Enter your prompt here..."
           />
           <div className="text-right text-sm text-gray-500">

@@ -23,7 +23,9 @@
 .color-white-100 {
   color: #5f8670 !important;
 }
-
+.prompt-text-size {
+  font-size: 1.2rem;
+}
 /* Sidebar*/
 .bg-blue-100 {
   background-color: #2772db63;
@@ -54,8 +56,6 @@
   text-align: center;
 }
 .storydivs {
-  border: 1px solid black;
-
   font-size: 1.2rem;
 }
 
@@ -85,7 +85,7 @@
 .twinheading {
   color: white;
   font-size: 2em;
-  color: #547faf;
+  color: white;
 }
 
 .stories-color {

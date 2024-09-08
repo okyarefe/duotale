@@ -17,7 +17,8 @@ export const s3_client = new S3Client({
   },
 });
 
-export const getPublicUrlForMP3 = (fileName) => {
+export const getPublicUrlForMP3 = async (fileName) => {
+  "use server";
   console.log("The file name go get an URL IS :", fileName);
   const url = supabase.storage.from(tts_bucket_name).getPublicUrl(fileName);
   console.log("URL for the MP3 file:", url);
@@ -25,6 +26,7 @@ export const getPublicUrlForMP3 = (fileName) => {
 };
 
 export async function createSignedUrl(bucketName, filePath, expiresIn = 60) {
+  "use server";
   try {
     // Generate the signed URL
     const { data, error } = await supabase.storage

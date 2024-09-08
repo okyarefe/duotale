@@ -6,6 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { saveFileUrlToRedis } from "./redis";
 
 export const getUsers = async () => {
+  "use server";
   let { data: users, error } = await supabase.from("users").select("*");
 
   if (error) {
@@ -16,6 +17,7 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (userData) => {
+  "use server";
   console.log("USER DATA FROM WEB HOOKS", userData);
   let clerkId, email;
 
@@ -43,6 +45,7 @@ export const createUser = async (userData) => {
 };
 
 export const deleteUser = async (userData) => {
+  "use server";
   const { clerkId } = userData;
   const { error } = await supabase.from("users").delete().eq("id", clerkId);
 
@@ -52,6 +55,7 @@ export const deleteUser = async (userData) => {
 };
 
 export const getUserTokenById = async (userId) => {
+  "use server";
   // The getUserTokenById function looks mostly correct, but we can improve it:
   // 1. Add error handling for when no user is found
   // 2. Use optional chaining to safely access the token
@@ -86,6 +90,7 @@ export const getUserTokenById = async (userId) => {
 };
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
+  "use server";
   const token = await getUserTokenById(userId);
   console.log("USER TOKEN", token);
   console.log("TOKEN USED", tokenUsed);
@@ -100,6 +105,7 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
 };
 
 export const saveStory = async (userId, englishStory, finnishStory) => {
+  "use server";
   console.log("Saved story to database");
 
   const { data, error } = await supabase.from("stories").insert([
@@ -118,6 +124,7 @@ export const saveStory = async (userId, englishStory, finnishStory) => {
 };
 
 export const getStories = async (userId, paginationStart, paginationEnd) => {
+  "use server";
   try {
     const { data, error } = await supabase
       .from("stories")
@@ -137,6 +144,7 @@ export const getStories = async (userId, paginationStart, paginationEnd) => {
 };
 
 export const getStoryById = async (id) => {
+  "use server";
   const user = await currentUser();
   const userId = user.id;
   const { data, error } = await supabase
@@ -153,6 +161,7 @@ export const getStoryById = async (id) => {
 };
 
 export const createUserIfNotExists = async (user) => {
+  "use server";
   const { id: userId, email: email } = user;
 
   const { data: existingUser } = await supabase
@@ -167,6 +176,7 @@ export const createUserIfNotExists = async (user) => {
 };
 
 export const checkIfUserExists = async (userId) => {
+  "use server";
   const { data: user } = await supabase
     .from("users")
     .select("id")
@@ -177,6 +187,7 @@ export const checkIfUserExists = async (userId) => {
 };
 
 export const saveTTSfileToS3 = async (buffer, fileName) => {
+  "use server";
   const { data, error } = await supabase.storage
     .from("llearning_bucket")
     .upload(fileName, buffer, {
@@ -196,6 +207,7 @@ export const saveTTSfileToS3 = async (buffer, fileName) => {
 };
 
 export const checkIfTTSexistInS3 = async (fileName) => {
+  "use server";
   console.log("CHECKING S3 STORAGE - - - - ");
   try {
     // List the files in the bucket or folder
@@ -227,6 +239,7 @@ export const checkIfTTSexistInS3 = async (fileName) => {
 };
 
 export const getTTSfileFromS3 = async (fileName) => {
+  "use server";
   const { data, error } = await supabase.storage
     .from("llearning_bucket")
     .download(fileName);

@@ -26,7 +26,7 @@ const openai = new OpenAI({
 });
 
 export const generateChatResponse = async (prompt, translateTo) => {
-  console.log("GENERATING REPONSE!");
+  "use server";
   const response = await openai.chat.completions.create({
     // model: "gpt-3.5-turbo",
     model: "gpt-4o-mini",
@@ -74,6 +74,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
 };
 
 export async function fetchAudio(text) {
+  "use server";
   // Make a unique name for the file to save in S3bucket
   const uniqueFileName = `${generateUniqueId(text)}.mp3`;
 
@@ -147,6 +148,7 @@ export async function fetchAudio(text) {
 }
 
 export const fetchTranslateWord = async (word) => {
+  "use server";
   console.log("TRANSLATING WORD FROM OPEN AI", word);
   try {
     const response = await openai.chat.completions.create({
