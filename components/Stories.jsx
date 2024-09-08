@@ -12,8 +12,6 @@ const Stories = ({ initialStories, userId }) => {
   const [pageNumber, setPageNumber] = useState(0);
   const [storyNumber, setStoryNumber] = useState(0);
 
-  console.log("WE ARE PAGE NUMBER", pageNumber);
-
   const loadStories = async (start, end) => {
     setIsLoading(true);
     const newStories = await getStories(userId, start, end);

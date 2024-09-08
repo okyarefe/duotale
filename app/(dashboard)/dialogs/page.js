@@ -12,7 +12,6 @@ const DialogsPage = async () => {
   const userId = user.id;
 
   const stories = await getStories(userId, paginationStart, paginationEnd);
-  console.log("Number of stories in the database:", stories.length);
 
   return (
     <>

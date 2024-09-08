@@ -105,19 +105,15 @@ const SingleStoryF = ({ story }) => {
       const cachedMeaning = localStorage.getItem(`wordMeaning_${word}`);
       // if the meaning is cached, use it
       if (cachedMeaning) {
-        console.log("Meaning found in cache");
         const wordTranslation = JSON.parse(cachedMeaning);
         setWordTranslation(wordTranslation);
-        console.log(
-          `Translation for "${word}": ${wordTranslation} saved to the LOCAL STORAGE`
-        );
+
         return;
       }
 
       // if the meaning is not cached, fetch it
       const { wordTranslation, tokenUsed } = await fetchTranslateWord(word);
-      console.log(`Translation for "${word}": ${wordTranslation}`);
-      console.log(`Tokens used: ${tokenUsed}`);
+
       // You can update the state or perform any other action with the translation here
       localStorage.setItem(
         `wordMeaning_${word}`,
