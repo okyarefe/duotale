@@ -304,3 +304,23 @@
     font-family: var(--font-heading); /* Use for headings */
   }
 }
+
+.animated-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-underline::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px; /* Thickness of the underline */
+  bottom: 0;
+  left: 0;
+  background-color: currentColor; /* Uses the text color */
+  transition: width 2s ease;
+}
+
+.animated-underline:hover::after {
+  width: 100%;
+}
