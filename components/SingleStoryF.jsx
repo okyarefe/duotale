@@ -67,7 +67,6 @@ const SingleStoryF = ({ story }) => {
   // Updated function to split sentence into words and render them
   // Updated function to handle mouse over a word
   const handleWordMouseOver = (word) => {
-    console.log("Howering over word", word);
     setHighlightedWord(word);
   };
 
@@ -103,16 +102,34 @@ const SingleStoryF = ({ story }) => {
 
   const fetchWordMeaning = async (word) => {
     try {
+      const cachedMeaning = localStorage.getItem(`wordMeaning_${word}`);
+      // if the meaning is cached, use it
+      if (cachedMeaning) {
+        console.log("Meaning found in cache");
+        const wordTranslation = JSON.parse(cachedMeaning);
+        setWordTranslation(wordTranslation);
+        console.log(
+          `Translation for "${word}": ${wordTranslation} saved to the LOCAL STORAGE`
+        );
+        return;
+      }
+
+      // if the meaning is not cached, fetch it
       const { wordTranslation, tokenUsed } = await fetchTranslateWord(word);
       console.log(`Translation for "${word}": ${wordTranslation}`);
       console.log(`Tokens used: ${tokenUsed}`);
       // You can update the state or perform any other action with the translation here
+      localStorage.setItem(
+        `wordMeaning_${word}`,
+        JSON.stringify(wordTranslation)
+      );
+
       setWordTranslation(wordTranslation);
+
       // For example, you could update the WordTranslationPopup component to display the translation
     } catch (error) {
       toast.error("Error translating..Please try again later");
       setWordPopup({ show: false, word: "", x: 0, y: 0 });
-      // Handle the error appropriately, e.g., show an error message to the user
     }
   };
 

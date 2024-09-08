@@ -251,3 +251,7 @@ export const getTTSfileFromS3 = async (fileName) => {
 
   return data;
 };
+
+export const saveWordToLocalStorage = async (word) => {
+  "use server";
+};

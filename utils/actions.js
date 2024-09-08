@@ -165,7 +165,7 @@ export const fetchTranslateWord = async (word) => {
          `,
         },
       ],
-      max_tokens: 20,
+      max_tokens: 50,
     });
 
     const wordTranslation = response.choices[0].message.content;
