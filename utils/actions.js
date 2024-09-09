@@ -149,15 +149,15 @@ export async function fetchAudio(text) {
 
 export const fetchTranslateWord = async (word, userId) => {
   "use server";
-  console.log("TRANSLATING WORD FROM OPEN AI", word);
 
   try {
     const result = await decreaseWordTranslationLimitByOne(userId);
-    console.log("RESULT", result);
+
     if (result.status === "failed") {
       return { error: "Daily translation limit reached" };
     }
     if (result.status === "success") {
+      console.log("TRANSLATING WORD FROM OPEN AI", word);
       try {
         const response = await openai.chat.completions.create({
           // model: "gpt-3.5-turbo",
@@ -180,7 +180,7 @@ export const fetchTranslateWord = async (word, userId) => {
 
         const tokenUsed = response.usage.total_tokens;
         console.log(
-          "Translating word" + wordTranslation + "costed" + tokenUsed
+          "Translating word" + wordTranslation + "costed   " + tokenUsed
         );
         // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
 

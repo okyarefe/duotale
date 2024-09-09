@@ -4,7 +4,9 @@ import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 import WordTranslationPopup from "./WordTranslationPopup";
 import { fetchTranslateWord } from "../utils/actions";
+
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; //
 import { useToken } from "@/context/TokenContext";
 import { useAuth } from "@clerk/nextjs";
 const SingleStoryF = ({ story }) => {
@@ -103,7 +105,6 @@ const SingleStoryF = ({ story }) => {
   };
 
   // Fetch Word meaning on click
-  // Fetch Word meaning on click
 
   const fetchWordMeaning = async (word) => {
     try {
@@ -120,7 +121,7 @@ const SingleStoryF = ({ story }) => {
       try {
         const result = await fetchTranslateWord(word, userId);
         if (result.error) {
-          alert("Daily translation limit reached");
+          toast.error(result.error);
         } else {
           const { wordTranslation, tokenUsed } = result;
           setUserDailyTranslation((prev) => prev - 1);
@@ -131,8 +132,6 @@ const SingleStoryF = ({ story }) => {
           );
 
           setWordTranslation(wordTranslation);
-
-          // For example, you could update the WordTranslationPopup component to display the translation
         }
       } catch (error) {
         alert("Error translating..Please try again later");
@@ -153,6 +152,17 @@ const SingleStoryF = ({ story }) => {
 
   return (
     <div className="p-6">
+      {" "}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        draggable
+        theme="colored"
+      />
       <h1 className="text-3xl font-extrabold mb-6 text-black">
         Story Detail Page
       </h1>

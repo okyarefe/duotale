@@ -240,9 +240,10 @@ export const fetchDailyTranslationLimit = async (userId) => {
 
 export const decreaseWordTranslationLimitByOne = async (userId) => {
   const { daily_free_translations } = await fetchDailyTranslationLimit(userId);
-  console.log("USER CURRENTLY HAVE", daily_free_translations);
+  console.log("Daily translation left : ", daily_free_translations);
 
   if (daily_free_translations < 1) {
+    console.log("User does not have any daily translation left to proceed");
     return {
       status: "failed",
       message: " You have 0 remaining daily translation",
@@ -317,7 +318,7 @@ export const createUser = async (userData) => {
 
 export const getUserById = async (userId) => {
   "use server";
-  console.log("GET USER BY ID RUNS with userId", userId);
+
   try {
     let { data, error } = await supabase
       .from("users")
