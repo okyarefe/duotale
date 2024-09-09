@@ -117,20 +117,26 @@ const SingleStoryF = ({ story }) => {
       }
 
       // if the meaning is not cached, fetch it
-      const { wordTranslation, tokenUsed } = await fetchTranslateWord(
-        word,
-        userId
-      );
-      setUserDailyTranslation((prev) => prev - 1);
-      // You can update the state or perform any other action with the translation here
-      localStorage.setItem(
-        `wordMeaning_${word}`,
-        JSON.stringify(wordTranslation)
-      );
+      try {
+        const result = await fetchTranslateWord(word, userId);
+        if (result.error) {
+          alert("Daily translation limit reached");
+        } else {
+          const { wordTranslation, tokenUsed } = result;
+          setUserDailyTranslation((prev) => prev - 1);
+          // You can update the state or perform any other action with the translation here
+          localStorage.setItem(
+            `wordMeaning_${word}`,
+            JSON.stringify(wordTranslation)
+          );
 
-      setWordTranslation(wordTranslation);
+          setWordTranslation(wordTranslation);
 
-      // For example, you could update the WordTranslationPopup component to display the translation
+          // For example, you could update the WordTranslationPopup component to display the translation
+        }
+      } catch (error) {
+        alert("Error translating..Please try again later");
+      }
     } catch (error) {
       toast.error("Error translating..Please try again later");
       setWordPopup({ show: false, word: "", x: 0, y: 0 });
@@ -209,16 +215,6 @@ const SingleStoryF = ({ story }) => {
           handlePopupButtonClick={handleClosePopup}
         />
       )}
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        draggable
-        theme="colored"
-      />
     </div>
   );
 };

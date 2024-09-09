@@ -152,44 +152,45 @@ export const fetchTranslateWord = async (word, userId) => {
   console.log("TRANSLATING WORD FROM OPEN AI", word);
 
   try {
-    const response = await openai.chat.completions.create({
-      // model: "gpt-3.5-turbo",
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a dictionary",
-        },
-        {
-          role: "user",
-          content: `What does ${word} mean in English? just write the answer
-         `,
-        },
-      ],
-      max_tokens: 50,
-    });
-
-    const wordTranslation = response.choices[0].message.content;
-
-    const tokenUsed = response.usage.total_tokens;
-    console.log("Translating word" + wordTranslation + "costed" + tokenUsed);
-    // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
-    try {
-      const result = await decreaseWordTranslationLimitByOne(userId);
-      if (result.status === "failed") {
-        console.log("There was an error decreason token ");
-      }
-      if (result.status === "success") {
-        console.log("SUCCESSFULLY DECREASED TOKEN LIMIT");
-      }
-      console.log("RESULT", result);
-    } catch (error) {
-      console.log("Error decreasing the word Translation", error);
+    const result = await decreaseWordTranslationLimitByOne(userId);
+    console.log("RESULT", result);
+    if (result.status === "failed") {
+      return { error: "Daily translation limit reached" };
     }
+    if (result.status === "success") {
+      try {
+        const response = await openai.chat.completions.create({
+          // model: "gpt-3.5-turbo",
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: "You are a dictionary",
+            },
+            {
+              role: "user",
+              content: `What does ${word} mean in English? just write the answer
+             `,
+            },
+          ],
+          max_tokens: 50,
+        });
 
-    return { wordTranslation, tokenUsed };
+        const wordTranslation = response.choices[0].message.content;
+
+        const tokenUsed = response.usage.total_tokens;
+        console.log(
+          "Translating word" + wordTranslation + "costed" + tokenUsed
+        );
+        // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
+
+        return { wordTranslation, tokenUsed };
+      } catch (error) {
+        console.log("ERROR TRANSLATING WORD", error);
+        throw new Error(error);
+      }
+    }
   } catch (error) {
-    console.log("ERROR TRANSLATING WORD", error);
-    throw new Error(error);
+    throw new Error("Error fetching daily translation limit");
   }
 };

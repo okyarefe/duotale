@@ -241,6 +241,7 @@ export const fetchDailyTranslationLimit = async (userId) => {
 export const decreaseWordTranslationLimitByOne = async (userId) => {
   const { daily_free_translations } = await fetchDailyTranslationLimit(userId);
   console.log("USER CURRENTLY HAVE", daily_free_translations);
+
   if (daily_free_translations < 1) {
     return {
       status: "failed",
