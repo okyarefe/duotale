@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { TokenProvider } from "@/context/TokenContext";
 const inter = Inter({ subsets: ["latin"] });
 
 const fontHeading = Bricolage_Grotesque({
@@ -30,13 +31,19 @@ export default function RootLayout({ children }) {
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
-      <html lang="en">
-        <body
-          className={cn("antialiased", fontHeading.variable, fontBody.variable)}
-        >
-          {children}
-        </body>
-      </html>
+      <TokenProvider>
+        <html lang="en">
+          <body
+            className={cn(
+              "antialiased",
+              fontHeading.variable,
+              fontBody.variable
+            )}
+          >
+            {children}
+          </body>
+        </html>
+      </TokenProvider>
     </ClerkProvider>
   );
 }

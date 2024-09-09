@@ -5,6 +5,7 @@ import PopupComponent from "./Popup";
 import WordTranslationPopup from "./WordTranslationPopup";
 import { fetchTranslateWord } from "../utils/actions";
 import { ToastContainer, toast } from "react-toastify";
+import { useToken } from "@/context/TokenContext";
 import { useAuth } from "@clerk/nextjs";
 const SingleStoryF = ({ story }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
@@ -20,6 +21,7 @@ const SingleStoryF = ({ story }) => {
     x: 0,
     y: 0,
   });
+  const { setUserDailyTranslation } = useToken();
 
   const { userId } = useAuth();
   // Function to handle mouse over a sentence
@@ -119,7 +121,7 @@ const SingleStoryF = ({ story }) => {
         word,
         userId
       );
-
+      setUserDailyTranslation((prev) => prev - 1);
       // You can update the state or perform any other action with the translation here
       localStorage.setItem(
         `wordMeaning_${word}`,

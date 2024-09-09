@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { languagesList, splitTextIntoSentences } from "../utils/helper";
-
+import { useToken } from "@/context/TokenContext";
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -12,7 +12,8 @@ import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
-const Chat = ({ token, daily_free_translations }) => {
+const Chat = () => {
+  const { userToken, setUserToken, userDailyTranslation } = useToken();
   const [translateTo, setTranslateTo] = useState("Finnish");
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
@@ -21,10 +22,7 @@ const Chat = ({ token, daily_free_translations }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [selectedSentence, setSelectedSentence] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [userToken, setUserToken] = useState(token);
-  const [userDailyTranslation, setUserDailyTranslation] = useState(
-    daily_free_translations
-  );
+
   const [isLoading, setIsLoading] = useState(false);
 
   const estimatedTokenCost = 1000;
@@ -73,7 +71,7 @@ const Chat = ({ token, daily_free_translations }) => {
           await generateChatResponse(text, translateTo);
         setEnglishSentences(splitTextIntoSentences(englishStory));
         setFinnishSentences(splitTextIntoSentences(translatedStory));
-        let newTokenAmount = token - tokenUsed;
+        let newTokenAmount = userToken - tokenUsed;
 
         // Store the responses in local storage
         localStorage.setItem("englishMessage", englishStory);
