@@ -2,7 +2,8 @@ import { createClient } from "redis";
 import { createSignedUrl } from "./supabase";
 
 const client = createClient({
-  url: process.env.RENDER_REDIS_URL,
+  url: process.env.RENDER_REDIS_EXTERNAL_URL,
+  socketTimeout: 30000,
 });
 //process.env.RENDER_REDIS_EXTERNAL_URL
 // process.env.RENDER_REDIS_URL

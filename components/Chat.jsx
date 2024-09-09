@@ -12,7 +12,7 @@ import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
-const Chat = ({ token }) => {
+const Chat = ({ token, daily_free_translations }) => {
   const [translateTo, setTranslateTo] = useState("Finnish");
   const [text, setText] = useState("");
   const [englishSentences, setEnglishSentences] = useState([]);
@@ -168,10 +168,32 @@ const Chat = ({ token }) => {
           </Chooselanguage>
 
           {/* TOKEN TEXT*/}
-          <h1 className="special">
-            You have <span className="color-red-100">{userToken}</span> tokens
-            left
-          </h1>
+          <div className="flex gap-5">
+            <h1
+              className="special"
+              style={{
+                border: "2px solid black",
+                padding: "10px",
+                display: "inline-block",
+              }}
+            >
+              You have <span className="color-red-100">{userToken}</span> tokens
+              left
+            </h1>
+            <h1
+              className="special"
+              style={{
+                border: "2px solid black",
+                padding: "10px",
+                display: "inline-block",
+              }}
+            >
+              You have{" "}
+              <span className="color-red-100">{daily_free_translations}</span>{" "}
+              free daily word translations
+            </h1>
+          </div>
+
           <button
             type="submit"
             className="btn btn-primary self-end bg-blue-100 btn"

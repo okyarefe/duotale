@@ -16,6 +16,32 @@ export const getUsers = async () => {
   return users;
 };
 
+export const getUserById = async (userId) => {
+  "use server";
+  console.log("GET USER BY ID RUNS with userId", userId);
+  try {
+    let { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      console.log("ERROR GETTING USER BY ID", error);
+      return null;
+    }
+    if (!data) {
+      console.log("No user found with id:", userId);
+      return null;
+    }
+    console.log("DATA AT SUPA LIB SERVICE", data);
+    return data;
+  } catch (error) {
+    console.log("ERROR", error);
+    return null;
+  }
+};
+
 export const createUser = async (userData) => {
   "use server";
   console.log("USER DATA FROM WEB HOOKS", userData);

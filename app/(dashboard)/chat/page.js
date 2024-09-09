@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import {
   getUserTokenById,
   createUserIfNotExists,
+  getUserById,
 } from "../../_lib/data-service";
 
 const ChatPage = async () => {
@@ -17,27 +18,34 @@ const ChatPage = async () => {
     const userId = user.id;
 
     // Check if user exists in database, if not create the user
+    /* await createUserIfNotExists(user); */
     await createUserIfNotExists(user);
-
+    const userDataFromDatabase = await getUserById(userId);
+    console.log("USER FROM SUPABAE<<<<<<<<<<<<<<<<<", userDataFromDatabase);
     // Implement a retry mechanism with a maximum number of attempts
     const maxAttempts = 5;
     const retryDelay = 1000; // 1 second
-    let userToken = null;
+    let userToken = userDataFromDatabase.token;
+    let daily_free_translations = userDataFromDatabase.daily_free_translations;
 
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      userToken = await getUserTokenById(userId);
+    // Check if user exists in database, if not create the user
 
-      if (userToken !== null && userToken !== undefined) {
-        break;
+    if (!userDataFromDatabase) {
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        userToken = await getUserById(userId);
+
+        if (userDataFromDatabase !== undefined) {
+          break;
+        }
+
+        console.log(
+          `Token not found, retrying... (Attempt ${attempt + 1}/${maxAttempts})`
+        );
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
       }
-
-      console.log(
-        `Token not found, retrying... (Attempt ${attempt + 1}/${maxAttempts})`
-      );
-      await new Promise((resolve) => setTimeout(resolve, retryDelay));
     }
 
-    if (!userToken) {
+    if (!userToken || !daily_free_translations) {
       console.error("Failed to retrieve user token after multiple attempts");
       return <h1>Error: Unable to retrieve user token</h1>;
     }
@@ -46,7 +54,11 @@ const ChatPage = async () => {
 
     return (
       <div>
-        <Chat token={userToken} userId={userId} />
+        <Chat
+          token={userToken}
+          daily_free_translations={daily_free_translations}
+          userId={userId}
+        />
       </div>
     );
   } catch (error) {

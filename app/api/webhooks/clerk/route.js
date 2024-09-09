@@ -68,7 +68,6 @@ export async function POST(req) {
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
       });
-      console.log("user returned after saving to supabase", createdUser);
     } else if (evt.type === "user.deleted") {
       // Delete user
 
