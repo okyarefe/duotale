@@ -5,6 +5,7 @@ import PopupComponent from "./Popup";
 import WordTranslationPopup from "./WordTranslationPopup";
 import { fetchTranslateWord } from "../utils/actions";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "@clerk/nextjs";
 const SingleStoryF = ({ story }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
@@ -19,6 +20,8 @@ const SingleStoryF = ({ story }) => {
     x: 0,
     y: 0,
   });
+
+  const { userId } = useAuth();
   // Function to handle mouse over a sentence
   const handleMouseOver = (index) => {
     if (!isPopupOpen) {
@@ -112,7 +115,10 @@ const SingleStoryF = ({ story }) => {
       }
 
       // if the meaning is not cached, fetch it
-      const { wordTranslation, tokenUsed } = await fetchTranslateWord(word);
+      const { wordTranslation, tokenUsed } = await fetchTranslateWord(
+        word,
+        userId
+      );
 
       // You can update the state or perform any other action with the translation here
       localStorage.setItem(

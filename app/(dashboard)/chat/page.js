@@ -57,7 +57,6 @@ const ChatPage = async () => {
         <Chat
           token={userToken}
           daily_free_translations={daily_free_translations}
-          userId={userId}
         />
       </div>
     );

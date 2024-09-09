@@ -281,3 +281,50 @@ export const getTTSfileFromS3 = async (fileName) => {
 export const saveWordToLocalStorage = async (word) => {
   "use server";
 };
+
+export const fetchDailyTranslationLimit = async (userId) => {
+  console.log("USER ID IN DAILYYYYYYYY", userId);
+  try {
+    const { data, error: fetchError } = await supabase
+      .from("users")
+      .select("daily_free_translations")
+      .eq("id", userId)
+      .single();
+
+    if (fetchError) {
+      console.error("Error fetching user:", fetchError);
+      return { status: failed, message: "Error fetching user data" };
+    }
+
+    if (!data) {
+      return { status: failed, message: "User does not exist" };
+    }
+    return data;
+  } catch (error) {
+    console.log("ERROR FETCHING DAILY LIMIT", error);
+  }
+
+  console.log("DATA AT FETCH DAILY TRANSLATION LIMIT", data);
+};
+
+export const decreaseWordTranslationLimitByOne = async (userId) => {
+  const { daily_free_translations } = await fetchDailyTranslationLimit(userId);
+  console.log("USER CURRENTLY HAVE", daily_free_translations);
+  if (daily_free_translations < 1) {
+    return {
+      status: "failed",
+      message: " You have 0 remaining daily translation",
+    };
+  }
+  const newCurrentDailyLimit = daily_free_translations - 1;
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({ daily_free_translations: newCurrentDailyLimit })
+    .eq("id", userId);
+  if (updateError) {
+    console.log("Error updating tokens", updateError);
+    return { status: "failed", message: "Error updating daily limit" };
+  }
+
+  return { status: "success", message: "Updated limit successfully." };
+};

@@ -22,6 +22,9 @@ const Chat = ({ token, daily_free_translations }) => {
   const [selectedSentence, setSelectedSentence] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userToken, setUserToken] = useState(token);
+  const [userDailyTranslation, setUserDailyTranslation] = useState(
+    daily_free_translations
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const estimatedTokenCost = 1000;
@@ -189,8 +192,8 @@ const Chat = ({ token, daily_free_translations }) => {
               }}
             >
               You have{" "}
-              <span className="color-red-100">{daily_free_translations}</span>{" "}
-              free daily word translations
+              <span className="color-red-100">{userDailyTranslation}</span> free
+              daily word translations
             </h1>
           </div>
 

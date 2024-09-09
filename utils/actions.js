@@ -4,7 +4,7 @@ import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
 import { generateUniqueId } from "../utils/helper";
-import { getPublicUrlForMP3 } from "../app/_lib/supabase";
+import { decreaseWordTranslationLimitByOne } from "../app/_lib/data-service";
 const speechFile = path.resolve("./public/speech.mp3");
 import { getValueFromCache } from "../app/_lib/redis";
 import { decreaseUserToken } from "../app/_lib/data-service";
@@ -147,9 +147,10 @@ export async function fetchAudio(text) {
   await fs.promises.writeFile(speechFile, buffer);
 }
 
-export const fetchTranslateWord = async (word) => {
+export const fetchTranslateWord = async (word, userId) => {
   "use server";
   console.log("TRANSLATING WORD FROM OPEN AI", word);
+
   try {
     const response = await openai.chat.completions.create({
       // model: "gpt-3.5-turbo",
@@ -172,9 +173,23 @@ export const fetchTranslateWord = async (word) => {
 
     const tokenUsed = response.usage.total_tokens;
     console.log("Translating word" + wordTranslation + "costed" + tokenUsed);
+    // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
+    try {
+      const result = await decreaseWordTranslationLimitByOne(userId);
+      if (result.status === "failed") {
+        console.log("There was an error decreason token ");
+      }
+      if (result.status === "success") {
+        console.log("SUCCESSFULLY DECREASED TOKEN LIMIT");
+      }
+      console.log("RESULT", result);
+    } catch (error) {
+      console.log("Error decreasing the word Translation", error);
+    }
+
     return { wordTranslation, tokenUsed };
   } catch (error) {
-    // console.log("ERROR TRANSLATING WORD", error);
+    console.log("ERROR TRANSLATING WORD", error);
     throw new Error(error);
   }
 };
