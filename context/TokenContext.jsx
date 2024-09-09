@@ -30,7 +30,14 @@ export const TokenProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, []); // Fetch data on route change
+  }, [userId]); // Fetch data on route change
+  const updateToken = (amount) => {
+    setUserToken((prevToken) => {
+      const newToken = prevToken - amount;
+      // Trigger any additional side effects here, e.g., refetch data
+      return newToken;
+    });
+  };
 
   return (
     <TokenContext.Provider

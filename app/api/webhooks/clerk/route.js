@@ -64,10 +64,15 @@ export async function POST(req) {
       console.log("WEB HOOK EVENT IS - USER CREATED");
       console.log("UserId", evt.data.id);
       console.log("Email", evt.data.email_addresses[0]["email_address"]);
-      const createdUser = await createUser({
-        clerkId: evt.data.id,
-        email: evt.data.email_addresses[0]["email_address"],
-      });
+      try {
+        const createdUser = await createUser({
+          clerkId: evt.data.id,
+          email: evt.data.email_addresses[0]["email_address"],
+        });
+        console.log("User Created", createdUser);
+      } catch (error) {
+        return <h1>TRY AGAIN LATER</h1>;
+      }
     } else if (evt.type === "user.deleted") {
       // Delete user
 
@@ -80,6 +85,6 @@ export async function POST(req) {
     return new Response("Success", { status: 200 });
   } catch (error) {
     console.error("Error processing webhook event:", error);
-    return new Response("Internal server error", { status: 500 });
+    return new Response(error.message, { status: 500 });
   }
 }

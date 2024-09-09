@@ -7,63 +7,54 @@ import {
 } from "../../_lib/data-service";
 
 const ChatPage = async () => {
-  try {
-    const user = await currentUser();
+  const user = await currentUser();
 
-    if (!user || !user.id) {
-      console.log("There is no CURRENT USER");
-      return <h1>Not authorized</h1>;
-    }
-
-    const userId = user.id;
-
-    // Check if user exists in database, if not create the user
-    /* await createUserIfNotExists(user); */
-    await createUserIfNotExists(user);
-    const userDataFromDatabase = await getUserById(userId);
-    console.log("USER FROM SUPABAE<<<<<<<<<<<<<<<<<", userDataFromDatabase);
-    // Implement a retry mechanism with a maximum number of attempts
-    const maxAttempts = 5;
-    const retryDelay = 1000; // 1 second
-    let userToken = userDataFromDatabase.token;
-    let daily_free_translations = userDataFromDatabase.daily_free_translations;
-
-    // Check if user exists in database, if not create the user
-
-    if (!userDataFromDatabase) {
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        userToken = await getUserById(userId);
-
-        if (userDataFromDatabase !== undefined) {
-          break;
-        }
-
-        console.log(
-          `Token not found, retrying... (Attempt ${attempt + 1}/${maxAttempts})`
-        );
-        await new Promise((resolve) => setTimeout(resolve, retryDelay));
-      }
-    }
-
-    if (!userToken || !daily_free_translations) {
-      console.error("Failed to retrieve user token after multiple attempts");
-      return <h1>Error: Unable to retrieve user token</h1>;
-    }
-
-    console.log("Token found", userToken);
-
-    return (
-      <div>
-        <Chat
-          token={userToken}
-          daily_free_translations={daily_free_translations}
-        />
-      </div>
-    );
-  } catch (error) {
-    console.error("Error fetching user or token:", error);
-    return <h1>Error occurred</h1>;
+  if (!user || !user.id) {
+    console.log("There is no CURRENT USER");
+    return <h1>Not authorized</h1>;
   }
+  let userToken = null;
+  let daily_free_translations = null;
+  const userId = user.id;
+
+  // Check if user exists in database, if not create the user
+  /* await createUserIfNotExists(user); */
+  try {
+    const X = await createUserIfNotExists(
+      user
+    ); /* If the user exists, this function returns the user and not create a new one IF EXITS- CREATES A NEW USER AND RETURNS IT*/
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", X);
+    userToken = X.token;
+    daily_free_translations = X.daily_free_translations;
+    console.log("userToken", userToken);
+    console.log("daily_free_translations", daily_free_translations);
+  } catch (error) {
+    console.log("ERROR in createUserIfNotExists", error);
+    throw new Error("createUserIfNotExists failed", error);
+  }
+
+  return (
+    <div>
+      <Chat
+        token={userToken}
+        daily_free_translations={daily_free_translations}
+      />
+    </div>
+  );
 };
 
 export default ChatPage;
+// let userDataFromDatabase = await getUserById(userId);
+
+// Implement a retry mechanism with a maximum number of attempts
+
+// Check if user exists in database, if not create the user
+// const maxAttempts = 5;
+// const retryDelay = 1000; // 1 second
+// for (let attempt = 0; attempt < maxAttempts; attempt++) {
+//   if (userDataFromDatabase) break;
+
+//   console.log(`Retrying... (Attempt ${attempt + 1}/${maxAttempts})`);
+//   await new Promise((resolve) => setTimeout(resolve, retryDelay));
+//   userDataFromDatabase = await getUserById(userId);
+// }
