@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
-import WordTranslationPopup from "./WordTranslationPopup";
+import WordOnClickPopup from "./WordOnClickPopup";
 import { fetchTranslateWord } from "../utils/actions";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -12,11 +12,14 @@ import { useAuth } from "@clerk/nextjs";
 const SingleStoryF = ({ story }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
+
   const [selectedSentence, setSelectedSentence] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const [highlightedWord, setHighlightedWord] = useState(null);
   const [wordTranslation, setWordTranslation] = useState(null);
+
+  /*Opens WordOnClickPopup */
   const [wordPopup, setWordPopup] = useState({
     show: false,
     word: "",
@@ -25,7 +28,6 @@ const SingleStoryF = ({ story }) => {
   });
   const { setUserDailyTranslation } = useToken();
 
-  const { userId } = useAuth();
   // Function to handle mouse over a sentence
   const handleMouseOver = (index) => {
     if (!isPopupOpen) {
@@ -106,48 +108,12 @@ const SingleStoryF = ({ story }) => {
 
   // Fetch Word meaning on click
 
-  const fetchWordMeaning = async (word) => {
-    try {
-      const cachedMeaning = localStorage.getItem(`wordMeaning_${word}`);
-      // if the meaning is cached, use it
-      if (cachedMeaning) {
-        const wordTranslation = JSON.parse(cachedMeaning);
-        setWordTranslation(wordTranslation);
-
-        return;
-      }
-
-      // if the meaning is not cached, fetch it
-      try {
-        const result = await fetchTranslateWord(word, userId);
-        if (result.error) {
-          toast.error(result.error);
-        } else {
-          const { wordTranslation, tokenUsed } = result;
-          setUserDailyTranslation((prev) => prev - 1);
-          // You can update the state or perform any other action with the translation here
-          localStorage.setItem(
-            `wordMeaning_${word}`,
-            JSON.stringify(wordTranslation)
-          );
-
-          setWordTranslation(wordTranslation);
-        }
-      } catch (error) {
-        alert("Error translating..Please try again later");
-      }
-    } catch (error) {
-      toast.error("Error translating..Please try again later");
-      setWordPopup({ show: false, word: "", x: 0, y: 0 });
-    }
-  };
-
   // on click WORD
   const handleWordClick = (event, word) => {
     event.preventDefault();
     const { clientX, clientY } = event;
     setWordPopup({ show: true, word, x: clientX - 145, y: clientY - 65 });
-    fetchWordMeaning(word);
+    // fetchWordMeaning(word);
   };
 
   return (
@@ -208,12 +174,15 @@ const SingleStoryF = ({ story }) => {
         </div>
       </div>
       {wordPopup.show && (
-        <WordTranslationPopup
+        <WordOnClickPopup
           word={wordPopup.word}
           x={wordPopup.x}
           y={wordPopup.y}
           onClose={closeWordPopup}
           translatedWord={wordTranslation}
+          setUserDailyTranslation={setUserDailyTranslation}
+          setWordPopup={setWordPopup}
+          wordPopup={wordPopup}
         />
       )}
       {popupPosition && (

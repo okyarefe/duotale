@@ -1,9 +1,14 @@
 import { createClient } from "redis";
 import { createSignedUrl } from "./supabase";
 
+const redisUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.RENDER_REDIS_EXTERNAL_URL
+    : process.env.RENDER_REDIS_URL;
+
 const client = createClient({
-  url: process.env.RENDER_REDIS_URL,
-  socketTimeout: 100000,
+  url: redisUrl,
+  socketTimeout: 6000,
 });
 //process.env.RENDER_REDIS_EXTERNAL_URL
 // process.env.RENDER_REDIS_URL
@@ -12,7 +17,7 @@ client.on("error", (err) => {
   console.error("Redis error:", err);
 });
 
-client.connect();
+// client.connect();
 
 // Save the URL to Redis
 export async function saveFileUrlToRedis(key, fileUrl) {

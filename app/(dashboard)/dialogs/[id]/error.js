@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 
 const ErrorPage = () => {
   return (
@@ -10,9 +9,6 @@ const ErrorPage = () => {
         <p style={styles.subMessage}>
           It might have been removed or you may not have permission to view it.
         </p>
-        <button style={styles.button} onClick={() => window.history.back()}>
-          Go Back
-        </button>
       </div>
     </div>
   );
