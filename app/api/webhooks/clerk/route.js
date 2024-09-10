@@ -64,22 +64,30 @@ export async function POST(req) {
       console.log("WEB HOOK EVENT IS - USER CREATED");
       console.log("UserId", evt.data.id);
       console.log("Email", evt.data.email_addresses[0]["email_address"]);
+
+      console.log("Webhook: createUser run in webhooks");
       try {
         const createdUser = await createUser({
           clerkId: evt.data.id,
           email: evt.data.email_addresses[0]["email_address"],
         });
-        console.log("User Created", createdUser);
+        console.log(
+          "Webhook: created user returned from supabase in web hooks",
+          createdUser
+        );
+        return new Response("Successfuly created user", { status: 200 });
       } catch (error) {
-        return <h1>TRY AGAIN LATER</h1>;
+        return new Response(error.message, { status: 500 });
       }
     } else if (evt.type === "user.deleted") {
       // Delete user
-
+      console.log("Webhook: Deleting user");
       const deletedUser = await deleteUser({
         clerkId: evt.data.id,
       });
-      console.log("DELETING USER", deletedUser);
+      console.log("Webhook: Deleted user succesfully.User id:", {
+        clerkId: evt.data.id,
+      });
     }
 
     return new Response("Success", { status: 200 });

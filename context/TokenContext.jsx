@@ -53,4 +53,4 @@ export const TokenProvider = ({ children }) => {
   );
 };
 
-export const useToken = () => useContext(TokenContext);
+export const useTokenContext = () => useContext(TokenContext);

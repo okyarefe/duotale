@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { languagesList, splitTextIntoSentences } from "../utils/helper";
-import { useToken } from "@/context/TokenContext";
+import { useTokenContext } from "@/context/TokenContext";
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -13,11 +13,14 @@ import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
 const Chat = () => {
-  const { userToken, setUserToken, userDailyTranslation } = useToken();
-  const [translateTo, setTranslateTo] = useState("Finnish");
-  const [text, setText] = useState("");
+  const { userToken, setUserToken, userDailyTranslation } = useTokenContext();
+
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
+  const [translateTo, setTranslateTo] = useState("Finnish");
+  const [text, setText] = useState("");
+  /*End of sentences*/
+
   const [popupPosition, setPopupPosition] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [selectedSentence, setSelectedSentence] = useState("");

@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import { splitTextIntoSentences } from "../utils/helper";
 import PopupComponent from "./Popup";
 import WordOnClickPopup from "./WordOnClickPopup";
-import { fetchTranslateWord } from "../utils/actions";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; //
-import { useToken } from "@/context/TokenContext";
-import { useAuth } from "@clerk/nextjs";
+import { useTokenContext } from "@/context/TokenContext";
+
 const SingleStoryF = ({ story }) => {
+  const { setUserDailyTranslation } = useTokenContext();
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
 
@@ -26,7 +26,6 @@ const SingleStoryF = ({ story }) => {
     x: 0,
     y: 0,
   });
-  const { setUserDailyTranslation } = useToken();
 
   // Function to handle mouse over a sentence
   const handleMouseOver = (index) => {

@@ -1,15 +1,14 @@
 import { getStories } from "../../_lib/data-service";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import Stories from "../../../components/Stories";
 
 import { Suspense } from "react";
 
 const DialogsPage = async () => {
-  const user = await currentUser();
-
+  const { userId, sessionId } = auth();
+  console.log("User id in stories page", userId);
   const paginationStart = 0;
   const paginationEnd = 4;
-  const userId = user.id;
 
   const stories = await getStories(userId, paginationStart, paginationEnd);
 

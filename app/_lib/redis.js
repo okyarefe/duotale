@@ -8,7 +8,7 @@ const redisUrl =
 
 const client = createClient({
   url: redisUrl,
-  socketTimeout: 6000,
+  socketTimeout: 20000,
 });
 //process.env.RENDER_REDIS_EXTERNAL_URL
 // process.env.RENDER_REDIS_URL

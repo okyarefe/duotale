@@ -270,7 +270,7 @@ export const createUserIfNotExists = async (user) => {
 
   try {
     const existingUser = await getUserById(userId);
-
+    console.log("NOOONOONONONBONOFGSOXOFSDAOFKOASDFKOASD ", existingUser);
     if (!existingUser) {
       try {
         const newlyCreatedUser = await createUser(user);
@@ -290,7 +290,7 @@ export const createUserIfNotExists = async (user) => {
 
 export const createUser = async (userData) => {
   "use server";
-  console.log("USER DATA FROM WEB HOOKS", userData);
+  console.log("User data from webhooks in createUser ", userData);
   let clerkId, email;
 
   if (userData.id) {
@@ -312,7 +312,7 @@ export const createUser = async (userData) => {
     console.error("ERROR CREATING USER TO DATABASE", error);
     throw new Error("ERROR CREATING USER TO DATABASE");
   }
-  console.log("User Created in Supabase", data);
+  console.log("User created & returned from supabase succesfully", data);
   return data;
 };
 
@@ -327,17 +327,17 @@ export const getUserById = async (userId) => {
       .single();
 
     if (error) {
-      console.log("ERROR GETTING USER BY ID", error);
+      console.log("Error querying user from database", error);
       return null;
     }
     if (!data) {
       console.log("No user found with id:", userId);
       return null;
     }
-    console.log("DATA AT SUPA LIB SERVICE", data);
+    console.log("Returning user from database:", data);
     return data;
   } catch (error) {
-    console.log("ERROR", error);
+    console.log("Error querying data from database", error);
     return null;
   }
 };
