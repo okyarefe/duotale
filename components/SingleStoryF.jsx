@@ -10,6 +10,7 @@ import { useTokenContext } from "@/context/TokenContext";
 
 const SingleStoryF = ({ story }) => {
   const { setUserDailyTranslation } = useTokenContext();
+
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
 

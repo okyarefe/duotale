@@ -4,8 +4,9 @@ function WordOnClickTranslation({
   y,
   translatedWord,
   isError,
-
   closePopup,
+  setWordPopup,
+  wordPopup,
 }) {
   return (
     <div

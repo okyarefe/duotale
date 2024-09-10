@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Spinner from "./Spinner";
 import { fetchTranslateWord } from "@/utils/actions";
 import WordOnClickTranslation from "./WordOnClickTranslation";
@@ -22,10 +22,30 @@ const WordOnClickPopup = ({
   const [wordTranslation, setWordTranslation] = useState(null);
   const [buttonVisible, setButtonVisible] = useState(true);
   const { userId } = useAuth();
+  const popupRef = useRef(null); // Ref to the popup div
   useEffect(() => {
     // Reset button visibility when the word or showTranslation changes
     setButtonVisible(true);
   }, [word, showTranslation]);
+  useEffect(() => {
+    // Close the popup when clicking outside of it
+    function handleClickOutside(event) {
+      console.log("clicking outside");
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        onClose();
+      }
+    }
+
+    if (wordPopup.show) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wordPopup.show]);
 
   const handleTranslateClick = async () => {
     setButtonVisible(false);
@@ -90,6 +110,7 @@ const WordOnClickPopup = ({
     <>
       {wordPopup.show && (
         <div
+          ref={popupRef}
           className="word-translation-popup flex flex-col gap-3"
           style={{
             position: "fixed",
