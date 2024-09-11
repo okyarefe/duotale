@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { languagesList, splitTextIntoSentences } from "../utils/helper";
-import { useTokenContext } from "@/context/TokenContext";
+
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -12,9 +12,7 @@ import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
-const Chat = () => {
-  const { userToken, setUserToken, userDailyTranslation } = useTokenContext();
-
+const Chat = ({ token, daily_free_translations }) => {
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
   const [translateTo, setTranslateTo] = useState("Finnish");
@@ -25,6 +23,7 @@ const Chat = () => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [selectedSentence, setSelectedSentence] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  // const [userToken, setUserToken] = useState(token);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,7 +65,7 @@ const Chat = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (userToken > estimatedTokenCost) {
+    if (token > estimatedTokenCost) {
       setIsLoading(true);
 
       try {
@@ -74,27 +73,22 @@ const Chat = () => {
           await generateChatResponse(text, translateTo);
         setEnglishSentences(splitTextIntoSentences(englishStory));
         setFinnishSentences(splitTextIntoSentences(translatedStory));
-        let newTokenAmount = userToken - tokenUsed;
+        let newTokenAmount = token - tokenUsed;
 
         // Store the responses in local storage
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", translatedStory);
-        setUserToken((prev) => prev - tokenUsed);
+        // setUserToken((prev) => prev - tokenUsed);
         toast.success("Your story has been generated!");
 
         toast.info(`You have used ${tokenUsed} tokens.`);
         toast.info(`You have ${newTokenAmount} tokens left.`);
 
         setIsLoading(false);
-        return null;
+        return;
       } catch (error) {
-        toast.warn("An error occurred while saving the story.");
         setIsLoading(false);
-
-        toast.error("Failed to save the story. Please try again later.");
-        console.error("Error saving story:", error);
-
-        throw new Error("An error occurred while saving the story.");
+        throw new Error("Error occured while rendering .", error);
       }
     } else {
       toast.warn("You do not have enough tokens to generate a story.");
@@ -181,7 +175,7 @@ const Chat = () => {
                 display: "inline-block",
               }}
             >
-              You have <span className="color-red-100">{userToken}</span> tokens
+              You have <span className="color-red-100">{token}</span> tokens
               left
             </h1>
             <h1
@@ -193,8 +187,8 @@ const Chat = () => {
               }}
             >
               You have{" "}
-              <span className="color-red-100">{userDailyTranslation}</span> free
-              daily word translations
+              <span className="color-red-100">{daily_free_translations}</span>{" "}
+              free daily word translations
             </h1>
           </div>
 

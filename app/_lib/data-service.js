@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 
 import { currentUser } from "@clerk/nextjs/server";
 import { saveFileUrlToRedis } from "./redis";
+import { revalidatePath } from "next/cache";
 
 export const getUsers = async () => {
   "use server";
@@ -28,11 +29,6 @@ export const deleteUser = async (userData) => {
 
 export const getUserTokenById = async (userId) => {
   "use server";
-  // The getUserTokenById function looks mostly correct, but we can improve it:
-  // 1. Add error handling for when no user is found
-  // 2. Use optional chaining to safely access the token
-  // 3. Return null if there's an error or no user found
-  // Here's an improved version:
 
   console.log("GETTING USER TOKEN BY ID");
   try {
@@ -56,43 +52,58 @@ export const getUserTokenById = async (userId) => {
     console.log("Token retrieved:", token);
     return token;
   } catch (error) {
-    console.log("ERROR", error);
-    return null;
+    throw new Error("Failed to get user token by id", error);
   }
 };
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
   "use server";
-  const token = await getUserTokenById(userId);
-  console.log("USER TOKEN", token);
-  console.log("TOKEN USED", tokenUsed);
 
+  const token = await getUserTokenById(userId);
+  console.log("User token:", token);
+  console.log("Used token:", tokenUsed);
+
+  if (token < tokenUsed) {
+    throw new Error("Token used is greater than the user's token count");
+  }
   const newToken = token - tokenUsed;
-  console.log("REMANING TOKENS", newToken);
-  const { data, error } = await supabase
-    .from("users")
-    .update({ token: newToken })
-    .eq("id", userId)
-    .select();
+  console.log("Remaining", newToken);
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .update({ token: newToken })
+      .eq("id", userId)
+      .select();
+    if (error) {
+      console.log("ERROR DECREASING TOKEN", error);
+    }
+  } catch (error) {
+    console.log("ERROR DECREASING TOKEN", error);
+    throw new Error("Failed to decrease token count");
+  }
 };
 
 export const saveStory = async (userId, englishStory, finnishStory) => {
   "use server";
-  console.log("Saved story to database");
 
-  const { data, error } = await supabase.from("stories").insert([
-    {
-      user_id: userId,
-      english_story: englishStory,
-      finnish_story: finnishStory,
-    },
-  ]);
-  if (error) {
-    console.log("ERROR SAVING STORY TO DATABASE", error);
-    throw new Error("ERROR SAVING STORY TO DATABASE");
+  try {
+    const { data, error } = await supabase.from("stories").insert([
+      {
+        user_id: userId,
+        english_story: englishStory,
+        finnish_story: finnishStory,
+      },
+    ]);
+    if (error) {
+      throw new Error(
+        `Supabase returned an error while saving story: ${error.message}`
+      );
+    }
+    console.log("Saved story to database");
+    return data;
+  } catch (error) {
+    throw new Error(`Failed to save story to database: ${error.message}`);
   }
-
-  return data;
 };
 
 export const getStories = async (userId, paginationStart, paginationEnd) => {
@@ -214,7 +225,7 @@ export const saveWordToLocalStorage = async (word) => {
 };
 
 export const fetchDailyTranslationLimit = async (userId) => {
-  console.log("USER ID IN DAILYYYYYYYY", userId);
+  console.log("Gathering daily translation limit for user:", userId);
   try {
     const { data, error: fetchError } = await supabase
       .from("users")
@@ -223,12 +234,15 @@ export const fetchDailyTranslationLimit = async (userId) => {
       .single();
 
     if (fetchError) {
-      console.error("Error fetching user:", fetchError);
+      console.error("Error fetching user daily translation limit:", fetchError);
       return { status: failed, message: "Error fetching user data" };
     }
 
     if (!data) {
-      return { status: failed, message: "User does not exist" };
+      return {
+        status: failed,
+        message: "User does not exist in daily translation limit",
+      };
     }
     return data;
   } catch (error) {
@@ -313,6 +327,7 @@ export const createUser = async (userData) => {
     throw new Error("ERROR CREATING USER TO DATABASE");
   }
   console.log("User created & returned from supabase succesfully", data);
+  revalidatePath("/chat");
   return data;
 };
 

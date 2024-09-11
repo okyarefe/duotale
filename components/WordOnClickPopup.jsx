@@ -11,7 +11,7 @@ const WordOnClickPopup = ({
   x,
   y,
   onClose,
-  setUserDailyTranslation,
+
   setWordPopup,
   wordPopup,
 }) => {
@@ -80,7 +80,7 @@ const WordOnClickPopup = ({
           setWordPopup({ show: false, word: "", x: 0, y: 0 });
         } else {
           const { wordTranslation, tokenUsed } = result;
-          setUserDailyTranslation((prev) => prev - 1);
+          // setUserDailyTranslation((prev) => prev - 1);
           // You can update the state or perform any other action with the translation here
           localStorage.setItem(
             `wordMeaning_${word}`,

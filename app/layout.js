@@ -1,6 +1,6 @@
-import { Inter, Merienda } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { TokenProvider } from "@/context/TokenContext";
+
 import { ClerkProvider } from "@clerk/nextjs";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Space_Mono } from "next/font/google";
@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
         <body
           className={cn("antialiased", fontHeading.variable, fontBody.variable)}
         >
-          <TokenProvider>{children}</TokenProvider>
+          {children}
         </body>
       </html>
     </ClerkProvider>

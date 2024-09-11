@@ -63,10 +63,10 @@ export const generateChatResponse = async (prompt, translateTo) => {
     const user = await currentUser();
     const userId = user.id;
 
-    // save story to database
-    await saveStory(userId, englishStory, translatedStory);
     await decreaseUserToken(userId, tokenUsed);
-    revalidatePath("/dialogs");
+    await saveStory(userId, englishStory, translatedStory);
+
+    revalidatePath("/chat");
     return { englishStory, translatedStory, tokenUsed };
   } catch (error) {
     throw new Error(error);
@@ -183,7 +183,7 @@ export const fetchTranslateWord = async (word, userId) => {
           "Translating word" + wordTranslation + "costed   " + tokenUsed
         );
         // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
-
+        revalidatePath("/chat");
         return { wordTranslation, tokenUsed };
       } catch (error) {
         console.log("ERROR TRANSLATING WORD", error);

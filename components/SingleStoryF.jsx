@@ -6,11 +6,8 @@ import WordOnClickPopup from "./WordOnClickPopup";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; //
-import { useTokenContext } from "@/context/TokenContext";
 
 const SingleStoryF = ({ story }) => {
-  const { setUserDailyTranslation } = useTokenContext();
-
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
 
@@ -180,7 +177,6 @@ const SingleStoryF = ({ story }) => {
           y={wordPopup.y}
           onClose={closeWordPopup}
           translatedWord={wordTranslation}
-          setUserDailyTranslation={setUserDailyTranslation}
           setWordPopup={setWordPopup}
           wordPopup={wordPopup}
         />
