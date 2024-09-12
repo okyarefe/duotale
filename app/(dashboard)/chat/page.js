@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "../../_lib/data-service";
 import { notFound } from "next/navigation";
 import Spinner from "@/components/Spinner";
+import { revalidatePath } from "next/cache";
 
 const ChatPage = async () => {
   const { userId } = auth();
@@ -17,6 +18,7 @@ const ChatPage = async () => {
       />
     );
   } catch (error) {
+    revalidatePath("/chat");
     return (
       <div>
         <p>Error </p>

@@ -1,19 +1,12 @@
-import { SignIn, UserProfile } from "@clerk/nextjs";
+import { UserProfile } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const ProfilePage = async () => {
-  try {
-    const user = await currentUser();
+  const user = await currentUser();
 
-    if (user) {
-      return <UserProfile routing="hash"></UserProfile>;
-    } else {
-      return <SignIn></SignIn>;
-    }
-  } catch (error) {
-    <Link href="/"></Link>;
-  }
+  // If user exists, render the user profile
+  return <UserProfile routing="hash" />;
 };
 
 export default ProfilePage;
