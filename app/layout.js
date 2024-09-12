@@ -1,10 +1,12 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, SignInButton, UserButton } from "@clerk/nextjs";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Sign } from "crypto";
+import { SignedOut, SignedIn } from "@clerk/nextjs";
 
 // import { TokenProvider } from "@/context/TokenContext";
 const inter = Inter({ subsets: ["latin"] });
@@ -37,6 +39,7 @@ export default function RootLayout({ children }) {
         <body
           className={cn("antialiased", fontHeading.variable, fontBody.variable)}
         >
+          <div></div>
           {children}
         </body>
       </html>

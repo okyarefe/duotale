@@ -66,7 +66,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
     await decreaseUserToken(userId, tokenUsed);
     await saveStory(userId, englishStory, translatedStory);
 
-    revalidatePath("/chat");
+    // revalidatePath("/chat");
     return { englishStory, translatedStory, tokenUsed };
   } catch (error) {
     throw new Error(error);
@@ -183,7 +183,7 @@ export const fetchTranslateWord = async (word, userId) => {
           "Translating word" + wordTranslation + "costed   " + tokenUsed
         );
         // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
-        revalidatePath("/chat");
+        // revalidatePath("/chat");
         return { wordTranslation, tokenUsed };
       } catch (error) {
         console.log("ERROR TRANSLATING WORD", error);

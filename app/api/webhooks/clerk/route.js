@@ -90,5 +90,5 @@ export async function POST(req) {
     return new Response("Successfully deleted user", { status: 200 });
   }
 
-  return new Response("Success", { status: 200 });
+  return new Response("Nothing happened", { status: 200 });
 }

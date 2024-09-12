@@ -13,6 +13,11 @@ import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
 const Chat = ({ token, daily_free_translations }) => {
+  const [userToken, setUserToken] = useState(token);
+  const [user_daily_free_translations, setUserDailyFreeTranslations] = useState(
+    daily_free_translations
+  );
+
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
   const [translateTo, setTranslateTo] = useState("Finnish");
@@ -23,9 +28,9 @@ const Chat = ({ token, daily_free_translations }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [selectedSentence, setSelectedSentence] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  // const [userToken, setUserToken] = useState(token);
 
   const [isLoading, setIsLoading] = useState(false);
+  /*Tokens*/
 
   const estimatedTokenCost = 1000;
 
@@ -65,7 +70,7 @@ const Chat = ({ token, daily_free_translations }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (token > estimatedTokenCost) {
+    if (userToken > estimatedTokenCost) {
       setIsLoading(true);
 
       try {
@@ -73,12 +78,12 @@ const Chat = ({ token, daily_free_translations }) => {
           await generateChatResponse(text, translateTo);
         setEnglishSentences(splitTextIntoSentences(englishStory));
         setFinnishSentences(splitTextIntoSentences(translatedStory));
-        let newTokenAmount = token - tokenUsed;
+        let newTokenAmount = userToken - tokenUsed;
 
         // Store the responses in local storage
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", translatedStory);
-        // setUserToken((prev) => prev - tokenUsed);
+        setUserToken((prev) => prev - tokenUsed);
         toast.success("Your story has been generated!");
 
         toast.info(`You have used ${tokenUsed} tokens.`);
@@ -131,6 +136,9 @@ const Chat = ({ token, daily_free_translations }) => {
     }
   };
 
+  if (!token || !daily_free_translations) {
+    return <p>Loading...</p>; // Fallback while waiting for the data
+  }
   return (
     <div>
       <ToastContainer
@@ -175,7 +183,7 @@ const Chat = ({ token, daily_free_translations }) => {
                 display: "inline-block",
               }}
             >
-              You have <span className="color-red-100">{token}</span> tokens
+              You have <span className="color-red-100">{userToken}</span> tokens
               left
             </h1>
             <h1

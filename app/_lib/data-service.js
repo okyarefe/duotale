@@ -327,7 +327,7 @@ export const createUser = async (userData) => {
     throw new Error("ERROR CREATING USER TO DATABASE");
   }
   console.log("User created & returned from supabase succesfully", data);
-  revalidatePath("/chat");
+
   return data;
 };
 
