@@ -1,26 +1,19 @@
 import Chat from "../../../components/Chat";
-import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "../../_lib/data-service";
+import { getServerSession } from "next-auth/next";
 
 const ChatPage = async () => {
-  const { userId } = auth();
+  /* session includes name,email,image*/
+  const session = await getServerSession();
 
-  try {
-    console.log("I RUN NOW******");
-    const userDataFromDatabase = await getUserById(userId);
-    return (
-      <Chat
-        token={userDataFromDatabase.token}
-        daily_free_translations={userDataFromDatabase.daily_free_translations}
-      />
-    );
-  } catch (error) {
-    return (
-      <div>
-        <p>Error </p>
-      </div>
-    );
-  }
+  console.log("SESSION", session);
+  return (
+    <h1> CHAT PAGE </h1>
+    // <Chat
+    // //   token={userDataFromDatabase.token}
+    // //   daily_free_translations={userDataFromDatabase.daily_free_translations}
+    // />
+  );
 };
 
 export default ChatPage;

@@ -8,14 +8,14 @@ import { decreaseWordTranslationLimitByOne } from "../app/_lib/data-service";
 const speechFile = path.resolve("./public/speech.mp3");
 import { getValueFromCache } from "../app/_lib/redis";
 import { decreaseUserToken } from "../app/_lib/data-service";
-import { currentUser } from "@clerk/nextjs/server";
+
 import {
   saveStory,
   saveTTSfileToS3,
   checkIfTTSexistInS3,
   getTTSfileFromS3,
 } from "../app/_lib/data-service";
-import { revalidatePath } from "next/cache";
+
 const textToSpeech = require("@google-cloud/text-to-speech");
 // Creates a client
 const client = new textToSpeech.TextToSpeechClient();

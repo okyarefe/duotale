@@ -1,15 +1,8 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-import { ClerkProvider, SignInButton, UserButton } from "@clerk/nextjs";
+import { SessionProvider } from "next-auth/react";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { Sign } from "crypto";
-import { SignedOut, SignedIn } from "@clerk/nextjs";
-
-// import { TokenProvider } from "@/context/TokenContext";
-const inter = Inter({ subsets: ["latin"] });
 
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -32,17 +25,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    >
-      <html lang="en">
-        <body
-          className={cn("antialiased", fontHeading.variable, fontBody.variable)}
-        >
-          <div></div>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body
+        className={cn("antialiased", fontHeading.variable, fontBody.variable)}
+      >
+        <div></div>
+        {children}
+      </body>
+    </html>
   );
 }

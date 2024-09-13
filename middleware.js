@@ -1,32 +1,5 @@
-// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-
-// const isProtectedRoute = createRouteMatcher([
-//   "/chat(.*)",
-//   "/dialogs(.*)",
-//   "/profile(.*)",
-// ]);
-
-// export default clerkMiddleware((auth, req) => {
-//   if (isProtectedRoute(req)) auth().protect();
-// });
-
-// export const config = {
-//   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-// };
-
-const { clerkMiddleware, createRouteMatcher } = require("@clerk/nextjs/server");
-
-const isProtectedRoute = createRouteMatcher([
-  "/chat(.*)",
-  "/dialogs(.*)",
-  "/profile(.*)",
-  "/gettokens(.*)",
-]);
-
-export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
-});
+export { default } from "next-auth/middleware";
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/chat(.*)", "/dialogs(.*)", "/gettokens(.*)", "/features(.*)"],
 };

@@ -2,9 +2,14 @@
 import "server-only";
 import { supabase } from "./supabase";
 
-import { currentUser } from "@clerk/nextjs/server";
+// import { currentUser } from "@clerk/nextjs/server";
 import { saveFileUrlToRedis } from "./redis";
-import { revalidatePath } from "next/cache";
+
+export const handleSignIn = async () => {
+  console.log("SIGNING IN WITH GOOGLE");
+
+  await signIn("google", { callbackUrl: "/gettokens" });
+};
 
 export const getUsers = async () => {
   "use server";

@@ -9,7 +9,7 @@ import GetStartedButton from "@/components/ui/GetStartedButton";
 
 export default function Component() {
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <div className="flex flex-col min-h-[100dvh] ">
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <Link
           href="#"
@@ -47,8 +47,8 @@ export default function Component() {
           </Link>
         </nav>
       </header>
-      <main className="flex-1">
-        <section className="w-full py-12 sm:py-24 lg:py-32">
+      <main className="flex-1 ">
+        <section className="w-full py-12 sm:py-24 lg:py-32 ">
           <div className="container mx-auto p-6 md:px-12">
             <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
               <div className="flex flex-col flex-1 justify-center space-y-4">

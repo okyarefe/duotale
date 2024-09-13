@@ -1,4 +1,3 @@
-import MemberProfile from "../components/MemberProfile";
 import NavLinks from "../components/NavLinks";
 import SidebarHeader from "../components/SidebarHeader";
 import { Merienda } from "next/font/google";
@@ -8,7 +7,6 @@ const Sidebar = () => {
     <div className="px-4 w-80 min-h-full py-12 grid grid-rows-[auto-1fr-1auto] ">
       <SidebarHeader></SidebarHeader>
       <NavLinks></NavLinks>
-      <MemberProfile></MemberProfile>
     </div>
   );
 };
