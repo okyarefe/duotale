@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 // components/Error.js
 const Error = ({ error, reset }) => {
   return (
     <div className="error-container">
-      <h1>An Error Occurred</h1>
+      <h1 className="bg-slate-700">An Error Occurred</h1>
       <p>{error.message}</p>
       <button onClick={() => reset()}>Try again</button>
-
+      <Link href="/chat"> TRY AGAIN</Link>
       <style jsx>{`
         .error-container {
           padding: 2rem;

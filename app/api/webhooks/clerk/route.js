@@ -66,14 +66,13 @@ export async function POST(req) {
 
     console.log("Webhook: createUser run in webhooks");
     try {
-      const createdUser = await createUser({
+      await createUser({
         clerkId: evt.data.id,
         email: evt.data.email_addresses[0]["email_address"],
       });
-      console.log(
-        "Webhook: created user returned from supabase in web hooks",
-        createdUser
-      );
+
+      console.log("Webhook: created user returned from supabase in web hooks");
+
       return new Response("Successfully created user", { status: 200 });
     } catch (error) {
       return new Response(error.message, { status: 500 });
@@ -89,6 +88,4 @@ export async function POST(req) {
     });
     return new Response("Successfully deleted user", { status: 200 });
   }
-
-  return new Response("Nothing happened", { status: 200 });
 }

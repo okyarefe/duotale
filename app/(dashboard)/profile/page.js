@@ -3,8 +3,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 const ProfilePage = async () => {
-  const user = await currentUser();
-
   // If user exists, render the user profile
   return <UserProfile routing="hash" />;
 };
