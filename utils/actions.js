@@ -16,7 +16,7 @@ import {
   checkIfTTSexistInS3,
   getTTSfileFromS3,
 } from "../app/_lib/data-service";
-
+import { revalidatePath } from "next/cache";
 const textToSpeech = require("@google-cloud/text-to-speech");
 // Creates a client
 const client = new textToSpeech.TextToSpeechClient();
@@ -150,11 +150,14 @@ export async function fetchAudio(text) {
   await fs.promises.writeFile(speechFile, buffer);
 }
 
-export const fetchTranslateWord = async (word, userId) => {
+export const fetchTranslateWord = async (word) => {
   "use server";
-
+  const session = await getServerSession();
+  const { id, token, daily_free_translation } = await getUserByEmail(
+    session.user.email
+  );
   try {
-    const result = await decreaseWordTranslationLimitByOne(userId);
+    const result = await decreaseWordTranslationLimitByOne(id);
 
     if (result.status === "failed") {
       return { error: "Daily translation limit reached" };
@@ -186,7 +189,7 @@ export const fetchTranslateWord = async (word, userId) => {
           "Translating word" + wordTranslation + "costed   " + tokenUsed
         );
         // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
-        // revalidatePath("/chat");
+        revalidatePath("/chat");
         return { wordTranslation, tokenUsed };
       } catch (error) {
         console.log("ERROR TRANSLATING WORD", error);

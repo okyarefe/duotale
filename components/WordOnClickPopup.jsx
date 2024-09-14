@@ -21,7 +21,7 @@ const WordOnClickPopup = ({
   const [showTranslation, setShowTranslation] = useState(false);
   const [wordTranslation, setWordTranslation] = useState(null);
   const [buttonVisible, setButtonVisible] = useState(true);
-  const { userId } = useAuth();
+
   const popupRef = useRef(null); // Ref to the popup div
   useEffect(() => {
     // Reset button visibility when the word or showTranslation changes
@@ -71,7 +71,7 @@ const WordOnClickPopup = ({
 
       // if the meaning is not cached, fetch it
       try {
-        const result = await fetchTranslateWord(word, userId);
+        const result = await fetchTranslateWord(word);
         if (result.error) {
           // toast.error(result.error);
           alert(result.error);
