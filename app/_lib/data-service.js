@@ -1,9 +1,45 @@
 "use server";
 import "server-only";
 import { supabase } from "./supabase";
+const { v4: uuidv4 } = require("uuid");
 
 // import { currentUser } from "@clerk/nextjs/server";
 import { saveFileUrlToRedis } from "./redis";
+import { signOut } from "next-auth/react";
+import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+
+export async function getUserByEmail(email) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email)
+    .single();
+  console.log("DATA AT GET USER BY EMAIL", data);
+  return data;
+}
+
+export const createUser = async (email) => {
+  const id = uuidv4();
+  const { data, error } = await supabase
+    .from("users")
+    .insert([
+      { id: id, token: 5000, email: email, daily_free_translations: 50 },
+    ])
+    .select();
+
+  if (error) {
+    console.error("ERROR CREATING USER TO DATABASE", error);
+    throw new Error("ERROR CREATING USER TO DATABASE");
+  }
+  console.log("User created & returned from supabase succesfully", data);
+
+  return data;
+};
+
+export const signOutButton = async () => {
+  signOut({ redirectTo: "/" });
+};
 
 export const handleSignIn = async () => {
   console.log("SIGNING IN WITH GOOGLE");
@@ -23,7 +59,6 @@ export const getUsers = async () => {
 };
 
 export const deleteUser = async (userData) => {
-  "use server";
   const { clerkId } = userData;
   const { error } = await supabase.from("users").delete().eq("id", clerkId);
 
@@ -33,8 +68,6 @@ export const deleteUser = async (userData) => {
 };
 
 export const getUserTokenById = async (userId) => {
-  "use server";
-
   console.log("GETTING USER TOKEN BY ID");
   try {
     const { data, error } = await supabase
@@ -62,8 +95,6 @@ export const getUserTokenById = async (userId) => {
 };
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
-  "use server";
-
   const token = await getUserTokenById(userId);
   console.log("User token:", token);
   console.log("Used token:", tokenUsed);
@@ -82,6 +113,7 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
     if (error) {
       console.log("ERROR DECREASING TOKEN", error);
     }
+    revalidatePath("/chat");
   } catch (error) {
     console.log("ERROR DECREASING TOKEN", error);
     throw new Error("Failed to decrease token count");
@@ -89,8 +121,6 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
 };
 
 export const saveStory = async (userId, englishStory, finnishStory) => {
-  "use server";
-
   try {
     const { data, error } = await supabase.from("stories").insert([
       {
@@ -112,7 +142,6 @@ export const saveStory = async (userId, englishStory, finnishStory) => {
 };
 
 export const getStories = async (userId, paginationStart, paginationEnd) => {
-  "use server";
   try {
     const { data, error } = await supabase
       .from("stories")
@@ -131,15 +160,11 @@ export const getStories = async (userId, paginationStart, paginationEnd) => {
   }
 };
 
-export const getStoryById = async (id) => {
-  "use server";
-  const user = await currentUser();
-  const userId = user.id;
+export const getStoryById = async (storyId) => {
   const { data, error } = await supabase
     .from("stories")
     .select("*")
-    .eq("user_id", userId)
-    .eq("id", id)
+    .eq("id", storyId)
     .single();
 
   if (error) {
@@ -149,7 +174,6 @@ export const getStoryById = async (id) => {
 };
 
 export const checkIfUserExists = async (userId) => {
-  "use server";
   const { data: user } = await supabase
     .from("users")
     .select("id")
@@ -160,7 +184,6 @@ export const checkIfUserExists = async (userId) => {
 };
 
 export const saveTTSfileToS3 = async (buffer, fileName) => {
-  "use server";
   const { data, error } = await supabase.storage
     .from("llearning_bucket")
     .upload(fileName, buffer, {
@@ -180,7 +203,6 @@ export const saveTTSfileToS3 = async (buffer, fileName) => {
 };
 
 export const checkIfTTSexistInS3 = async (fileName) => {
-  "use server";
   console.log("CHECKING S3 STORAGE - - - - ");
   try {
     // List the files in the bucket or folder
@@ -212,7 +234,6 @@ export const checkIfTTSexistInS3 = async (fileName) => {
 };
 
 export const getTTSfileFromS3 = async (fileName) => {
-  "use server";
   const { data, error } = await supabase.storage
     .from("llearning_bucket")
     .download(fileName);
@@ -284,7 +305,6 @@ export const decreaseWordTranslationLimitByOne = async (userId) => {
 /*  USER RELETED FUNCTIONS */
 
 export const createUserIfNotExists = async (user) => {
-  "use server";
   const { id: userId, email: email } = user;
 
   try {
@@ -307,38 +327,7 @@ export const createUserIfNotExists = async (user) => {
   }
 };
 
-export const createUser = async (userData) => {
-  "use server";
-  console.log("User data from webhooks in createUser ", userData);
-  let clerkId, email;
-
-  if (userData.id) {
-    // Handle the case when userData is a Clerk User object
-    clerkId = userData.id;
-    email = userData.emailAddresses[0].emailAddress;
-  } else {
-    // Handle the case when userData is the simplified object
-    clerkId = userData.clerkId;
-    email = userData.email;
-  }
-
-  const { data, error } = await supabase
-    .from("users")
-    .insert([{ id: clerkId, token: 5000, email: email }])
-    .select();
-
-  if (error) {
-    console.error("ERROR CREATING USER TO DATABASE", error);
-    throw new Error("ERROR CREATING USER TO DATABASE");
-  }
-  console.log("User created & returned from supabase succesfully", data);
-
-  return data;
-};
-
 export const getUserById = async (userId) => {
-  "use server";
-
   try {
     let { data, error } = await supabase
       .from("users")

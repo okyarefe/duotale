@@ -5,7 +5,6 @@
  */
 import VideoWalkthrough from "@/components/VideoWalkthrough";
 import Link from "next/link";
-import GetStartedButton from "@/components/ui/GetStartedButton";
 
 export default function Component() {
   return (

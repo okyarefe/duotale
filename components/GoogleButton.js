@@ -1,3 +1,4 @@
+"use client";
 import { signIn } from "next-auth/react";
 function GoogleButton() {
   const handleSignIn = async () => {

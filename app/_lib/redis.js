@@ -17,7 +17,7 @@ client.on("error", (err) => {
   console.error("Redis error:", err);
 });
 
-// client.connect();
+client.connect();
 
 // Save the URL to Redis
 export async function saveFileUrlToRedis(key, fileUrl) {

@@ -3,7 +3,7 @@ import Spinner from "./Spinner";
 import { fetchTranslateWord } from "@/utils/actions";
 import WordOnClickTranslation from "./WordOnClickTranslation";
 import { Button } from "./ui/button";
-import { useAuth } from "@clerk/nextjs";
+
 import { ToastContainer, toast } from "react-toastify";
 
 const WordOnClickPopup = ({

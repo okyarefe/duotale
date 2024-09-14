@@ -8,7 +8,8 @@ import { decreaseWordTranslationLimitByOne } from "../app/_lib/data-service";
 const speechFile = path.resolve("./public/speech.mp3");
 import { getValueFromCache } from "../app/_lib/redis";
 import { decreaseUserToken } from "../app/_lib/data-service";
-
+import { getServerSession } from "next-auth";
+import { getUserByEmail } from "../app/_lib/data-service";
 import {
   saveStory,
   saveTTSfileToS3,
@@ -60,11 +61,13 @@ export const generateChatResponse = async (prompt, translateTo) => {
   // console.log("RESPONSE", response);
   try {
     // decrease token count
-    const user = await currentUser();
-    const userId = user.id;
+    const session = await getServerSession();
+    const { id, token, daily_free_translation } = await getUserByEmail(
+      session.user.email
+    );
 
-    await decreaseUserToken(userId, tokenUsed);
-    await saveStory(userId, englishStory, translatedStory);
+    await decreaseUserToken(id, tokenUsed);
+    await saveStory(id, englishStory, translatedStory);
 
     // revalidatePath("/chat");
     return { englishStory, translatedStory, tokenUsed };
