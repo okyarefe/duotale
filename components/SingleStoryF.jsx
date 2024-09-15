@@ -152,7 +152,7 @@ const SingleStoryF = ({ story }) => {
 
         {/* Finnish Story */}
         <div className="flex-1 bg-white border border-gray-200 rounded-lg shadow-md p-4 text-black">
-          <h2 className="text-lg font-bold mb-2">Finnish Story:</h2>
+          <h2 className="text-lg font-bold mb-2">Translated Story:</h2>
           {splitTextIntoSentences(story.finnish_story).map(
             (sentence, index) => (
               <p
