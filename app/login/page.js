@@ -22,7 +22,7 @@ export default function LoginPage() {
       {/* Content */}
       <div className="relative z-10 text-center">
         <h1 className="text-4xl font-bold text-white mb-8 tracking-wide">
-          Welcome to Adventure
+          Welcome to an Adventure
         </h1>
         <p className="text-xl text-white mb-12 max-w-md mx-auto">
           Embark on your language learning journey with us

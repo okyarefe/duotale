@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import Chat from "@/components/Chat";
 import { getUserByEmail } from "../../_lib/data-service";
+
 const ChatPage = async () => {
   const session = await getServerSession();
 
@@ -12,6 +13,7 @@ const ChatPage = async () => {
       <Chat
         token={userDataFromDatabase.token}
         daily_free_translations={userDataFromDatabase.daily_free_translations}
+        paid_tokens={userDataFromDatabase.paid_tokens}
       />
     </>
   );

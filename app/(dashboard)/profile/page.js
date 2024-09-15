@@ -32,7 +32,7 @@ export default async function ProfilePage() {
     stats: {
       storiesCreated: 42,
       tokensLeft: userDataFromDatabase.token,
-      dailyTransitionsLeft: userDataFromDatabase.daily_free_translations,
+      dailyTransitionsLeft: userDataFromDatabase.total_tokens,
     },
   };
 

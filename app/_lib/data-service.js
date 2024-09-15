@@ -255,7 +255,7 @@ export const fetchDailyTranslationLimit = async (userId) => {
   try {
     const { data, error: fetchError } = await supabase
       .from("users")
-      .select("daily_free_translations")
+      .select("daily_free_translations,paid_tokens,total_tokens")
       .eq("id", userId)
       .single();
 
@@ -279,20 +279,30 @@ export const fetchDailyTranslationLimit = async (userId) => {
 };
 
 export const decreaseWordTranslationLimitByOne = async (userId) => {
-  const { daily_free_translations } = await fetchDailyTranslationLimit(userId);
+  const { daily_free_translations, paid_tokens, total_tokens } =
+    await fetchDailyTranslationLimit(userId);
   console.log("Daily translation left : ", daily_free_translations);
+  console.log("Paid tokens left : ", paid_tokens);
+  console.log("Total tokens left : ", total_tokens);
 
-  if (daily_free_translations < 1) {
+  if (total_tokens < 1) {
     console.log("User does not have any daily translation left to proceed");
     return {
       status: "failed",
       message: " You have 0 remaining daily translation",
     };
   }
-  const newCurrentDailyLimit = daily_free_translations - 1;
+  let upDateData = {};
+
+  if (daily_free_translations > 0) {
+    upDateData.daily_free_translations = daily_free_translations - 1;
+  } else if (paid_tokens > 0) {
+    upDateData.paid_tokens = paid_tokens - 1;
+  }
+
   const { error: updateError } = await supabase
     .from("users")
-    .update({ daily_free_translations: newCurrentDailyLimit })
+    .update(upDateData)
     .eq("id", userId);
   if (updateError) {
     console.log("Error updating tokens", updateError);

@@ -12,11 +12,12 @@ import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
 
-const Chat = ({ token, daily_free_translations }) => {
+const Chat = ({ token, daily_free_translations, paid_tokens }) => {
   const [userToken, setUserToken] = useState(token);
   const [user_daily_free_translations, setUserDailyFreeTranslations] = useState(
     daily_free_translations
   );
+  const [paidTokens, setPaidTokens] = useState(paid_tokens);
 
   const [englishSentences, setEnglishSentences] = useState([]);
   const [finnishSentences, setFinnishSentences] = useState([]);
@@ -136,9 +137,6 @@ const Chat = ({ token, daily_free_translations }) => {
     }
   };
 
-  if (!token || !daily_free_translations) {
-    return <p>Loading...</p>; // Fallback while waiting for the data
-  }
   return (
     <div>
       <ToastContainer
@@ -183,7 +181,8 @@ const Chat = ({ token, daily_free_translations }) => {
                 display: "inline-block",
               }}
             >
-              You have <span className="color-red-100">{userToken}</span> tokens
+              You have{" "}
+              <span className="color-red-100 text-xl">{userToken}</span> tokens
               left
             </h1>
             <h1
@@ -195,8 +194,22 @@ const Chat = ({ token, daily_free_translations }) => {
               }}
             >
               You have{" "}
-              <span className="color-red-100">{daily_free_translations}</span>{" "}
+              <span className="color-red-100 text-xl">
+                {daily_free_translations}
+              </span>{" "}
               free daily word translations
+            </h1>
+            <h1
+              className="special"
+              style={{
+                border: "2px solid black",
+                padding: "10px",
+                display: "inline-block",
+              }}
+            >
+              You have{" "}
+              <span className="color-red-100 text-xl">{paidTokens}</span> paid
+              word translations
             </h1>
           </div>
 
