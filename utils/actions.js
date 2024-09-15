@@ -116,13 +116,14 @@ export async function fetchAudio(text) {
     deu: "de-DE", // German
     ita: "it-IT", // Italian
     fin: "fi-FI", // Finnish
+    tur: "tr-TR", // Turkish
     // Add more mappings as needed
   };
 
   function detectLanguage(text) {
     const langCode = franc(text);
     // console.log("Detected Language Code:", langCode);
-
+    console.log("Detected Language Code:", langCode);
     return francToGoogleLangMap[langCode] || "en-US";
   }
   const languageCode = detectLanguage(text);
