@@ -117,6 +117,7 @@ export async function fetchAudio(text) {
     ita: "it-IT", // Italian
     fin: "fi-FI", // Finnish
     tur: "tr-TR", // Turkish
+    rus: "ru-RU", // Russian
     // Add more mappings as needed
   };
 
