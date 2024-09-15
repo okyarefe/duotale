@@ -73,8 +73,8 @@ const WordOnClickPopup = ({
       try {
         const result = await fetchTranslateWord(word);
         if (result.error) {
-          // toast.error(result.error);
-          alert(result.error);
+          toast.error(result.error);
+
           setIsError(true);
           setShowTranslation(false);
           setWordPopup({ show: false, word: "", x: 0, y: 0 });
@@ -95,7 +95,7 @@ const WordOnClickPopup = ({
         console.log("Error", error);
         setIsError(true);
         setShowTranslation(false);
-        alert("Error translating..Please try again later");
+        alert(error.message);
       }
     } catch (error) {
       toast.error("Error translating..Please try again later");

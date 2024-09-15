@@ -158,47 +158,43 @@ export const fetchTranslateWord = async (word) => {
   const { id, token, daily_free_translation } = await getUserByEmail(
     session.user.email
   );
-  try {
-    const result = await decreaseWordTranslationLimitByOne(id);
 
-    if (result.status === "failed") {
-      return { error: "Daily translation limit reached" };
-    }
-    if (result.status === "success") {
-      console.log("TRANSLATING WORD FROM OPEN AI", word);
-      try {
-        const response = await openai.chat.completions.create({
-          // model: "gpt-3.5-turbo",
-          model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "system",
-              content: "You are a dictionary",
-            },
-            {
-              role: "user",
-              content: `What does ${word} mean in English? just write the answer
+  const result = await decreaseWordTranslationLimitByOne(id);
+
+  if (result.status === "failed") {
+    return { error: "Daily translation limit reached" };
+  } else if (result.status === "success") {
+    console.log("TRANSLATING WORD FROM OPEN AI", word);
+    try {
+      const response = await openai.chat.completions.create({
+        // model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: "You are a dictionary",
+          },
+          {
+            role: "user",
+            content: `What does ${word} mean in English? just write the answer
              `,
-            },
-          ],
-          max_tokens: 50,
-        });
+          },
+        ],
+        max_tokens: 50,
+      });
 
-        const wordTranslation = response.choices[0].message.content;
+      const wordTranslation = response.choices[0].message.content;
 
-        const tokenUsed = response.usage.total_tokens;
-        console.log(
-          "Translating word" + wordTranslation + "costed   " + tokenUsed
-        );
-        // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
-        revalidatePath("/chat");
-        return { wordTranslation, tokenUsed };
-      } catch (error) {
-        console.log("ERROR TRANSLATING WORD", error);
-        throw new Error(error);
-      }
+      const tokenUsed = response.usage.total_tokens;
+      console.log(
+        "Translating word" + wordTranslation + "costed   " + tokenUsed
+      );
+      // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
+      revalidatePath("/chat");
+      return { wordTranslation, tokenUsed };
+    } catch (error) {
+      console.log("Error from translation OPENAI ", error);
+      throw new Error(error);
     }
-  } catch (error) {
-    throw new Error("Error fetching daily translation limit");
   }
 };
