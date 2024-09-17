@@ -6,7 +6,6 @@ const ChatPage = async () => {
   const session = await getServerSession();
 
   const userDataFromDatabase = await getUserByEmail(session.user.email);
-  console.log("USER DATA FROM DATABASE", userDataFromDatabase);
 
   return (
     <>

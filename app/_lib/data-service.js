@@ -7,7 +7,6 @@ const { v4: uuidv4 } = require("uuid");
 import { saveFileUrlToRedis } from "./redis";
 import { signOut } from "next-auth/react";
 import { revalidatePath } from "next/cache";
-import { getServerSession } from "next-auth/next";
 
 export async function getUserByEmail(email) {
   const { data, error } = await supabase
@@ -15,7 +14,7 @@ export async function getUserByEmail(email) {
     .select("*")
     .eq("email", email)
     .single();
-  console.log("DATA AT GET USER BY EMAIL", data);
+
   return data;
 }
 
@@ -32,6 +31,41 @@ export const getPackage = async (packageName) => {
   }
 
   return data;
+};
+
+export const updateUserCreditsBasicPackage = async (userId) => {
+  const tokensToAdd = 5000;
+  const paidTokensToAdd = 50;
+  console.log("*********************************", userId);
+
+  const { data: user, error: fetchError } = await supabase
+    .from("users")
+    .select("token, paid_tokens")
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (fetchError) {
+    console.log("Error Getting user tokens", error);
+    return null;
+  }
+  // Calculate new token values
+  console.log("USER DATA GATTERS", user);
+  const newTokens = user.token + tokensToAdd;
+  const newPaidTokens = user.paid_tokens + paidTokensToAdd;
+
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({ token: newTokens, paid_tokens: newPaidTokens })
+    .eq("id", userId);
+
+  if (updateError) {
+    throw new Error(`Error updating user tokens: ${updateError.message}`);
+  }
+
+  console.log(
+    `Successfully updated user ${userId} with ${tokensToAdd} tokens and ${paidTokensToAdd} paid tokens.`
+  );
 };
 
 export const createUser = async (email) => {
@@ -334,7 +368,7 @@ export const createUserIfNotExists = async (user) => {
 
   try {
     const existingUser = await getUserById(userId);
-    console.log("NOOONOONONONBONOFGSOXOFSDAOFKOASDFKOASD ", existingUser);
+
     if (!existingUser) {
       try {
         const newlyCreatedUser = await createUser(user);
@@ -368,7 +402,7 @@ export const getUserById = async (userId) => {
       console.log("No user found with id:", userId);
       return null;
     }
-    console.log("Returning user from database:", data);
+
     return data;
   } catch (error) {
     console.log("Error querying data from database", error);

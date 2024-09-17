@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { useStripe } from "@stripe/react-stripe-js";
+import Link from "next/link";
+import { revalidatePath } from "next/cache";
 
 const SuccessIcon = (
   <svg
@@ -136,13 +138,20 @@ export default function CompletePage() {
       <h2 id="status-text" className="mb-14">
         {STATUS_CONTENT_MAP[status].text}
       </h2>
-      <p className="text-gray-600 mb-4 ">
-        {status === "succeeded"
-          ? "Thank you for your purchase! 🎉"
-          : status === "processing"
-          ? "We're processing your purchase. Please wait a moment."
-          : "Please try again."}
-      </p>
+      <div className="text-gray-600 mb-4 ">
+        {status === "succeeded" ? (
+          "Thank you for your purchase! 🎉"
+        ) : status === "processing" ? (
+          "We're processing your purchase. Please wait a moment."
+        ) : (
+          <Link
+            href="/gettokens"
+            className="inline-block mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Try again
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
