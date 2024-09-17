@@ -324,3 +324,15 @@
 .animated-underline:hover::after {
   width: 100%;
 }
+
+@layer utilities {
+  .animation-delay-0 {
+    animation-delay: 0s;
+  }
+  .animation-delay-150 {
+    animation-delay: 0.15s;
+  }
+  .animation-delay-300 {
+    animation-delay: 0.3s;
+  }
+}

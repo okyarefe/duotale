@@ -1,12 +1,8 @@
 import React from "react";
-import { CircleLoader } from "react-spinners";
+import Spinner from "@/components/Spinner";
 
 const loading = () => {
-  return (
-    <div className="loader-container">
-      <CircleLoader />
-    </div>
-  );
+  return <Spinner></Spinner>;
 };
 
 export default loading;
