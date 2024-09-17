@@ -1,8 +1,7 @@
 import { updateUserCreditsBasicPackage } from "../../../app/_lib/data-service";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const endpointSecret =
-  "whsec_c6f6b65b20444526c9c555e83f1df9970248b5c51e001179e4944019d36452eb";
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
 export async function POST(request, response) {
   let event = request.body;

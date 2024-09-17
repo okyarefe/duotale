@@ -13,10 +13,7 @@ export async function POST(req, res) {
   const session = await getServerSession();
 
   const emailFromSession = session.user.email;
-  console.log(
-    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    emailFromSession
-  );
+
   const userDataFromDb = await getUserByEmail(emailFromSession);
 
   let price = 400;
