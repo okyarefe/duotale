@@ -5,8 +5,9 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import SubscriptionPage from "./SubscriptionPage";
 
-export default function CheckoutForm({ dpmCheckerLink }) {
+export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -54,6 +55,7 @@ export default function CheckoutForm({ dpmCheckerLink }) {
 
   return (
     <>
+      <SubscriptionPage />
       <div className="max-w-xl mx-auto mt-10 p-6 border-b-indigo-300 rounded-lg shadow-lg">
         <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-gray-50 p-4 rounded-md">

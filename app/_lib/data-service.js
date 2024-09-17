@@ -19,6 +19,21 @@ export async function getUserByEmail(email) {
   return data;
 }
 
+export const getPackage = async (packageName) => {
+  const { data, error } = await supabase
+    .from("packages")
+    .select("*")
+    .eq("name", packageName)
+    .single();
+
+  if (error) {
+    console.log("ERROR GETTING PACKAGE", error);
+    return null;
+  }
+
+  return data;
+};
+
 export const createUser = async (email) => {
   const id = uuidv4();
   const { data, error } = await supabase
