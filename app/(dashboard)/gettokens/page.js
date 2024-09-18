@@ -15,53 +15,49 @@ const stripePromise = loadStripe(
 );
 
 export default function App() {
-  const [clientSecret, setClientSecret] = React.useState("");
-  const [dpmCheckerLink, setDpmCheckerLink] = React.useState("");
-  const [confirmed, setConfirmed] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true); // Add loading state
-
-  React.useEffect(() => {
-    setConfirmed(
-      new URLSearchParams(window.location.search).get(
-        "payment_intent_client_secret"
-      )
-    );
-  });
-
-  React.useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ packagename: "basic" }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-        setIsLoading(false);
-      });
-  }, []);
-
-  const appearance = {
-    theme: "stripe",
-  };
-
-  const options = {
-    clientSecret,
-    appearance,
-  };
-
-  return (
-    <div className="App">
-      {isLoading ? (
-        <Spinner /> // Show spinner while loading
-      ) : (
-        clientSecret && (
-          <Elements options={options} stripe={stripePromise}>
-            {confirmed ? <CompletePage /> : <CheckoutForm />}
-          </Elements>
-        )
-      )}
-    </div>
-  );
+  return <h1>Not available yet</h1>;
+  // const [clientSecret, setClientSecret] = React.useState("");
+  // const [dpmCheckerLink, setDpmCheckerLink] = React.useState("");
+  // const [confirmed, setConfirmed] = React.useState(false);
+  // const [isLoading, setIsLoading] = React.useState(true); // Add loading state
+  // React.useEffect(() => {
+  //   setConfirmed(
+  //     new URLSearchParams(window.location.search).get(
+  //       "payment_intent_client_secret"
+  //     )
+  //   );
+  // });
+  // React.useEffect(() => {
+  //   // Create PaymentIntent as soon as the page loads
+  //   fetch("/api/create-payment-intent", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ packagename: "basic" }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setClientSecret(data.clientSecret);
+  //       setIsLoading(false);
+  //     });
+  // }, []);
+  // const appearance = {
+  //   theme: "stripe",
+  // };
+  // const options = {
+  //   clientSecret,
+  //   appearance,
+  // };
+  // return (
+  //   <div className="App">
+  //     {isLoading ? (
+  //       <Spinner /> // Show spinner while loading
+  //     ) : (
+  //       clientSecret && (
+  //         <Elements options={options} stripe={stripePromise}>
+  //           {confirmed ? <CompletePage /> : <CheckoutForm />}
+  //         </Elements>
+  //       )
+  //     )}
+  //   </div>
+  // );
 }

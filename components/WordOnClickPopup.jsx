@@ -3,7 +3,7 @@ import Spinner from "./Spinner";
 import { fetchTranslateWord } from "@/utils/actions";
 import WordOnClickTranslation from "./WordOnClickTranslation";
 import { Button } from "./ui/button";
-
+import SmallSpinner from "./SmallSpinner";
 import { ToastContainer, toast } from "react-toastify";
 
 const WordOnClickPopup = ({
@@ -137,8 +137,8 @@ const WordOnClickPopup = ({
               showTranslation={showTranslation}
             />
           ) : isLoading ? (
-            <div style={{ height: "50px" }}>
-              <Spinner size={20} color="black" />
+            <div className="wordloading">
+              <SmallSpinner />
             </div>
           ) : (
             buttonVisible && (

@@ -11,6 +11,7 @@ import { CircleLoader } from "react-spinners";
 import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
+import Spinner from "./Spinner";
 
 const Chat = ({ token, daily_free_translations, paid_tokens }) => {
   const [userToken, setUserToken] = useState(token);
@@ -224,10 +225,10 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
       </div>
       {isLoading ? (
         <div>
-          <div className="loader-container">
-            <CircleLoader />
-          </div>
           <div className="loader-container">Please wait...</div>
+          <div className="loader-container">
+            <Spinner />
+          </div>
         </div>
       ) : (
         <div className="flex space-x-4 storydivs">

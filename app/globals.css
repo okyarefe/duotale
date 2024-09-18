@@ -93,7 +93,8 @@
 }
 
 .loader-container {
-  display: flex;
+  text-align: center;
+
   justify-content: center;
   align-items: center;
 }
@@ -250,6 +251,10 @@
   font-weight: bold;
   background-color: #547faf;
   width: 50%;
+}
+.wordloading {
+  background-color: red;
+  height: 40px;
 }
 
 @layer base {

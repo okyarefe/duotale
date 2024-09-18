@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchAudio } from "../utils/actions";
-import Spinner from "../components/Spinner";
+import SmallSpinner from "../components/SmallSpinner";
 import ErrorComponent from "./ErrorComponent";
 
 import { useState } from "react";
@@ -63,9 +63,7 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
             disabled={isLoading}
             className={`button ${isLoading ? "disabled" : ""}`}
           >
-            <span className="voice">
-              Voice {isLoading && <Spinner size={20} color="black" />}
-            </span>
+            <span className="voice">Voice {isLoading && <SmallSpinner />}</span>
           </button>
         </div>
       )}
