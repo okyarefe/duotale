@@ -151,7 +151,12 @@ const WordOnClickPopup = ({
               </Button>
             )
           )}
-          <Button style={{ height: "40px" }}>Add to Practice List</Button>
+          <Button style={{ height: "40px" }} disabled>
+            Coming Soon
+          </Button>
+          <Button style={{ height: "40px" }} disabled>
+            Coming Soon
+          </Button>
         </div>
       )}
     </>

@@ -14,15 +14,14 @@ export default function Component() {
   return (
     <button
       onClick={handleSignOut}
-      className="bg-primary text-primary-foreground shadow hover:bg-primary/90"
+      className="text-primary-foreground signoutbutton"
       style={{
         height: "20%",
         width: "50%",
-        borderRadius: "10px",
-        color: "white",
+        fontFamily: "inherit",
       }}
     >
-      <span>Sign Out</span>
+      SIGN OUT
     </button>
   );
 }

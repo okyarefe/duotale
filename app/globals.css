@@ -85,7 +85,12 @@
 .twinheading {
   color: white;
   font-size: 2em;
-  color: white;
+
+  text-align: center;
+}
+
+.sidebar {
+  background-color: var(--background);
 }
 
 .stories-color {
@@ -246,11 +251,7 @@
 
 /* Get Tokens Link*/
 .getTokensLink {
-  margin-top: 5rem;
   color: white;
-  font-weight: bold;
-  background-color: #547faf;
-  width: 50%;
 }
 .wordloading {
   background-color: red;
@@ -340,4 +341,18 @@
   .animation-delay-300 {
     animation-delay: 0.3s;
   }
+}
+
+.signoutbutton {
+  border-bottom: whitesmoke 1px solid;
+  box-shadow: 0 4px 6px rgba(228, 219, 219, 0.1);
+}
+
+.navlinks {
+  border-bottom: whitesmoke 1px solid;
+  box-shadow: 0 4px 6px rgba(228, 219, 219, 0.1);
+}
+
+.contact-div {
+  
 }

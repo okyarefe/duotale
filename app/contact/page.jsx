@@ -4,7 +4,7 @@ function ContactPage() {
   return (
     <div className="w-full h-screen max-w-4xl mx-auto py-12 md:py-20 flex items-center">
       <div className="grid md:grid-cols-2 gap-8">
-        <div className="space-y-4">
+        <div className="space-y-4 contact-div">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">Get in Touch</h2>
             <p className="text-muted-foreground">

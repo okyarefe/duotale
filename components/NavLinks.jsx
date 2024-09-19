@@ -5,6 +5,7 @@ const links = [
   { href: "/dialogs", label: "STORIES" },
 
   { href: "/profile", label: "PROFILE" },
+
   // { href: "/gettokens", label: "GET TOKENS" },
 ];
 
@@ -14,10 +15,10 @@ const NavLinks = () => {
       {links.map((link) => {
         const specialClass = link.label === "GET TOKENS" ? "getTokensLink" : "";
         return (
-          <li key={link.href}>
+          <li key={link.href} className="navlinks">
             <Link
               href={link.href}
-              className={`capitalize transition duration-300 ease-in-out hover:bg-gray-200 hover:text-black ${specialClass}`}
+              className={`capitalize transition duration-300 p-4 ease-in-out hover:text-white ${specialClass}`}
             >
               {link.label}
             </Link>

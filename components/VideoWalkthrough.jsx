@@ -33,7 +33,7 @@ const VideoWalkthrough = () => {
         style={{ width: "100%", height: "100%" }}
         onClick={handlePlayWithSound}
       >
-        <source src="/finalelanding.mp4" type="video/mp4" />
+        <source src="/duotaletrailer.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </div>

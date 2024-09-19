@@ -16,7 +16,7 @@ export default function Component() {
           prefetch={false}
         ></Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
+          {/* <Link
             href="#"
             className="text-lg font-medium underline-offset-4 text-foreground animated-underline"
             prefetch={false}
@@ -36,7 +36,7 @@ export default function Component() {
             prefetch={false}
           >
             About
-          </Link>
+          </Link> */}
           <Link
             href="/contact"
             className="text-lg font-medium underline-offset-4 text-foreground animated-underline"
