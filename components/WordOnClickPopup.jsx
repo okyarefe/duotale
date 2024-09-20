@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import Spinner from "./Spinner";
+
 import { fetchTranslateWord } from "@/utils/actions";
 import WordOnClickTranslation from "./WordOnClickTranslation";
 import { Button } from "./ui/button";
 import SmallSpinner from "./SmallSpinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const WordOnClickPopup = ({
   word,

@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import { Bricolage_Grotesque } from "next/font/google";
+import { Bricolage_Grotesque, Roboto } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import { Merriweather } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -19,11 +19,16 @@ const fontHeading = Bricolage_Grotesque({
 //   weight: "700",
 // });
 
-const fontBody = Merriweather({
+// const fontBody = Merriweather({
+//   subsets: ["latin"],
+//   display: "swap",
+//   variable: "--font-body",
+//   weight: ["400", "700"], // Set the weights as needed
+// });
+const fontBody = Roboto({
+  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-body",
-  weight: ["400", "700"], // Set the weights as needed
 });
 export const metadata = {
   title: "Learn with fun stories",
