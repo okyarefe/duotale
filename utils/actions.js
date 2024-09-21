@@ -133,6 +133,7 @@ export async function fetchAudio(text) {
   const request = {
     input: { text: text },
     voice: {
+      name: `${languageCode}-Standard-A`,
       languageCode: languageCode,
       ssmlGender: "NEUTRAL",
     },
