@@ -2,12 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { languagesList, splitTextIntoSentences } from "../utils/helper";
-
 import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
-import { CircleLoader } from "react-spinners";
 import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
@@ -15,7 +12,7 @@ import Spinner from "./Spinner";
 
 const Chat = ({ token, daily_free_translations, paid_tokens }) => {
   const [userToken, setUserToken] = useState(token);
-  const [user_daily_free_translations, setUserDailyFreeTranslations] = useState(
+  const [userDailyFreeTranslations, setUserDailyFreeTranslations] = useState(
     daily_free_translations
   );
   const [paidTokens, setPaidTokens] = useState(paid_tokens);
@@ -24,117 +21,104 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
   const [finnishSentences, setFinnishSentences] = useState([]);
   const [translateTo, setTranslateTo] = useState("Finnish");
   const [text, setText] = useState("");
-  /*End of sentences*/
 
-  const [popupPosition, setPopupPosition] = useState(null);
-  const [highlightedIndex, setHighlightedIndex] = useState(null);
-  const [selectedSentence, setSelectedSentence] = useState("");
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupState, setPopupState] = useState({
+    position: null,
+    isOpen: false,
+    highlightedIndex: null,
+    selectedSentence: "",
+  });
 
   const [isLoading, setIsLoading] = useState(false);
-  /*Tokens*/
 
   const estimatedTokenCost = 1000;
-
   const maxCharacters = 100;
 
-  // Retrieve stored responses when component mounts
   useEffect(() => {
+    loadStoredResponses();
+    setupDocumentClickListener();
+  }, []);
+
+  const loadStoredResponses = () => {
     const storedEnglishMessage = localStorage.getItem("englishMessage");
     const storedFinnishMessage = localStorage.getItem("finnishMessage");
     if (storedEnglishMessage)
       setEnglishSentences(splitTextIntoSentences(storedEnglishMessage));
     if (storedFinnishMessage)
       setFinnishSentences(splitTextIntoSentences(storedFinnishMessage));
-  }, []);
+  };
 
-  useEffect(() => {
-    // Attach click event listener to document to handle clicks outside the popup
+  const setupDocumentClickListener = () => {
     const handleDocumentClick = (e) => {
       if (!e.target.closest(".popup")) {
-        setPopupPosition(null); // Close popup if click is outside the popup
-        setIsPopupOpen(false); // Reset the popup state
-        setHighlightedIndex(null); // Reset the highlighted sentence
-        setSelectedSentence(""); // Reset the selected sentence
+        resetPopupState();
       }
     };
 
     document.addEventListener("click", handleDocumentClick);
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, []);
+    return () => document.removeEventListener("click", handleDocumentClick);
+  };
 
-  const languageToTranslate = (lang) => {
-    console.log("Translating to:", lang);
-    setTranslateTo(lang);
+  const resetPopupState = () => {
+    setPopupState({
+      position: null,
+      isOpen: false,
+      highlightedIndex: null,
+      selectedSentence: "",
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (userToken > estimatedTokenCost) {
-      setIsLoading(true);
-
-      try {
-        const { englishStory, translatedStory, tokenUsed } =
-          await generateChatResponse(text, translateTo);
-        setEnglishSentences(splitTextIntoSentences(englishStory));
-        setFinnishSentences(splitTextIntoSentences(translatedStory));
-        let newTokenAmount = userToken - tokenUsed;
-
-        // Store the responses in local storage
-        localStorage.setItem("englishMessage", englishStory);
-        localStorage.setItem("finnishMessage", translatedStory);
-        setUserToken((prev) => prev - tokenUsed);
-        toast.success("Your story has been generated!");
-
-        toast.info(`You have used ${tokenUsed} tokens.`);
-        toast.info(`You have ${newTokenAmount} tokens left.`);
-
-        setIsLoading(false);
-        return;
-      } catch (error) {
-        setIsLoading(false);
-        throw new Error("Error occured while rendering .", error);
-      }
-    } else {
+    if (userToken <= estimatedTokenCost) {
       toast.warn("You do not have enough tokens to generate a story.");
+      return;
     }
-  };
 
-  const handleMouseOver = (index) => {
-    if (!isPopupOpen) {
-      setHighlightedIndex(index);
-    }
-  };
-
-  const handleMouseOut = (index) => {
-    if (!isPopupOpen) {
-      setHighlightedIndex(null);
-    }
-  };
-
-  const handleContextMenu = (e, index, sentence) => {
-    e.preventDefault();
-    setPopupPosition({ x: e.pageX, y: e.pageY }); // Store mouse coordinates
-    setSelectedSentence(sentence); // Store the selected sentence
-    setIsPopupOpen(true);
-    setHighlightedIndex(index); // Lock the highlighted sentence
-  };
-
-  const handleClosePopup = () => {
-    setPopupPosition(null);
-    setIsPopupOpen(false);
-    setHighlightedIndex(null);
-    setSelectedSentence("");
-  };
-
-  const handlePopupButtonClick = () => {
+    setIsLoading(true);
     try {
-      setPopupPosition(null);
-      setIsPopupOpen(false);
+      const { englishStory, translatedStory, tokenUsed } =
+        await generateChatResponse(text, translateTo);
+      updateStories(englishStory, translatedStory);
+      updateTokens(tokenUsed);
+      showSuccessToasts(tokenUsed);
     } catch (error) {
-      console.error("Error handling button click:", error);
+      console.error("Error occurred while rendering:", error);
+      toast.error("An error occurred while generating the story.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateStories = (englishStory, translatedStory) => {
+    setEnglishSentences(splitTextIntoSentences(englishStory));
+    setFinnishSentences(splitTextIntoSentences(translatedStory));
+    localStorage.setItem("englishMessage", englishStory);
+    localStorage.setItem("finnishMessage", translatedStory);
+  };
+
+  const updateTokens = (tokenUsed) => {
+    setUserToken((prev) => prev - tokenUsed);
+  };
+
+  const showSuccessToasts = (tokenUsed) => {
+    toast.success("Your story has been generated!");
+    toast.info(`You have used ${tokenUsed} tokens.`);
+    toast.info(`You have ${userToken - tokenUsed} tokens left.`);
+  };
+
+  const handleSentenceInteraction = (action, index, sentence) => {
+    if (action === "mouseOver" && !popupState.isOpen) {
+      setPopupState((prev) => ({ ...prev, highlightedIndex: index }));
+    } else if (action === "mouseOut" && !popupState.isOpen) {
+      setPopupState((prev) => ({ ...prev, highlightedIndex: null }));
+    } else if (action === "contextMenu") {
+      setPopupState({
+        position: { x: event.pageX, y: event.pageY },
+        isOpen: true,
+        highlightedIndex: index,
+        selectedSentence: sentence,
+      });
     }
   };
 
@@ -163,57 +147,18 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
           <div className="text-right text-sm text-gray-500">
             {text.length}/{maxCharacters} characters
           </div>
-          {/* DROPDOWN COMPONENT */}
           <Chooselanguage translateTo={translateTo}>
             <Dropdown
               label={"Choose a language pair - Translate to "}
               items={languagesList}
-              onSelect={languageToTranslate}
-            ></Dropdown>
+              onSelect={setTranslateTo}
+            />
           </Chooselanguage>
-
-          {/* TOKEN TEXT*/}
-          <div className="flex gap-5">
-            <h1
-              className="special"
-              style={{
-                border: "2px solid black",
-                padding: "10px",
-                display: "inline-block",
-              }}
-            >
-              You have{" "}
-              <span className="color-red-100 text-xl">{userToken}</span> tokens
-              left
-            </h1>
-            <h1
-              className="special"
-              style={{
-                border: "2px solid black",
-                padding: "10px",
-                display: "inline-block",
-              }}
-            >
-              You have{" "}
-              <span className="color-red-100 text-xl">
-                {daily_free_translations}
-              </span>{" "}
-              free daily word translations
-            </h1>
-            <h1
-              className="special"
-              style={{
-                border: "2px solid black",
-                padding: "10px",
-                display: "inline-block",
-              }}
-            >
-              You have{" "}
-              <span className="color-red-100 text-xl">{paidTokens}</span> paid
-              word translations
-            </h1>
-          </div>
-
+          <TokenDisplay
+            userToken={userToken}
+            dailyFreeTranslations={userDailyFreeTranslations}
+            paidTokens={paidTokens}
+          />
           <button
             type="submit"
             className="btn btn-primary self-end bg-blue-100 btn"
@@ -224,65 +169,114 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
         </form>
       </div>
       {isLoading ? (
-        <div>
-          <div className="loader-container">Please wait...</div>
-          <div className="loader-container">
-            <Spinner />
-          </div>
-        </div>
+        <LoadingIndicator />
       ) : (
-        <div className="flex space-x-4 storydivs">
-          <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-right-border">
-            <h2 className="text-lg font-bold mb-2 story">English Story</h2>
-            <p className="stories-color">
-              {englishSentences.map((sentence, index) => (
-                <span
-                  key={index}
-                  id={`english-sentence-${index}`}
-                  onMouseOver={() => handleMouseOver(index)}
-                  onMouseOut={() => handleMouseOut(index)}
-                  onContextMenu={(e) => handleContextMenu(e, index, sentence)}
-                  className={`mb-2 cursor-pointer ${
-                    highlightedIndex === index ? "bg-yellow-200 " : ""
-                  }`}
-                >
-                  {sentence + " "}
-                </span>
-              ))}
-            </p>
-          </div>
-          <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-left-border">
-            <h2 className="text-lg font-bold mb-2 story">Translated Story</h2>
-            <p className="stories-color">
-              {finnishSentences.map((sentence, index) => (
-                <span
-                  key={index}
-                  id={`finnish-sentence-${index}`}
-                  onMouseOver={() => handleMouseOver(index)}
-                  onMouseOut={() => handleMouseOut(index)}
-                  onContextMenu={(e) => handleContextMenu(e, index, sentence)}
-                  className={`mb-2 cursor-pointer ${
-                    highlightedIndex === index ? "bg-yellow-200 " : ""
-                  }`}
-                >
-                  {sentence + " "}
-                </span>
-              ))}
-            </p>
-          </div>
-        </div>
+        <StoryDisplay
+          englishSentences={englishSentences}
+          finnishSentences={finnishSentences}
+          handleSentenceInteraction={handleSentenceInteraction}
+          highlightedIndex={popupState.highlightedIndex}
+        />
       )}
-      {popupPosition && (
+      {popupState.position && (
         <PopupComponent
-          x={popupPosition.x}
-          y={popupPosition.y}
-          sentence={selectedSentence}
-          onClose={handleClosePopup}
-          handlePopupButtonClick={handlePopupButtonClick}
+          x={popupState.position.x}
+          y={popupState.position.y}
+          sentence={popupState.selectedSentence}
+          onClose={resetPopupState}
+          handlePopupButtonClick={resetPopupState}
         />
       )}
     </div>
   );
 };
+
+const TokenDisplay = ({ userToken, dailyFreeTranslations, paidTokens }) => (
+  <div className="flex gap-5">
+    <TokenInfo label="tokens left" value={userToken} />
+    <TokenInfo
+      label="free daily word translations"
+      value={dailyFreeTranslations}
+    />
+    <TokenInfo label="paid word translations" value={paidTokens} />
+  </div>
+);
+
+const TokenInfo = ({ label, value }) => (
+  <h1
+    className="special"
+    style={{
+      border: "2px solid black",
+      padding: "10px",
+      display: "inline-block",
+    }}
+  >
+    You have <span className="color-red-100 text-xl">{value}</span> {label}
+  </h1>
+);
+
+const LoadingIndicator = () => (
+  <div>
+    <div className="loader-container">Please wait...</div>
+    <div className="loader-container">
+      <Spinner />
+    </div>
+  </div>
+);
+
+const StoryDisplay = ({
+  englishSentences,
+  finnishSentences,
+  handleSentenceInteraction,
+  highlightedIndex,
+}) => (
+  <div className="flex space-x-4 storydivs">
+    <StorySection
+      title="English Story"
+      sentences={englishSentences}
+      handleSentenceInteraction={handleSentenceInteraction}
+      highlightedIndex={highlightedIndex}
+    />
+    <StorySection
+      title="Translated Story"
+      sentences={finnishSentences}
+      handleSentenceInteraction={handleSentenceInteraction}
+      highlightedIndex={highlightedIndex}
+    />
+  </div>
+);
+
+const StorySection = ({
+  title,
+  sentences,
+  handleSentenceInteraction,
+  highlightedIndex,
+}) => (
+  <div className="w-1/2 bg-green-100 p-4 rounded-lg shadow-md story-right-border">
+    <h2 className="text-lg font-bold mb-2 story">{title}</h2>
+    <p className="stories-color">
+      {sentences.map((sentence, index) => (
+        <span
+          key={index}
+          onMouseOver={() =>
+            handleSentenceInteraction("mouseOver", index, sentence)
+          }
+          onMouseOut={() =>
+            handleSentenceInteraction("mouseOut", index, sentence)
+          }
+          onContextMenu={(e) => {
+            e.preventDefault();
+            handleSentenceInteraction("contextMenu", index, sentence);
+          }}
+          className={`mb-2 cursor-pointer ${
+            highlightedIndex === index ? "bg-yellow-200 " : ""
+          }`}
+        >
+          {sentence + " "}
+        </span>
+      ))}
+    </p>
+  </div>
+);
 
 export default Chat;
