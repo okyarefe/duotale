@@ -1,4 +1,4 @@
-# DuoTale language practice web app
+# DuoTale language practice web app  [https://llearning.onrender.com/](URL)  
 
 - Write your own prompts, and the app generates a bilingual story based on your input, allowing you to practice creatively.
 - Get a split-screen view of stories in two languages to enhance your understanding of sentence structure and meaning in different contexts.
