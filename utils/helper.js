@@ -60,3 +60,13 @@ export const languagesList = [
 export function generateUniqueId(text) {
   return crypto.createHash("md5").update(text).digest("hex");
 }
+
+export function playTheMp3(mp3) {
+  if (mp3) {
+    const audio = new Audio(mp3);
+    audio.play();
+  } else {
+    const audio = new Audio(`/speech.mp3?timestamp=${new Date().getTime()}`);
+    audio.play();
+  }
+}

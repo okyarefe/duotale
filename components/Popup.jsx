@@ -3,7 +3,7 @@
 import { fetchAudio } from "../utils/actions";
 import SmallSpinner from "../components/SmallSpinner";
 import ErrorComponent from "./ErrorComponent";
-
+import { playTheMp3 } from "@/utils/helper";
 import { useState } from "react";
 
 const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
@@ -17,15 +17,7 @@ const PopupComponent = ({ x, y, sentence, handlePopupButtonClick }) => {
 
       // Fetch the audio file
       const mp3 = await fetchAudio(sentence);
-      if (mp3) {
-        const audio = new Audio(mp3);
-        audio.play();
-      } else {
-        const audio = new Audio(
-          `/speech.mp3?timestamp=${new Date().getTime()}`
-        );
-        audio.play();
-      }
+      playTheMp3(mp3);
 
       //Play the newly fetched audio
 

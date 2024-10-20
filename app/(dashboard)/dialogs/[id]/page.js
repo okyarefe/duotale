@@ -1,5 +1,6 @@
 // pages/dialogs/[id].js
 import { getStoryById } from "../../../_lib/data-service";
+
 import SingleStoryF from "../../../../components/SingleStoryF";
 
 const StoryDetailPage = async ({ params }) => {

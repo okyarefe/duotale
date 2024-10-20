@@ -216,7 +216,7 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
 
           <button
             type="submit"
-            className="btn btn-primary self-end bg-blue-100 btn"
+            className="btn btn-primary self-end bg-blue-100"
             disabled={isLoading}
           >
             Submit
