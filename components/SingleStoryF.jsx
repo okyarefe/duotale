@@ -8,6 +8,7 @@ import WordOnClickPopup from "./WordOnClickPopup";
 import { Button } from "./ui/button";
 import { fetchAudio } from "@/utils/actions";
 import { playTheMp3 } from "../utils/helper";
+import StoryPlayer from "./StoryPlayer";
 
 const SingleStoryF = ({ story }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(null);
@@ -178,7 +179,12 @@ const SingleStoryF = ({ story }) => {
               </p>
             )
           )}{" "}
-          <Button onClick={() => handleListenStory(a)}>Listen</Button>
+          <div class="flex">
+            <Button onClick={() => handleListenStory(a)}>Listen</Button>
+            <div class="bg-orange-400">
+              <StoryPlayer></StoryPlayer>
+            </div>
+          </div>
         </div>
       </div>
       {wordPopup.show && (
