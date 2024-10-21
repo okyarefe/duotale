@@ -96,31 +96,33 @@ const StoryPlayer = ({ storyToAudio }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 border-2 border-cyan-600 shadow-lg">
       <div className="flex items-center gap-4">
         {" "}
         <Button
           onClick={() => handleListenStory(storyToAudio)}
           disabled={isLoading}
+          className="w-1/4"
         >
-          {isLoading ? (
-            <div className="w-24 h-18 text-center">
-              <SmallSpinner />
-            </div>
-          ) : (
-            <h1 className="w-24 h-18 text-center">Listen</h1>
-          )}
+          <div className="flex justify-center items-center min-w-[60px] text-center">
+            {isLoading ? <SmallSpinner /> : <h1>Listen</h1>}
+          </div>
         </Button>
-        <Button onClick={handlePause} disabled={!isPlaying}>
+        <Button className="w-1/4" onClick={handlePause} disabled={!isPlaying}>
           Pause
         </Button>
         <Button
+          className="w-1/4"
           onClick={handleResume}
           disabled={isPlaying || !audioRef.current}
         >
           Resume
         </Button>
-        <Button onClick={handleStop} disabled={!audioRef.current}>
+        <Button
+          className="w-1/4"
+          onClick={handleStop}
+          disabled={!audioRef.current}
+        >
           Stop
         </Button>
       </div>

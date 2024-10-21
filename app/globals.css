@@ -354,6 +354,7 @@
 }
 
 /* Style for the thumb (the draggable ball) */
+
 input[type="range"]::-webkit-slider-thumb {
   cursor: pointer; /* This will change the cursor to a pointer when hovering over the thumb */
 }
