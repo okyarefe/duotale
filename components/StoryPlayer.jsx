@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { fetchAudio } from "@/utils/actions";
 import { debounce } from "lodash";
 import SmallSpinner from "./SmallSpinner";
+import { toast } from "react-toastify";
 
 const StoryPlayer = ({ storyToAudio }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,39 +16,56 @@ const StoryPlayer = ({ storyToAudio }) => {
 
   const debouncedFetchAudio = useRef(
     debounce(async (a) => {
-      const mp3 = await fetchAudio(a);
-      setIsLoading(false);
-      if (mp3) {
-        // Create a new Audio object and store it in the ref
-        audioRef.current = new Audio(mp3);
+      console.log("Debounce run!");
+      setIsLoading(true);
+      try {
+        const mp3 = await fetchAudio(a);
 
-        // Set the audio duration once metadata is loaded
-        audioRef.current.onloadedmetadata = () => {
-          setDuration(audioRef.current.duration);
-        };
+        if (mp3) {
+          // Create a new Audio object and store it in the ref
+          setIsLoading(false);
+          audioRef.current = new Audio(mp3);
 
-        // Start playing the audio
-        audioRef.current.play();
-        setIsPlaying(true);
+          // Set the audio duration once metadata is loaded
+          audioRef.current.onloadedmetadata = () => {
+            setDuration(audioRef.current.duration);
+          };
 
-        // Start updating the progress periodically
-        intervalRef.current = setInterval(() => {
-          setProgress(audioRef.current.currentTime);
-        }, 1000);
+          // Start playing the audio
+          audioRef.current.play();
+          console.log("Play function ran!");
+          setIsPlaying(true);
 
-        // Handle end of playback to reset state
-        audioRef.current.onended = () => {
-          setIsPlaying(false);
-          setProgress(0);
-          clearInterval(intervalRef.current);
-        };
+          // Start updating the progress periodically
+          intervalRef.current = setInterval(() => {
+            setProgress(audioRef.current.currentTime);
+          }, 1000);
+
+          // Handle end of playback to reset state
+          audioRef.current.onended = () => {
+            setIsPlaying(false);
+            setProgress(0);
+            clearInterval(intervalRef.current);
+          };
+        } else {
+          const audio = new Audio(
+            `/speech.mp3?timestamp=${new Date().getTime()}`
+          );
+          audio.play();
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log("ERROR!", error);
+      } finally {
+        setIsLoading(false);
       }
     }, 500) // Adjust debounce time as needed
   ).current;
 
-  const handleListenStory = async (a) => {
+  const handleListenStory = async (storyToAudio) => {
+    console.log("Handle Story run!");
     setIsLoading(true);
-    debouncedFetchAudio(a);
+    debouncedFetchAudio(storyToAudio);
   };
 
   const handlePause = () => {
