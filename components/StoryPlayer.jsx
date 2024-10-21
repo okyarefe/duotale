@@ -25,35 +25,34 @@ const StoryPlayer = ({ storyToAudio }) => {
           // Create a new Audio object and store it in the ref
           setIsLoading(false);
           audioRef.current = new Audio(mp3);
-
-          // Set the audio duration once metadata is loaded
-          audioRef.current.onloadedmetadata = () => {
-            setDuration(audioRef.current.duration);
-          };
-
-          // Start playing the audio
-          audioRef.current.play();
-          console.log("Play function ran!");
-          setIsPlaying(true);
-
-          // Start updating the progress periodically
-          intervalRef.current = setInterval(() => {
-            setProgress(audioRef.current.currentTime);
-          }, 1000);
-
-          // Handle end of playback to reset state
-          audioRef.current.onended = () => {
-            setIsPlaying(false);
-            setProgress(0);
-            clearInterval(intervalRef.current);
-          };
         } else {
-          const audio = new Audio(
+          audioRef.current = new Audio(
             `/speech.mp3?timestamp=${new Date().getTime()}`
           );
-          audio.play();
-          setIsLoading(false);
         }
+
+        // Set the audio duration once metadata is loaded
+        audioRef.current.onloadedmetadata = () => {
+          setDuration(audioRef.current.duration);
+        };
+
+        // Start playing the audio
+        audioRef.current.play();
+        console.log("Play function ran!");
+        setIsPlaying(true);
+
+        // Start updating the progress periodically
+        intervalRef.current = setInterval(() => {
+          setProgress(audioRef.current.currentTime);
+        }, 1000);
+
+        // Handle end of playback to reset state
+        audioRef.current.onended = () => {
+          setIsPlaying(false);
+          setProgress(0);
+          setIsPlaying(true);
+          clearInterval(intervalRef.current);
+        };
       } catch (error) {
         console.log("ERROR!", error);
       } finally {
