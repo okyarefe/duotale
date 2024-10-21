@@ -10,6 +10,7 @@ import { getValueFromCache } from "../app/_lib/redis";
 import { decreaseUserToken } from "../app/_lib/data-service";
 import { getServerSession } from "next-auth";
 import { getUserByEmail } from "../app/_lib/data-service";
+import * as deepl from "deepl-node";
 import {
   saveStory,
   saveTTSfileToS3,
@@ -18,13 +19,16 @@ import {
 } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
 const textToSpeech = require("@google-cloud/text-to-speech");
-// Creates a client
+// Creates a text2speech client
 const client = new textToSpeech.TextToSpeechClient();
 import { franc } from "franc";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+// Create Deepl client
+const deepl_key = process.env.DEEPL_AUTH_KEY;
+const translator = new deepl.Translator(deepl_key);
 
 export const generateChatResponse = async (prompt, translateTo) => {
   "use server";
@@ -127,6 +131,7 @@ export async function fetchAudio(text) {
     console.log("Detected Language Code:", langCode);
     return francToGoogleLangMap[langCode] || "en-US";
   }
+
   const languageCode = detectLanguage(text);
   console.log("Language Code:", languageCode);
 
@@ -165,36 +170,39 @@ export const fetchTranslateWord = async (word) => {
   if (result.status === "failed") {
     return { error: "Daily translation limit reached" };
   } else if (result.status === "success") {
-    console.log("TRANSLATING WORD FROM OPEN AI", word);
+    console.log("TRANSLATING WORD FROM DEEPL AI", word);
     try {
-      const response = await openai.chat.completions.create({
-        // model: "gpt-3.5-turbo",
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: "You are a dictionary",
-          },
-          {
-            role: "user",
-            content: `What does ${word} mean in English? just write the answer
-             `,
-          },
-        ],
-        max_tokens: 50,
-      });
+      const francToGoogleLangMap = {
+        eng: "en", // English
+        spa: "es", // Spanish
+        fra: "fr", // French
+        deu: "de", // German
+        ita: "it", // Italian
+        fin: "fi", // Finnish
+        tur: "tr", // Turkish
+        rus: "ru", // Russian
+        // Add more mappings as needed
+      };
 
-      const wordTranslation = response.choices[0].message.content;
-
-      const tokenUsed = response.usage.total_tokens;
-      console.log(
-        "Translating word" + wordTranslation + "costed   " + tokenUsed
+      function detectLanguage(word) {
+        const langCode = franc(word);
+        // console.log("Detected Language Code:", langCode);
+        console.log("Detected Language Code:", langCode);
+        return francToGoogleLangMap[langCode] || "en-US";
+      }
+      const response = await translator.translateText(
+        word,
+        null,
+        detectLanguage(word)
       );
-      // DECREASE THE USER DAILY FREE TRANSLATON LIMIT
+
+      const wordTranslation = response.text;
+
       revalidatePath("/chat");
-      return { wordTranslation, tokenUsed };
+      return { wordTranslation };
+      // return { wordTranslation, tokenUsed };
     } catch (error) {
-      console.log("Error from translation OPENAI ", error);
+      console.log("Error from translation word ", error);
       throw new Error(error);
     }
   }
