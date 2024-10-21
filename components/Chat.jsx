@@ -226,7 +226,8 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
       {isLoading ? (
         <div>
           <div className="loader-container">Please wait...</div>
-          <div className="loader-container">
+          <div className="spinner-div">
+            {" "}
             <Spinner />
           </div>
         </div>

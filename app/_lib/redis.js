@@ -8,16 +8,13 @@ const redisUrl =
 
 const client = createClient({
   url: redisUrl,
-  timeout: 8000,
-});
-//process.env.RENDER_REDIS_EXTERNAL_URL
-// process.env.RENDER_REDIS_URL
-
-client.on("error", (err) => {
-  console.error("Redis error:", err);
 });
 
-client.connect();
+(async () => {
+  client.on("error", (err) => console.log("Redis Client Error", err));
+
+  await client.connect();
+})();
 
 // Save the URL to Redis
 export async function saveFileUrlToRedis(key, fileUrl) {
