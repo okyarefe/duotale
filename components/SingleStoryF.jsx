@@ -5,9 +5,7 @@ import "react-toastify/dist/ReactToastify.css"; //
 import { ToastContainer, toast } from "react-toastify";
 import PopupComponent from "./Popup";
 import WordOnClickPopup from "./WordOnClickPopup";
-import { Button } from "./ui/button";
-import { fetchAudio } from "@/utils/actions";
-import { playTheMp3 } from "../utils/helper";
+
 import StoryPlayer from "./StoryPlayer";
 
 const SingleStoryF = ({ story }) => {
@@ -19,8 +17,7 @@ const SingleStoryF = ({ story }) => {
 
   const [highlightedWord, setHighlightedWord] = useState(null);
   const [wordTranslation, setWordTranslation] = useState(null);
-  let a = story.finnish_story;
-  console.log("Story:", a);
+  let storyToAudio = story.finnish_story;
 
   /*Opens WordOnClickPopup */
   const [wordPopup, setWordPopup] = useState({
@@ -84,12 +81,6 @@ const SingleStoryF = ({ story }) => {
   // Updated function to handle mouse out from a word
   const handleWordMouseOut = () => {
     setHighlightedWord(null);
-  };
-
-  const handleListenStory = async (a) => {
-    console.log("X", a);
-    const mp3 = await fetchAudio(a);
-    playTheMp3(mp3);
   };
 
   // Updated function to split sentence into words and render them
@@ -180,9 +171,8 @@ const SingleStoryF = ({ story }) => {
             )
           )}{" "}
           <div class="flex">
-            <Button onClick={() => handleListenStory(a)}>Listen</Button>
-            <div class="bg-orange-400">
-              <StoryPlayer></StoryPlayer>
+            <div>
+              <StoryPlayer storyToAudio={storyToAudio}></StoryPlayer>
             </div>
           </div>
         </div>
