@@ -353,5 +353,7 @@
   box-shadow: 0 4px 6px rgba(228, 219, 219, 0.1);
 }
 
-.contact-div {
+/* Style for the thumb (the draggable ball) */
+input[type="range"]::-webkit-slider-thumb {
+  cursor: pointer; /* This will change the cursor to a pointer when hovering over the thumb */
 }

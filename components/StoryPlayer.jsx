@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { fetchAudio } from "@/utils/actions";
 import { debounce } from "lodash";
@@ -7,8 +7,11 @@ import SmallSpinner from "./SmallSpinner";
 const StoryPlayer = ({ storyToAudio }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0); // Track the current progress (in seconds)
+  const [duration, setDuration] = useState(0); // Track the duration of the audio (in seconds)
 
   const audioRef = useRef(null);
+  const intervalRef = useRef(null); // To update the progress periodically
 
   const debouncedFetchAudio = useRef(
     debounce(async (a) => {
@@ -17,12 +20,26 @@ const StoryPlayer = ({ storyToAudio }) => {
       if (mp3) {
         // Create a new Audio object and store it in the ref
         audioRef.current = new Audio(mp3);
+
+        // Set the audio duration once metadata is loaded
+        audioRef.current.onloadedmetadata = () => {
+          setDuration(audioRef.current.duration);
+        };
+
+        // Start playing the audio
         audioRef.current.play();
         setIsPlaying(true);
+
+        // Start updating the progress periodically
+        intervalRef.current = setInterval(() => {
+          setProgress(audioRef.current.currentTime);
+        }, 1000);
 
         // Handle end of playback to reset state
         audioRef.current.onended = () => {
           setIsPlaying(false);
+          setProgress(0);
+          clearInterval(intervalRef.current);
         };
       }
     }, 500) // Adjust debounce time as needed
@@ -37,6 +54,7 @@ const StoryPlayer = ({ storyToAudio }) => {
     if (audioRef.current) {
       audioRef.current.pause();
       setIsPlaying(false);
+      clearInterval(intervalRef.current);
     }
   };
 
@@ -44,6 +62,11 @@ const StoryPlayer = ({ storyToAudio }) => {
     if (audioRef.current && audioRef.current.paused) {
       audioRef.current.play();
       setIsPlaying(true);
+
+      // Restart updating the progress
+      intervalRef.current = setInterval(() => {
+        setProgress(audioRef.current.currentTime);
+      }, 1000);
     }
   };
 
@@ -52,26 +75,42 @@ const StoryPlayer = ({ storyToAudio }) => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0; // Reset the playback position to the beginning
       setIsPlaying(false);
+      setProgress(0);
+      clearInterval(intervalRef.current);
     }
   };
 
+  const handleSeek = (event) => {
+    const newTime = event.target.value;
+    setProgress(newTime);
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+    }
+  };
+
+  useEffect(() => {
+    // Clean up the interval when the component is unmounted
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
+
   return (
-    <div class="flex items-center gap-4">
-      <div>
+    <div className="flex flex-col items-center gap-4">
+      <div className="flex items-center gap-4">
+        {" "}
         <Button
           onClick={() => handleListenStory(storyToAudio)}
           disabled={isLoading}
         >
           {isLoading ? (
-            <div class="w-24 h-18 text-center">
-              <SmallSpinner></SmallSpinner>
+            <div className="w-24 h-18 text-center">
+              <SmallSpinner />
             </div>
           ) : (
-            <h1 class="w-24 h-18 text-center">Listen</h1>
+            <h1 className="w-24 h-18 text-center">Listen</h1>
           )}
         </Button>
-      </div>
-      <div>
         <Button onClick={handlePause} disabled={!isPlaying}>
           Pause
         </Button>
@@ -85,8 +124,32 @@ const StoryPlayer = ({ storyToAudio }) => {
           Stop
         </Button>
       </div>
+      <div className="w-full">
+        <input
+          type="range"
+          min="0"
+          max={duration}
+          value={progress}
+          onChange={handleSeek}
+          className="w-full"
+        />
+        <div className="flex justify-between text-sm">
+          <span>{formatTime(progress)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
     </div>
   );
+};
+
+// Helper function to format time in mm:ss
+const formatTime = (time) => {
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+    2,
+    "0"
+  )}`;
 };
 
 export default StoryPlayer;
