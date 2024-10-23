@@ -44,7 +44,10 @@
 }
 
 .bg-gray-100 {
-  background-color: #2772db63 !important;
+}
+
+.sidebar-color {
+  color: rgba(129, 181, 241, 0.5);
 }
 
 .special {
@@ -87,10 +90,6 @@
   font-size: 2em;
 
   text-align: center;
-}
-
-.sidebar {
-  background-color: var(--background);
 }
 
 .stories-color {
@@ -336,7 +335,6 @@
 
 .navlinks {
   border-bottom: whitesmoke 1px solid;
-  box-shadow: 0 4px 6px rgba(228, 219, 219, 0.1);
 }
 
 /* Style for the thumb (the draggable ball) */

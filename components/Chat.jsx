@@ -150,7 +150,7 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
         draggable
         theme="colored"
       />
-      <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+      <div className="bg-slate-200 p-4 rounded-lg shadow-lg border-2 border-black">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
           <textarea
             maxLength={maxCharacters}

@@ -50,7 +50,7 @@ const Stories = ({ initialStories, userId }) => {
               <li key={story.id}>
                 <Link href={`/dialogs/${story.id}`}>
                   <button className="story-btn">
-                    {}-{story.english_story.slice(0, 80)}...
+                    {}-{story.english_story?.slice(0, 80)}...
                   </button>
                 </Link>
               </li>
