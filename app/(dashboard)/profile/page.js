@@ -15,13 +15,14 @@ export default async function ProfilePage() {
   const session = await getServerSession();
 
   const userDataFromDatabase = await getUserByEmail(session.user.email);
-  console.log("session", session);
+  console.log("User from database", userDataFromDatabase);
 
   function getEmailUsername(email) {
     const regex = /^[^@]+/;
     const match = email.match(regex);
     return match ? match[0] : null;
   }
+
   const username = getEmailUsername(userDataFromDatabase.email);
 
   // This would typically come from your authentication system
@@ -30,7 +31,7 @@ export default async function ProfilePage() {
     email: userDataFromDatabase.email,
     avatarUrl: session.user.image,
     stats: {
-      storiesCreated: 42,
+      storiesCreated: userDataFromDatabase.num_stories,
       tokensLeft: userDataFromDatabase.token,
       dailyTransitionsLeft: userDataFromDatabase.total_tokens,
     },
