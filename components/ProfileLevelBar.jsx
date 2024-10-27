@@ -27,7 +27,7 @@ export default function Component({ numStories }) {
   }, [numStories]);
 
   return (
-    <Card className="w-[300px]">
+    <Card className="w-[400px]">
       <CardHeader>
         <CardTitle>Story Creator Level</CardTitle>
         <CardDescription>Create stories to level up!</CardDescription>

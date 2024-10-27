@@ -1,20 +1,20 @@
 import { createClient } from "redis";
 import { createSignedUrl } from "./supabase";
 
-// const redisUrl =
-//   process.env.NODE_ENV === "development"
-//     ? process.env.RENDER_REDIS_EXTERNAL_URL
-//     : process.env.RENDER_REDIS_URL;
+const redisUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.RENDER_REDIS_EXTERNAL_URL
+    : process.env.RENDER_REDIS_URL;
 
-// const client = createClient({
-//   url: redisUrl,
-// });
+const client = createClient({
+  url: redisUrl,
+});
 
-// (async () => {
-//   client.on("error", (err) => console.log("Redis Client Error", err));
+(async () => {
+  client.on("error", (err) => console.log("Redis Client Error", err));
 
-//   await client.connect();
-// })();
+  await client.connect();
+})();
 
 // Save the URL to Redis
 export async function saveFileUrlToRedis(key, fileUrl) {

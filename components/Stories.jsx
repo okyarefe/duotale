@@ -46,11 +46,15 @@ const Stories = ({ initialStories, userId }) => {
       ) : stories.length > 0 ? (
         <>
           <ul>
-            {stories.map((story) => (
+            {stories.map((story, index) => (
               <li key={story.id}>
-                <Link href={`/dialogs/${story.id}`}>
+                <Link href={`/dialogs/${story.id}`} className="w-1/2">
                   <button className="story-btn">
-                    {}-{story.english_story?.slice(0, 80)}...
+                    <p className="inline bg-slate-950 p-2">
+                      Story - {index + 1 + pageNumber * 5}
+                    </p>
+                    -{story.english_story?.slice(0, 80)}
+                    ...
                   </button>
                 </Link>
               </li>
@@ -58,7 +62,7 @@ const Stories = ({ initialStories, userId }) => {
           </ul>
           <div>
             <button
-              className="pn-button"
+              className="pn-button "
               onClick={handlePrevious}
               disabled={paginationStart === 0}
             >

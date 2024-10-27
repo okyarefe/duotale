@@ -17,7 +17,8 @@ const SingleStoryF = ({ story }) => {
 
   const [highlightedWord, setHighlightedWord] = useState(null);
   const [wordTranslation, setWordTranslation] = useState(null);
-  let storyToAudio = story.finnish_story;
+  let finnishStoryToAudio = story.finnish_story;
+  let englishStoryToAudio = story.english_story;
 
   /*Opens WordOnClickPopup */
   const [wordPopup, setWordPopup] = useState({
@@ -150,6 +151,11 @@ const SingleStoryF = ({ story }) => {
               </p>
             )
           )}
+          <div class="flex">
+            <div>
+              <StoryPlayer storyToAudio={englishStoryToAudio}></StoryPlayer>
+            </div>
+          </div>
         </div>
 
         {/* Finnish Story */}
@@ -172,7 +178,7 @@ const SingleStoryF = ({ story }) => {
           )}{" "}
           <div class="flex">
             <div>
-              <StoryPlayer storyToAudio={storyToAudio}></StoryPlayer>
+              <StoryPlayer storyToAudio={finnishStoryToAudio}></StoryPlayer>
             </div>
           </div>
         </div>
