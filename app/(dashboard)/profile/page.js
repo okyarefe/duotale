@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
 import { getUserByEmail } from "../../_lib/data-service";
+import ProfileLevelBar from "@/components/ProfileLevelBar";
 import Link from "next/link";
 import {
   Card,
@@ -39,19 +40,26 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white shadow-xl rounded-3xl overflow-hidden">
+      <Card className="w-full max-w-md bg-white shadow-xl rounded-3xl overflow-hidden ">
         <CardHeader className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500 text-white p-6 text-center">
-          <div className="mb-4">
-            <Image
-              width={100}
-              height={100}
-              src={user.avatarUrl}
-              alt={user.name}
-              className="w-24 h-24 rounded-full border-4 border-white mx-auto"
-            />
+          <div className="flex gap-4">
+            <div>
+              <div className="mb-4 ">
+                <Image
+                  width={100}
+                  height={100}
+                  src={user.avatarUrl}
+                  alt={user.name}
+                  className="w-24 h-24 rounded-full border-4 border-white mx-auto"
+                />
+              </div>
+              <h2 className="text-2xl font-bold">{user.name}</h2>
+              <p className="text-sm opacity-80">{user.email}</p>
+            </div>
+            <ProfileLevelBar
+              numStories={userDataFromDatabase.num_stories}
+            ></ProfileLevelBar>
           </div>
-          <h2 className="text-2xl font-bold">{user.name}</h2>
-          <p className="text-sm opacity-80">{user.email}</p>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-3 gap-4 mb-6 text-blue-400">
