@@ -2,12 +2,12 @@ import React from "react";
 
 const Spinner = () => {
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-300 to-blue-400 bg-gray-100">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-300 to-blue-400">
       <div className="relative w-24 h-24">
         {[0, 1, 2].map((index) => (
           <div
             key={index}
-            className={`absolute w-8 h-8 bg-gray-100 rounded-full shadow-md 
+            className={`absolute w-8 h-8 rounded-full shadow-md 
                         animate-bounce
                         ${
                           index === 0

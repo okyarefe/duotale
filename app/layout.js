@@ -12,19 +12,6 @@ const fontHeading = Bricolage_Grotesque({
   weight: "700",
 });
 
-// const fontBody = Space_Mono({
-//   subsets: ["latin"],
-//   display: "swap",
-//   variable: "--font-body",
-//   weight: "700",
-// });
-
-// const fontBody = Merriweather({
-//   subsets: ["latin"],
-//   display: "swap",
-//   variable: "--font-body",
-//   weight: ["400", "700"], // Set the weights as needed
-// });
 const fontBody = Roboto({
   weight: ["400", "700"],
   subsets: ["latin"],

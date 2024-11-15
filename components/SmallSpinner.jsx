@@ -2,7 +2,7 @@ import React from "react";
 
 const SmallSpinner = () => {
   return (
-    <div className="flex items-center justify-center h-full text-center bg-slate-900">
+    <div className="flex items-center justify-center h-full text-center">
       <div className="relative w-4 h-4">
         {[0, 1, 2].map((index) => (
           <div

@@ -169,13 +169,19 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
   }
 };
 
-export const saveStory = async (userId, englishStory, finnishStory) => {
+export const saveStory = async (
+  userId,
+  englishStory,
+  translatedStory,
+  translateTo
+) => {
   try {
     const { data, error } = await supabase.from("stories").insert([
       {
         user_id: userId,
         english_story: englishStory,
-        finnish_story: finnishStory,
+        translated_story: translatedStory,
+        translate_to: translateTo,
       },
     ]);
     if (error) {

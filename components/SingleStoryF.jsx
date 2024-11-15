@@ -17,7 +17,7 @@ const SingleStoryF = ({ story }) => {
 
   const [highlightedWord, setHighlightedWord] = useState(null);
   const [wordTranslation, setWordTranslation] = useState(null);
-  let finnishStoryToAudio = story.finnish_story;
+  let finnishStoryToAudio = story.translated_story || story.finnish_story;
   let englishStoryToAudio = story.english_story;
 
   /*Opens WordOnClickPopup */
@@ -161,21 +161,21 @@ const SingleStoryF = ({ story }) => {
         {/* Finnish Story */}
         <div className="flex-1 bg-white border border-gray-200 rounded-lg shadow-md p-4 text-black">
           <h2 className="text-lg font-bold mb-2">Translated Story:</h2>
-          {splitTextIntoSentences(story.finnish_story).map(
-            (sentence, index) => (
-              <p
-                key={index}
-                className={`mb-2 cursor-pointer ${
-                  highlightedIndex === index ? "bg-yellow-200" : ""
-                }`}
-                onMouseOver={() => handleMouseOver(index)}
-                onMouseOut={handleMouseOut}
-                onContextMenu={(e) => handleContextMenu(e, index, sentence)}
-              >
-                {renderWords(sentence)}
-              </p>
-            )
-          )}{" "}
+          {splitTextIntoSentences(
+            story.translated_story || story.finnish_story
+          ).map((sentence, index) => (
+            <p
+              key={index}
+              className={`mb-2 cursor-pointer ${
+                highlightedIndex === index ? "bg-yellow-200" : ""
+              }`}
+              onMouseOver={() => handleMouseOver(index)}
+              onMouseOut={handleMouseOut}
+              onContextMenu={(e) => handleContextMenu(e, index, sentence)}
+            >
+              {renderWords(sentence)}
+            </p>
+          ))}{" "}
           <div class="flex">
             <div>
               <StoryPlayer storyToAudio={finnishStoryToAudio}></StoryPlayer>
