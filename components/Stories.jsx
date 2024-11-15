@@ -59,10 +59,12 @@ const Stories = ({ initialStories, userId }) => {
                       Your personal collection of language learning stories
                     </p>
                   </div>
-                  <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                    <Plus className="w-4 h-4" />
-                    New Story
-                  </button>
+                  <Link href="/chat">
+                    <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-105 hover:shadow-lg hover:-translate-y-0.5">
+                      <Plus className="w-4 h-4 transition-transform duration-300 ease-in-out group-hover:rotate-90" />
+                      Create a new story
+                    </button>
+                  </Link>
                 </div>
 
                 {stories.length === 0 ? (
@@ -80,15 +82,6 @@ const Stories = ({ initialStories, userId }) => {
                     {stories.map((story, index) => (
                       <li key={story.id}>
                         <Link href={`/dialogs/${story.id}`} className="w-1/2">
-                          {/*
-                          <button className="story-btn">
-                            <p className="inline bg-slate-950 p-2">
-                              Story - {index + 1 + pageNumber * 5}
-                            </p>
-                            -{story.english_story?.slice(0, 80)}
-                            ...
-                          </button>
-                          */}
                           <StoryCard key={story.id} story={story} />
                         </Link>
                       </li>
@@ -97,24 +90,6 @@ const Stories = ({ initialStories, userId }) => {
                 )}
               </div>
             </div>
-
-            /* 
-          <ul>
-            {stories.map((story, index) => (
-              <li key={story.id}>
-                <Link href={`/dialogs/${story.id}`} className="w-1/2">
-                  <button className="story-btn">
-                    <p className="inline bg-slate-950 p-2">
-                      Story - {index + 1 + pageNumber * 5}
-                    </p>
-                    -{story.english_story?.slice(0, 80)}
-                    ...
-                  </button>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          */
           }
           <div>
             <button
@@ -131,7 +106,21 @@ const Stories = ({ initialStories, userId }) => {
         </>
       ) : (
         <>
-          <p>No stories found.</p>
+          <div className="text-center py-12">
+            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No stories yet
+            </h3>
+            <p className="text-gray-500">
+              <Link
+                href="/chat"
+                className="inline-flex items-center gap-2 px-4 py-2 font-medium text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+              >
+                <Plus className="w-4 h-4" />
+                Click here to create your first language learning story!
+              </Link>
+            </p>
+          </div>
           <button
             className="pn-button"
             onClick={handlePrevious}

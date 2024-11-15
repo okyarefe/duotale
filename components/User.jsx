@@ -6,10 +6,7 @@ const User = ({ users }) => {
   const handleClick = () => {
     try {
       deleteUser({ clerkId: "user_2ly2EepicQBDpowFgG8IcOqA3jx" });
-      console.log("Succesfuly deleted the user!");
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
+    } catch (error) {}
   };
 
   return (

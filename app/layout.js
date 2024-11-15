@@ -1,8 +1,7 @@
 import "./globals.css";
 
 import { Bricolage_Grotesque, Roboto } from "next/font/google";
-import { Space_Mono } from "next/font/google";
-import { Merriweather } from "next/font/google";
+
 import { cn } from "@/lib/utils";
 
 const fontHeading = Bricolage_Grotesque({
@@ -28,7 +27,6 @@ export default function RootLayout({ children }) {
       <body
         className={cn("antialiased", fontHeading.variable, fontBody.variable)}
       >
-        <div></div>
         {children}
       </body>
     </html>
