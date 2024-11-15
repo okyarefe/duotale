@@ -31,7 +31,8 @@ const deepl_key = process.env.DEEPL_AUTH_KEY;
 const translator = new deepl.Translator(deepl_key);
 
 export const generateChatResponse = async (prompt, translateTo) => {
-  "use server";
+  console.log("The translateTo is", translateTo);
+  ("use server");
   const response = await openai.chat.completions.create({
     // model: "gpt-3.5-turbo",
     model: "gpt-4o-mini",
@@ -71,7 +72,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
     );
 
     await decreaseUserToken(id, tokenUsed);
-    await saveStory(id, englishStory, translatedStory);
+    await saveStory(id, englishStory, translatedStory, translateTo);
 
     // revalidatePath("/chat");
     return { englishStory, translatedStory, tokenUsed };

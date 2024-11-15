@@ -1,8 +1,7 @@
 import "./globals.css";
 
 import { Bricolage_Grotesque, Roboto } from "next/font/google";
-import { Space_Mono } from "next/font/google";
-import { Merriweather } from "next/font/google";
+
 import { cn } from "@/lib/utils";
 
 const fontHeading = Bricolage_Grotesque({
@@ -12,19 +11,6 @@ const fontHeading = Bricolage_Grotesque({
   weight: "700",
 });
 
-// const fontBody = Space_Mono({
-//   subsets: ["latin"],
-//   display: "swap",
-//   variable: "--font-body",
-//   weight: "700",
-// });
-
-// const fontBody = Merriweather({
-//   subsets: ["latin"],
-//   display: "swap",
-//   variable: "--font-body",
-//   weight: ["400", "700"], // Set the weights as needed
-// });
 const fontBody = Roboto({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -41,7 +27,6 @@ export default function RootLayout({ children }) {
       <body
         className={cn("antialiased", fontHeading.variable, fontBody.variable)}
       >
-        <div></div>
         {children}
       </body>
     </html>

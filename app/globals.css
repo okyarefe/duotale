@@ -240,6 +240,7 @@
 }
 .wordloading {
   height: 40px;
+  background-color: rgb(140, 185, 230);
 }
 
 @layer base {

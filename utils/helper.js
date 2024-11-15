@@ -41,6 +41,7 @@ const createSentenceSplitRegex = () => {
 
 // Function to split text into sentences
 const splitTextIntoSentences = (text) => {
+  console.log(text);
   const regex = createSentenceSplitRegex();
   return text.split(regex);
 };

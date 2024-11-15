@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import { Plus, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { getStories } from "../app/_lib/data-service";
 import Spinner from "../components/Spinner";
+import StoryCard from "./StoryCard";
 
 const Stories = ({ initialStories, userId }) => {
   const [stories, setStories] = useState(initialStories);
@@ -45,21 +47,50 @@ const Stories = ({ initialStories, userId }) => {
         </div>
       ) : stories.length > 0 ? (
         <>
-          <ul>
-            {stories.map((story, index) => (
-              <li key={story.id}>
-                <Link href={`/dialogs/${story.id}`} className="w-1/2">
-                  <button className="story-btn">
-                    <p className="inline bg-slate-950 p-2">
-                      Story - {index + 1 + pageNumber * 5}
+          {
+            <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+              <div className="max-w-4xl mx-auto px-4 py-12">
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-800">
+                      My Stories
+                    </h1>
+                    <p className="text-gray-600 mt-2">
+                      Your personal collection of language learning stories
                     </p>
-                    -{story.english_story?.slice(0, 80)}
-                    ...
-                  </button>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  </div>
+                  <Link href="/chat">
+                    <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-105 hover:shadow-lg hover:-translate-y-0.5">
+                      <Plus className="w-4 h-4 transition-transform duration-300 ease-in-out group-hover:rotate-90" />
+                      Create a new story
+                    </button>
+                  </Link>
+                </div>
+
+                {stories.length === 0 ? (
+                  <div className="text-center py-12">
+                    <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                      No stories yet
+                    </h3>
+                    <p className="text-gray-500">
+                      Start creating your first language learning story!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    {stories.map((story, index) => (
+                      <li key={story.id}>
+                        <Link href={`/dialogs/${story.id}`} className="w-1/2">
+                          <StoryCard key={story.id} story={story} />
+                        </Link>
+                      </li>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          }
           <div>
             <button
               className="pn-button "
@@ -75,7 +106,21 @@ const Stories = ({ initialStories, userId }) => {
         </>
       ) : (
         <>
-          <p>No stories found.</p>
+          <div className="text-center py-12">
+            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No stories yet
+            </h3>
+            <p className="text-gray-500">
+              <Link
+                href="/chat"
+                className="inline-flex items-center gap-2 px-4 py-2 font-medium text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+              >
+                <Plus className="w-4 h-4" />
+                Click here to create your first language learning story!
+              </Link>
+            </p>
+          </div>
           <button
             className="pn-button"
             onClick={handlePrevious}

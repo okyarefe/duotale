@@ -9,9 +9,8 @@ const Dropdown = ({ label, items, onSelect }) => {
     const secondLanguage = item.split("-")[1].trim();
 
     onSelect(secondLanguage);
-    console.log("Handle click ran");
+
     setIsOpen(false);
-    console.log("isOpen", isOpen);
   };
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
