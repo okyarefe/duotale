@@ -118,7 +118,7 @@ const StoryPlayer = ({ storyToAudio }) => {
         {" "}
         <Button
           onClick={() => handleListenStory(storyToAudio)}
-          disabled={isLoading}
+          disabled={isLoading || isPlaying}
           className="w-1/4"
         >
           <div className="flex justify-center items-center min-w-[60px] text-center">

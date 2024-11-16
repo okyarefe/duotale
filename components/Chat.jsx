@@ -7,7 +7,6 @@ import PopupComponent from "./Popup";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import { CircleLoader } from "react-spinners";
 import { generateChatResponse } from "../utils/actions";
 import Dropdown from "./Dropdown";
 import Chooselanguage from "./Chooselanguage";
@@ -225,11 +224,8 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
       </div>
       {isLoading ? (
         <div>
-          <div className="loader-container">Please wait...</div>
-          <div className="spinner-div">
-            {" "}
-            <Spinner />
-          </div>
+          {" "}
+          <Spinner />
         </div>
       ) : (
         <div className="flex space-x-4 storydivs">

@@ -76,9 +76,22 @@ const Stories = ({ initialStories, userId }) => {
                     <p className="text-gray-500">
                       Start creating your first language learning story!
                     </p>
+                    <div></div>
                   </div>
                 ) : (
                   <div className="grid gap-4">
+                    <div className="flex justify-end">
+                      <button
+                        className="pn-button "
+                        onClick={handlePrevious}
+                        disabled={paginationStart === 0}
+                      >
+                        Previous
+                      </button>
+                      <button className="pn-button" onClick={handleNext}>
+                        Next
+                      </button>
+                    </div>
                     {stories.map((story, index) => (
                       <li key={story.id}>
                         <Link href={`/dialogs/${story.id}`} className="w-1/2">
@@ -91,18 +104,6 @@ const Stories = ({ initialStories, userId }) => {
               </div>
             </div>
           }
-          <div>
-            <button
-              className="pn-button "
-              onClick={handlePrevious}
-              disabled={paginationStart === 0}
-            >
-              Previous
-            </button>
-            <button className="pn-button" onClick={handleNext}>
-              Next
-            </button>
-          </div>
         </>
       ) : (
         <>
