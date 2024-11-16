@@ -11,7 +11,7 @@ function StoryCard({ story }) {
             <Book className="w-5 h-5 text-blue-500" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">STORY TITLE</h3>
+            {/* <h3 className="font-semibold text-gray-800">STORY TITLE</h3> */}
             <div className="flex items-center gap-2 mt-1">
               <span className="text-sm text-gray-500">
                 {story.created_at.slice(0, 10)}

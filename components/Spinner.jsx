@@ -27,9 +27,9 @@ function Spinner() {
         {/* Loading dots */}
         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2">
           <div className="flex gap-1">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-loader"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-loader [animation-delay:0.2s]"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-loader [animation-delay:0.4s]"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:0s]"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
           </div>
         </div>
       </div>
