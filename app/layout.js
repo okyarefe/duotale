@@ -2,7 +2,7 @@ import "./globals.css";
 
 import { Bricolage_Grotesque, Roboto } from "next/font/google";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/twMerge";
 
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],

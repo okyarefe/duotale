@@ -16,7 +16,6 @@ export default async function ProfilePage() {
   const session = await getServerSession();
 
   const userDataFromDatabase = await getUserByEmail(session.user.email);
-  console.log("User from database", userDataFromDatabase);
 
   function getEmailUsername(email) {
     const regex = /^[^@]+/;
@@ -26,7 +25,6 @@ export default async function ProfilePage() {
 
   const username = getEmailUsername(userDataFromDatabase.email);
 
-  // This would typically come from your authentication system
   const user = {
     name: username,
     email: userDataFromDatabase.email,

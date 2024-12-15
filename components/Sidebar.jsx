@@ -1,6 +1,15 @@
 import NavLinks from "../components/NavLinks";
 import SidebarHeader from "../components/SidebarHeader";
 import SignOutButton from "../components/SignOutButton";
+import {
+  Book,
+  Flame,
+  Home,
+  Settings,
+  Trophy,
+  Gem,
+  GraduationCap,
+} from "lucide-react";
 
 const Sidebar = () => {
   return (

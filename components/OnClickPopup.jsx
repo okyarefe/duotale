@@ -1,4 +1,4 @@
-function OnClickPopup({ word, x, y, onClose, translatedWord }) {
+function OnClickPopup({ x, y }) {
   return (
     <div
       className="word-translation-popup"
