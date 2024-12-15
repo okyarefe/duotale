@@ -1,0 +1,248 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Color Palette */
+:root {
+  /* Primary Colors */
+  --color-primary-blue: #3b7fbf;
+  --color-primary-red: #d8312f;
+  --color-primary-black: #2c3e50;
+  --color-primary-white: #ffffff;
+
+  /* Accent Colors */
+  --color-accent-green: #5f8670;
+  --color-accent-blue-light: rgba(129, 181, 241, 0.5);
+
+  /* Background Colors */
+  --color-bg-base: #f7f9fc;
+  --color-bg-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Typography */
+  --font-size-small: 1.1em;
+  --font-size-medium: 1.2rem;
+  --font-size-large: 1.5em;
+  --font-size-heading: 2em;
+
+  /* Transitions */
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* Preserved Original Classes */
+.flex-div {
+  display: flex;
+}
+
+.highlight {
+  background-color: var(--color-primary-white);
+  font-size: var(--font-size-large);
+  transition: var(--transition-smooth);
+  color: var(--color-primary-black);
+  border: 1px solid var(--color-primary-red);
+  border-radius: 9px;
+}
+
+.color-accent-green-100 {
+  color: var(--color-accent-green) !important;
+}
+
+.prompt-text-size {
+  font-size: var(--font-size-medium);
+}
+
+.bg-blue-100 {
+  background-color: rgba(39, 114, 219, 0.39);
+}
+
+.color-red-100 {
+  color: var(--color-primary-red) !important;
+}
+
+.bg-base-200 {
+  background-color: var(--color-bg-base) !important;
+}
+
+.bg-green-100 {
+  background-color: var(--color-primary-white) !important;
+}
+
+.sidebar-color {
+  color: var(--color-accent-blue-light);
+}
+
+.special {
+  color: var(--color-primary-black);
+}
+
+.story {
+  color: var(--color-primary-black);
+  text-align: center;
+}
+
+.storydivs {
+  font-size: var(--font-size-medium);
+}
+
+.story-right-border {
+  border-right: 1px solid var(--color-primary-black);
+}
+
+.story-left-border {
+  border-left: 1px solid var(--color-primary-black);
+}
+
+/* Button Styles */
+.btn {
+  background-color: var(--color-primary-black);
+  color: var(--color-primary-white);
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn:hover {
+  background-color: var(--color-primary-white);
+  color: var(--color-primary-black);
+}
+
+.twinheading {
+  color: var(--color-primary-white);
+  font-size: var(--font-size-heading);
+  text-align: center;
+}
+
+.stories-color {
+  color: var(--color-primary-black);
+}
+
+.loader-container {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Story Button Styles (Preserved Original) */
+.story-btn {
+  display: inline-block;
+  padding: 12px 14px;
+  margin: 3px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-primary-white);
+  background-color: #005bb5;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.story-btn:hover {
+  background-color: #005bb5;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  opacity: 1;
+}
+
+.story-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.story-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.5);
+}
+
+.pn-button {
+  padding: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #0070f3;
+  color: var(--color-primary-black);
+}
+
+.sheading {
+  color: var(--color-primary-black);
+  font-size: var(--font-size-heading);
+}
+
+.voice {
+  color: var(--color-primary-black);
+  font-size: 1.1em;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.choose-language {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.translate-language {
+  color: var(--color-primary-white);
+}
+
+.video-container {
+  height: 100%;
+}
+
+.heading-div {
+  width: 100%;
+}
+
+.background-color-blue {
+  background-color: rgb(33, 33, 236);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-white);
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.getTokensLink {
+  color: var(--color-primary-white);
+}
+
+.wordloading {
+  height: 40px;
+  background-color: rgb(140, 185, 230);
+}
+
+/* Additional Improvements */
+@layer utilities {
+  .animation-delay-0 {
+    animation-delay: 0s;
+  }
+  .animation-delay-150 {
+    animation-delay: 0.15s;
+  }
+  .animation-delay-300 {
+    animation-delay: 0.3s;
+  }
+}
