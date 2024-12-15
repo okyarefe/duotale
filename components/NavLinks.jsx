@@ -5,8 +5,6 @@ const links = [
   { href: "/dialogs", label: "STORIES" },
 
   { href: "/profile", label: "PROFILE" },
-
-  // { href: "/gettokens", label: "GET TOKENS" },
 ];
 
 const NavLinks = () => {
