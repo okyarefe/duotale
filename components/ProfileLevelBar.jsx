@@ -39,7 +39,14 @@ export default function Component({ numStories }) {
             {stories}/10 stories to next level
           </span>
         </div>
-        <Progress value={(stories / 10) * 100} className="w-full" />
+        <Progress
+          value={(stories / 10) * 100}
+          className="w-full bg-gray-200"
+          style={{
+            "--tw-progress-bar-color": "var(--color-primary-blue)",
+            "--tw-progress-bar-bg": "var(--color-primary-black)",
+          }}
+        />
       </CardContent>
     </Card>
   );

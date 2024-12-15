@@ -33,6 +33,10 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        primaryBlue: "var(--color-primary-blue)",
+        primaryRed: "var(--color-primary-red)",
+        primaryBlack: "var(--color-primary-black)",
+        primaryWhite: "var(--color-primary-white)",
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -101,6 +105,10 @@ module.exports = {
           "float-2": "float-2 3.5s ease-in-out infinite",
           "float-3": "float-3 2.5s ease-in-out infinite",
         },
+      },
+      backgroundColor: {
+        base: "var(--color-bg-base)",
+        overlay: "var(--color-bg-overlay)",
       },
       borderRadius: {
         xl: `calc(var(--radius) + 4px)`,
