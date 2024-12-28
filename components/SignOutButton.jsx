@@ -1,5 +1,5 @@
 "use client";
-import button from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 const handleSignOut = async () => {
@@ -10,18 +10,14 @@ const handleSignOut = async () => {
   }
 };
 
-export default function Component() {
+export default function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="text-primary-foreground signoutbutton"
-      style={{
-        height: "20%",
-        width: "50%",
-        fontFamily: "inherit",
-      }}
+      className="flex items-center gap-3 text-white hover:bg-white/10 p-3 rounded-xl transition-all duration-200 w-full mt-auto border-y"
     >
-      SIGN OUT
+      <LogOut size={24} className="text-white" />
+      <span className="font-medium">Sign Out</span>
     </button>
   );
 }

@@ -27,25 +27,9 @@ export default function Component({ numStories }) {
   return (
     <Card className="w-[400px]">
       <CardHeader>
-        <CardTitle>Story Creator Level</CardTitle>
-        <CardDescription>Create stories to level up!</CardDescription>
+        <CardTitle>Badges are coming soon!</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-sm font-medium">Level {level}</span>
-          <span className="text-sm font-medium">
-            {stories}/10 stories to next level
-          </span>
-        </div>
-        <Progress
-          value={(stories / 10) * 100}
-          className="w-full bg-gray-200"
-          style={{
-            "--tw-progress-bar-color": "var(--color-primary-blue)",
-            "--tw-progress-bar-bg": "var(--color-primary-black)",
-          }}
-        />
-      </CardContent>
+      <CardContent className="space-y-4">{}</CardContent>
     </Card>
   );
 }

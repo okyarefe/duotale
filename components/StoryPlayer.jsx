@@ -113,46 +113,55 @@ const StoryPlayer = ({ storyToAudio }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-4 border-2 border-cyan-600 shadow-lg">
-      <div className="flex items-center gap-4">
-        {" "}
+    <div className="flex flex-col items-center gap-2 sm:gap-4 bg-white p-3 sm:p-6 rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.05)] border border-indigo-100">
+      {/* Controls Container */}
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 w-full">
         <Button
           onClick={() => handleListenStory(storyToAudio)}
           disabled={isLoading || isPlaying}
-          className="w-1/4"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg transition-all duration-200 rounded-xl px-4 sm:px-6 py-2 disabled:opacity-50 min-w-[80px] sm:min-w-[100px]"
         >
-          <div className="flex justify-center items-center min-w-[60px] text-center">
+          <div className="flex justify-center items-center gap-2">
             {isLoading ? <SmallSpinner /> : <h1>Listen</h1>}
           </div>
         </Button>
-        <Button className="w-1/4" onClick={handlePause} disabled={!isPlaying}>
+
+        <Button
+          onClick={handlePause}
+          disabled={!isPlaying}
+          className="bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50 transition-all duration-200 rounded-xl px-4 sm:px-6 py-2 disabled:opacity-50 min-w-[80px] sm:min-w-[100px]"
+        >
           Pause
         </Button>
+
         <Button
-          className="w-1/4"
           onClick={handleResume}
           disabled={isPlaying || !audioRef.current}
+          className="bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50 transition-all duration-200 rounded-xl px-4 sm:px-6 py-2 disabled:opacity-50 min-w-[80px] sm:min-w-[100px]"
         >
           Resume
         </Button>
+
         <Button
-          className="w-1/4"
           onClick={handleStop}
           disabled={!audioRef.current}
+          className="bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50 transition-all duration-200 rounded-xl px-4 sm:px-6 py-2 disabled:opacity-50 min-w-[80px] sm:min-w-[100px]"
         >
           Stop
         </Button>
       </div>
-      <div className="w-full">
+
+      {/* Progress Bar Container */}
+      <div className="w-full space-y-1 sm:space-y-2">
         <input
           type="range"
           min="0"
           max={duration}
           value={progress}
           onChange={handleSeek}
-          className="w-full"
+          className="w-full accent-indigo-600 h-1.5 sm:h-2 rounded-lg appearance-none cursor-pointer"
         />
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-xs sm:text-sm text-gray-600 font-medium px-1">
           <span>{formatTime(progress)}</span>
           <span>{formatTime(duration)}</span>
         </div>

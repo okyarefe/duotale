@@ -117,8 +117,7 @@ const SingleStoryF = ({ story }) => {
   };
 
   return (
-    <div className="p-6">
-      {" "}
+    <div className="p-4 md:p-6">
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -129,19 +128,51 @@ const SingleStoryF = ({ story }) => {
         draggable
         theme="colored"
       />
-      <h1 className="text-3xl font-extrabold mb-6 text-black">
+      <h1 className="text-2xl md:text-3xl font-extrabold mb-4 md:mb-6 text-black">
         Story Detail Page
       </h1>
-      <div className="flex space-x-6">
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* English Story */}
-        <div className="flex-1 bg-white border rounded-lg shadow-md p-4 text-black">
-          <h2 className="text-lg font-bold mb-2">English Story:</h2>
-          {splitTextIntoSentences(story.english_story).map(
-            (sentence, index) => (
+        <div className="bg-white border rounded-lg shadow-md p-3 md:p-4 text-black flex flex-col min-h-[400px] md:min-h-[500px]">
+          <div className="flex-1">
+            <h2 className="text-base md:text-lg font-bold mb-2">
+              English Story:
+            </h2>
+            {splitTextIntoSentences(story.english_story).map(
+              (sentence, index) => (
+                <p
+                  key={index}
+                  className={`mb-2 cursor-pointer text-sm md:text-base ${
+                    highlightedIndex === index ? "bg-indigo-200" : ""
+                  }`}
+                  onMouseOver={() => handleMouseOver(index)}
+                  onMouseOut={handleMouseOut}
+                  onContextMenu={(e) => handleContextMenu(e, index, sentence)}
+                >
+                  {renderWords(sentence)}
+                </p>
+              )
+            )}
+          </div>
+          <div className="mt-auto w-full">
+            <StoryPlayer storyToAudio={englishStoryToAudio} />
+          </div>
+        </div>
+
+        {/* Finnish Story */}
+        <div className="bg-white border border-gray-200 rounded-lg shadow-md p-3 md:p-4 text-black flex flex-col min-h-[400px] md:min-h-[500px]">
+          <div className="flex-1">
+            <h2 className="text-base md:text-lg font-bold mb-2">
+              Translated Story:
+            </h2>
+            {splitTextIntoSentences(
+              story.translated_story || story.finnish_story
+            ).map((sentence, index) => (
               <p
                 key={index}
-                className={`mb-2 cursor-pointer ${
-                  highlightedIndex === index ? "bg-yellow-200" : ""
+                className={`mb-2 cursor-pointer text-sm md:text-base ${
+                  highlightedIndex === index ? "bg-indigo-200" : ""
                 }`}
                 onMouseOver={() => handleMouseOver(index)}
                 onMouseOut={handleMouseOut}
@@ -149,40 +180,14 @@ const SingleStoryF = ({ story }) => {
               >
                 {renderWords(sentence)}
               </p>
-            )
-          )}
-          <div class="flex">
-            <div>
-              <StoryPlayer storyToAudio={englishStoryToAudio}></StoryPlayer>
-            </div>
+            ))}
           </div>
-        </div>
-
-        {/* Finnish Story */}
-        <div className="flex-1 bg-white border border-gray-200 rounded-lg shadow-md p-4 text-black">
-          <h2 className="text-lg font-bold mb-2">Translated Story:</h2>
-          {splitTextIntoSentences(
-            story.translated_story || story.finnish_story
-          ).map((sentence, index) => (
-            <p
-              key={index}
-              className={`mb-2 cursor-pointer ${
-                highlightedIndex === index ? "bg-yellow-200" : ""
-              }`}
-              onMouseOver={() => handleMouseOver(index)}
-              onMouseOut={handleMouseOut}
-              onContextMenu={(e) => handleContextMenu(e, index, sentence)}
-            >
-              {renderWords(sentence)}
-            </p>
-          ))}{" "}
-          <div class="flex">
-            <div>
-              <StoryPlayer storyToAudio={finnishStoryToAudio}></StoryPlayer>
-            </div>
+          <div className="mt-auto w-full">
+            <StoryPlayer storyToAudio={finnishStoryToAudio} />
           </div>
         </div>
       </div>
+
       {wordPopup.show && (
         <WordOnClickPopup
           word={wordPopup.word}
