@@ -8,10 +8,9 @@ const Chooselanguage = ({ children, translateTo }) => {
     setTranslateTo(translateTo);
   }, [translateTo]);
   return (
-    <div className="choose-language">
+    <div className="choose-language w-2/4">
       {children}
-      <span className="badge badge-lg badge-ghost">
-        {" "}
+      <span className="badge badge-lg badge-ghost bg-black">
         <span className="translate-language">
           {translateLang || "Choose a language"}
         </span>

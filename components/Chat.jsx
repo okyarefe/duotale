@@ -51,7 +51,7 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col space-y-8">
       <ToastContainer
         position="top-center"
         autoClose={5000}

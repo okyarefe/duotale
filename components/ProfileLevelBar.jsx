@@ -17,9 +17,7 @@ export default function Component({ numStories }) {
   const [level, setLevel] = useState(1);
 
   useEffect(() => {
-    console.log("Being called");
     let newLevel = Math.floor(numStories / 10) + 1;
-    console.log("New level is", newLevel);
 
     setLevel(newLevel);
     let remainingStories = numStories % 10;
