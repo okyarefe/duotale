@@ -109,10 +109,11 @@ const WordOnClickPopup = ({ word, x, y, onClose, setWordPopup, wordPopup }) => {
             left: `${x}px`,
             top: `${y}px`,
             background: "white",
-            border: "1px solid black",
-            borderRadius: "1px",
+            border: "1px solid #4f46e5",
+            borderRadius: "8px",
             padding: "11px",
             zIndex: 1000,
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
           }}
         >
           {showTranslation ? (
@@ -129,7 +130,7 @@ const WordOnClickPopup = ({ word, x, y, onClose, setWordPopup, wordPopup }) => {
               showTranslation={showTranslation}
             />
           ) : isLoading ? (
-            <div className="wordloading">
+            <div className="wordloading flex items-center justify-center min-h-[40px]">
               <SmallSpinner />
             </div>
           ) : (
@@ -137,16 +138,22 @@ const WordOnClickPopup = ({ word, x, y, onClose, setWordPopup, wordPopup }) => {
               <Button
                 onClick={handleTranslateClick}
                 disabled={isLoading}
-                style={{ height: "40px" }}
+                className="bg-white text-gray-900 border border-indigo-500 hover:bg-indigo-50 transition-all duration-200"
               >
                 Translate
               </Button>
             )
           )}
-          <Button style={{ height: "40px" }} disabled>
+          <Button
+            disabled
+            className="bg-white text-gray-900 border border-indigo-500 opacity-50"
+          >
             Coming Soon
           </Button>
-          <Button style={{ height: "40px" }} disabled>
+          <Button
+            disabled
+            className="bg-white text-gray-900 border border-indigo-500 opacity-50"
+          >
             Coming Soon
           </Button>
         </div>

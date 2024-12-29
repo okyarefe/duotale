@@ -59,28 +59,28 @@ const ChatForm = ({
           />
         </Chooselanguage>
         <div className="flex gap-6">
-          <div className="bg-white px-6 py-4 rounded-xl shadow-md border border-indigo-100 flex items-center">
+          <div className="bg-white px-2 py-4 rounded-xl shadow-md border border-indigo-100 flex items-center">
             <div className="text-gray-600">
               Tokens:{" "}
-              <span className="text-xl font-semibold text-indigo-600 ml-1">
+              <span className="text-xl font-semibold text-indigo-600">
                 {userToken}
               </span>
             </div>
           </div>
 
-          <div className="bg-white px-6 py-4 rounded-xl shadow-md border border-indigo-100 flex items-center">
-            <div className="text-gray-600">
-              Free Daily Translations:{" "}
-              <span className="text-xl font-semibold text-indigo-600 ml-1">
+          <div className="bg-white px-4 py-2 rounded-xl shadow-md border border-indigo-100 flex items-center">
+            <div className="text-sm text-gray-600">
+              Free Daily:{" "}
+              <span className="text-lg font-semibold text-indigo-600 ml-1">
                 {dailyFreeTranslations}
               </span>
             </div>
           </div>
 
-          <div className="bg-white px-6 py-4 rounded-xl shadow-md border border-indigo-100 flex items-center">
-            <div className="text-gray-600">
-              Paid Translations:{" "}
-              <span className="text-xl font-semibold text-indigo-600 ml-1">
+          <div className="bg-white px-4 py-2 rounded-xl shadow-md border border-indigo-100 flex items-center">
+            <div className="text-sm text-gray-600">
+              Paid:{" "}
+              <span className="text-lg font-semibold text-indigo-600 ml-1">
                 {paidTokens}
               </span>
             </div>
