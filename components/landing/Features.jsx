@@ -21,7 +21,7 @@ const features = [
     icon: Languages,
     title: "Multiple Languages",
     description:
-      "Learn in English, Spanish, French, German, Italian, and many more languages",
+      "Learn in Finnish,Turkish, Spanish, French, German, Italian, and many more languages",
   },
   {
     icon: Headphones,
