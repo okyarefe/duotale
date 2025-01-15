@@ -1,6 +1,7 @@
 import React from "react";
 import { Languages, Sparkles, Globe2 } from "lucide-react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -31,16 +32,17 @@ const Hero = () => {
             <Link href="/chat">
               <button className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
                 <Globe2 size={20} />
-                Join Early Access
+                Get Started Free
+                <ArrowRight size={20} />
               </button>
             </Link>
 
-            <Link href="#demo">
+            {/* <Link href="#demo">
               <button className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold border-2 border-indigo-600 hover:bg-indigo-50 transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
                 <Sparkles size={20} />
                 Watch Demo
               </button>
-            </Link>
+            </Link> */}
           </div>
 
           <div className="mt-12 flex justify-center gap-8">
