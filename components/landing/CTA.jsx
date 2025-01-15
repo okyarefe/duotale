@@ -9,13 +9,10 @@ const CTA = () => {
           Ready to Start Your Multilingual Journey?
         </h2>
         <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-          Join thousands of users who are already creating and sharing stories
+          Join us and start creating and sharing stories
           across languages.
         </p>
-        <button className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 transition-colors inline-flex items-center gap-2">
-          Get Started Free
-          <ArrowRight size={20} />
-        </button>
+       
       </div>
     </div>
   );
