@@ -6,6 +6,7 @@ import SmallSpinner from "../components/SmallSpinner";
 import ErrorComponent from "./ErrorComponent";
 import { playTheMp3 } from "@/utils/helper";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const PopupComponent = ({
   x,
@@ -32,12 +33,17 @@ const PopupComponent = ({
   }, [onClose]);
 
   const handleOnClick = async () => {
+    console.log(
+      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+    );
     try {
       setIsLoading(true);
       setIsError(false);
 
       // Fetch the audio file
+
       const mp3 = await fetchAudio(sentence);
+
       playTheMp3(mp3);
 
       //Play the newly fetched audio
@@ -46,7 +52,7 @@ const PopupComponent = ({
 
       handlePopupButtonClick();
     } catch (error) {
-      console.error("Error in handleOnClick:", error.digest);
+      toast.error(error.message);
       setIsError(true);
       setIsLoading(false);
     }

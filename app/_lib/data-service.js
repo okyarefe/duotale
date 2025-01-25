@@ -239,22 +239,25 @@ export const checkIfUserExists = async (userId) => {
 };
 
 export const saveTTSfileToS3 = async (buffer, fileName) => {
-  const { data, error } = await supabase.storage
-    .from("llearning_bucket")
-    .upload(fileName, buffer, {
-      contentType: "audio/mpeg",
-    });
+  try {
+    const { data, error } = await supabase.storage
+      .from("llearning_bucket")
+      .upload(fileName, buffer, {
+        contentType: "audio/mpeg",
+      });
 
-  console.log("SAVING FILE TO BUCKKET", data);
+    if (error) {
+      console.error("ERROR SAVING FILE TO S3", error);
+      throw new Error(error.message || "Error saving TTS to S3");
+    }
 
-  await saveFileUrlToRedis(fileName, data.path);
+    await saveFileUrlToRedis(fileName, data.path);
 
-  if (error) {
-    console.log("ERROR SAVING FILE TO S3", error);
-    throw new Error("Failed to upload audio to supabase stroage");
+    return data;
+  } catch (error) {
+    console.error("Caught error in saveTTSfileToS3:", error);
+    throw new Error(error.message || "Error saving TTS to S3");
   }
-
-  return data;
 };
 
 export const checkIfTTSexistInS3 = async (fileName) => {

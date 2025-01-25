@@ -100,12 +100,10 @@ export async function fetchAudio(text) {
     const doesExist = await checkIfTTSexistInS3(uniqueFileName);
 
     if (doesExist) {
-      console.log("TTS already exist in S3..downloading from S3");
       const existingTTSAudio = await getTTSfileFromS3(uniqueFileName);
       const buffer = Buffer.from(await existingTTSAudio.arrayBuffer());
 
       await fs.promises.writeFile(speechFile, buffer);
-      console.log("Local file updated with the existing TTS file from S3");
       return;
     }
   }
@@ -153,8 +151,12 @@ export async function fetchAudio(text) {
   const buffer = Buffer.from(response.audioContent, "binary");
 
   //  Save the buffer to Supase storage
-  await saveTTSfileToS3(buffer, uniqueFileName);
-
+  try {
+    await saveTTSfileToS3(buffer, uniqueFileName);
+  } catch (error) {
+    console.error("Error saving TTS file to S3", error);
+    throw new Error(error.message);
+  }
   // Write the buffer to a file in the public directory
   await fs.promises.writeFile(speechFile, buffer);
 }
