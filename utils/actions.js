@@ -52,6 +52,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
 
   const result = response.choices[0].message.content;
   // TOTAL TOKENS USED
+
   const tokenUsed = response.usage.total_tokens;
 
   const englishStory = result
@@ -107,10 +108,6 @@ export async function fetchAudio(text) {
       return;
     }
   }
-
-  console.log(
-    "000000000000  MAKING  API   REQUEST   TO  TEXT TO SPEECH 0000000000000"
-  );
 
   const francToGoogleLangMap = {
     eng: "en-US", // English

@@ -32,8 +32,10 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
       try {
         const { englishStory, translatedStory, tokenUsed } =
           await generateChatResponse(text, translateTo);
-        setEnglishSentences(englishStory.split(". "));
-        setFinnishSentences(translatedStory.split(". "));
+        // setEnglishSentences(englishStory.split(". "));
+        // setFinnishSentences(translatedStory.split(". "));
+        setEnglishSentences(englishStory.split(/(?<=\.)\s/));
+        setFinnishSentences(translatedStory.split(/(?<=\.)\s/));
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", translatedStory);
         setUserToken((prev) => prev - tokenUsed);

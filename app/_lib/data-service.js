@@ -131,12 +131,11 @@ export const getUserTokenById = async (userId) => {
     }
 
     if (!data) {
-      console.log("No user found with id:", userId);
       return null;
     }
 
     const token = data.token;
-    console.log("Token retrieved:", token);
+
     return token;
   } catch (error) {
     throw new Error("Failed to get user token by id", error);
@@ -145,8 +144,6 @@ export const getUserTokenById = async (userId) => {
 
 export const decreaseUserToken = async (userId, tokenUsed) => {
   const token = await getUserTokenById(userId);
-  console.log("User token:", token);
-  console.log("Used token:", tokenUsed);
 
   if (token < tokenUsed) {
     throw new Error("Token used is greater than the user's token count");
@@ -160,7 +157,7 @@ export const decreaseUserToken = async (userId, tokenUsed) => {
       .eq("id", userId)
       .select();
     if (error) {
-      console.log("ERROR DECREASING TOKEN", error);
+      throw new Error("No user");
     }
     revalidatePath("/chat");
   } catch (error) {
@@ -189,7 +186,7 @@ export const saveStory = async (
         `Supabase returned an error while saving story: ${error.message}`
       );
     }
-    console.log("Saved story to database");
+
     return data;
   } catch (error) {
     throw new Error(`Failed to save story to database: ${error.message}`);
