@@ -18,10 +18,11 @@ import {
   getTTSfileFromS3,
 } from "../app/_lib/data-service";
 import { revalidatePath } from "next/cache";
-const textToSpeech = require("@google-cloud/text-to-speech");
-// Creates a text2speech client
-const client = new textToSpeech.TextToSpeechClient();
+import { francToGoogleLangMap } from "../utils/helper";
 import { franc } from "franc";
+const textToSpeech = require("@google-cloud/text-to-speech");
+
+const client = new textToSpeech.TextToSpeechClient();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -64,9 +65,7 @@ export const generateChatResponse = async (prompt, translateTo) => {
 
   // Extract stories using the regex patterns
 
-  // console.log("RESPONSE", response);
   try {
-    // decrease token count
     const session = await getServerSession();
     const { id, token, daily_free_translation } = await getUserByEmail(
       session.user.email
@@ -92,9 +91,7 @@ export async function fetchAudio(text) {
   if (doesTTSexistsInCache.exists === true) {
     console.log("TTS already exist in Redis..Forming URL link");
 
-    // const supabaseBucketUrl = process.env.S3_ENDPOINT;
     const signedUrl = doesTTSexistsInCache.urlCache;
-    // console.log("SIGNED URL", signedUrl);
 
     return signedUrl;
   } else {
@@ -109,27 +106,14 @@ export async function fetchAudio(text) {
     }
   }
 
-  const francToGoogleLangMap = {
-    eng: "en-US", // English
-    spa: "es-ES", // Spanish
-    fra: "fr-FR", // French
-    deu: "de-DE", // German
-    ita: "it-IT", // Italian
-    fin: "fi-FI", // Finnish
-    tur: "tr-TR", // Turkish
-    rus: "ru-RU", // Russian
-    // Add more mappings as needed
-  };
-
   function detectLanguage(text) {
     const langCode = franc(text);
-    // console.log("Detected Language Code:", langCode);
+
     console.log("Detected Language Code:", langCode);
     return francToGoogleLangMap[langCode] || "en-US";
   }
 
   const languageCode = detectLanguage(text);
-  console.log("Language Code:", languageCode);
 
   const request = {
     input: { text: text },
@@ -147,7 +131,6 @@ export async function fetchAudio(text) {
   // Convert the response audio content to a buffer
   const buffer = Buffer.from(response.audioContent, "binary");
 
-  //  Save the buffer to Supase storage
   try {
     await saveTTSfileToS3(buffer, uniqueFileName);
   } catch (error) {
@@ -172,21 +155,9 @@ export const fetchTranslateWord = async (word) => {
   } else if (result.status === "success") {
     console.log("TRANSLATING WORD FROM DEEPL AI", word);
     try {
-      const francToGoogleLangMap = {
-        eng: "en", // English
-        spa: "es", // Spanish
-        fra: "fr", // French
-        deu: "de", // German
-        ita: "it", // Italian
-        fin: "fi", // Finnish
-        tur: "tr", // Turkish
-        rus: "ru", // Russian
-        // Add more mappings as needed
-      };
-
       function detectLanguage(word) {
         const langCode = franc(word);
-        // console.log("Detected Language Code:", langCode);
+
         console.log("Detected Language Code:", langCode);
         return francToGoogleLangMap[langCode] || "en-US";
       }
@@ -200,7 +171,6 @@ export const fetchTranslateWord = async (word) => {
 
       revalidatePath("/chat");
       return { wordTranslation };
-      // return { wordTranslation, tokenUsed };
     } catch (error) {
       console.log("Error from translation word ", error);
       throw new Error(error);

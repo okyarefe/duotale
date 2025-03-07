@@ -33,13 +33,23 @@ const abbreviations = [
   "Co",
 ];
 
-// Function to create the regex pattern
+export const francToGoogleLangMap = {
+  eng: "en-US", // English
+  spa: "es-ES", // Spanish
+  fra: "fr-FR", // French
+  deu: "de-DE", // German
+  ita: "it-IT", // Italian
+  fin: "fi-FI", // Finnish
+  tur: "tr-TR", // Turkish
+  rus: "ru-RU", // Russian
+  // Add more mappings as needed
+};
+
 const createSentenceSplitRegex = () => {
   const abbreviationsPattern = `\\b(?:${abbreviations.join("|")})\\.`;
   return new RegExp(`(?<!${abbreviationsPattern})(?<=\\.|\\?|!)\\s`, "g");
 };
 
-// Function to split text into sentences
 const splitTextIntoSentences = (text) => {
   const regex = createSentenceSplitRegex();
   return text.split(regex);

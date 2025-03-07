@@ -34,13 +34,10 @@ export async function getValueFromCache(key) {
     const exists = await client.exists(key);
 
     if (exists) {
-      // If the key exists, get the value
       console.log("******THE FILE EXISTS IN REDIS*******");
       const value = await client.get(key);
-      // console.log(" VALUE IN REDIS", value);
 
       const urlCache = await createSignedUrl("llearning_bucket", value, 200);
-      // console.log("URL CACHE", urlCache);
 
       return { exists: true, value, urlCache };
     } else {
