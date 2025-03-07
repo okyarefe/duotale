@@ -16,6 +16,7 @@ const DialogsPage = async () => {
 
   return (
     <>
+      {" "}
       <Suspense fallback={<div>...loading</div>}>
         {" "}
         <Stories initialStories={stories} userId={id} />

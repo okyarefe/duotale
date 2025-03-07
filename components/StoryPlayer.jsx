@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import { fetchAudio } from "@/utils/actions";
 import { debounce } from "lodash";
 import SmallSpinner from "./SmallSpinner";
-import { toast } from "react-toastify";
 
 const StoryPlayer = ({ storyToAudio }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +12,8 @@ const StoryPlayer = ({ storyToAudio }) => {
 
   const audioRef = useRef(null);
   const intervalRef = useRef(null); // To update the progress periodically
+
+  const heading = storyToAudio.split(" ").splice(0, 3).join(" ");
 
   const debouncedFetchAudio = useRef(
     debounce(async (a) => {
@@ -114,7 +115,8 @@ const StoryPlayer = ({ storyToAudio }) => {
 
   return (
     <div className="flex flex-col items-center gap-4 bg-white p-6 rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.05)] border border-indigo-100">
-      <div className="flex items-center gap-4">
+      <h1 className="text-1xl">{heading} ...</h1>
+      <div className="flex flex-wrap items-center gap-4 bg-white p-6 rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.05)] border border-indigo-100">
         <Button
           onClick={() => handleListenStory(storyToAudio)}
           disabled={isLoading || isPlaying}

@@ -54,11 +54,12 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", translatedStory);
 
+        const remaining = state.userToken - tokenUsed;
         dispatch({ type: "SET_TOKENS", payload: state.userToken - tokenUsed });
 
         toast.success("Your story has been generated!");
         toast.info(`You have used ${tokenUsed} tokens.`);
-        toast.info(`You have ${state.userToken - tokenUsed} tokens left.`);
+        toast.info(`You have ${remaining} tokens left.`);
       } catch (error) {
         toast.error("Error occurred while generating the story.");
       } finally {

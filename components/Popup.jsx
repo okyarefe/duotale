@@ -33,20 +33,13 @@ const PopupComponent = ({
   }, [onClose]);
 
   const handleOnClick = async () => {
-    console.log(
-      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-    );
     try {
       setIsLoading(true);
       setIsError(false);
 
-      // Fetch the audio file
-
       const mp3 = await fetchAudio(sentence);
 
       playTheMp3(mp3);
-
-      //Play the newly fetched audio
 
       setIsLoading(false);
 
