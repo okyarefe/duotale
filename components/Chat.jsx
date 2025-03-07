@@ -1,51 +1,68 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { generateChatResponse } from "../utils/actions";
 import ChatForm from "./ChatForm";
 import StoryDisplay from "./StoryDisplay";
+import { chatReducer, initialState } from "@/app/reducers/chatReducer";
 
 const Chat = ({ token, daily_free_translations, paid_tokens }) => {
-  const [userToken, setUserToken] = useState(token);
-  const [userDailyFreeTranslations, setUserDailyFreeTranslations] = useState(
-    daily_free_translations
-  );
-  const [paidTokens, setPaidTokens] = useState(paid_tokens);
-  const [englishSentences, setEnglishSentences] = useState([]);
-  const [finnishSentences, setFinnishSentences] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [state, dispatch] = useReducer(chatReducer, {
+    ...initialState,
+    userToken: token,
+    userDailyFreeTranslations: daily_free_translations,
+    paid_tokens: paid_tokens,
+  });
 
   useEffect(() => {
     const storedEnglishMessage = localStorage.getItem("englishMessage");
     const storedFinnishMessage = localStorage.getItem("finnishMessage");
-    if (storedEnglishMessage)
-      setEnglishSentences(storedEnglishMessage.split(". "));
-    if (storedFinnishMessage)
-      setFinnishSentences(storedFinnishMessage.split(". "));
+
+    if (storedEnglishMessage || storedFinnishMessage) {
+      dispatch({
+        type: "LOAD_STORIES_FROM_STORAGE",
+        payload: {
+          englishSentences: storedEnglishMessage
+            ? storedEnglishMessage.split(". ")
+            : [],
+          finnishSentences: storedFinnishMessage
+            ? storedFinnishMessage.split(". ")
+            : [],
+        },
+      });
+    }
   }, []);
 
   const handleSubmit = async (text, translateTo) => {
-    if (userToken > 1000) {
-      setIsLoading(true);
+    if (state.userToken > 1000) {
+      dispatch({ type: "SET_LOADING", payload: true });
+
       try {
         const { englishStory, translatedStory, tokenUsed } =
           await generateChatResponse(text, translateTo);
-        // setEnglishSentences(englishStory.split(". "));
-        // setFinnishSentences(translatedStory.split(". "));
-        setEnglishSentences(englishStory.split(/(?<=\.)\s/));
-        setFinnishSentences(translatedStory.split(/(?<=\.)\s/));
+
+        dispatch({
+          type: "SET_SENTENCES",
+          payload: {
+            englishSentences: englishStory.split(/(?<=\.)\s/),
+            finnishSentences: translatedStory.split(/(?<=\.)\s/),
+          },
+        });
+
         localStorage.setItem("englishMessage", englishStory);
         localStorage.setItem("finnishMessage", translatedStory);
-        setUserToken((prev) => prev - tokenUsed);
+
+        dispatch({ type: "SET_TOKENS", payload: state.userToken - tokenUsed });
+
         toast.success("Your story has been generated!");
         toast.info(`You have used ${tokenUsed} tokens.`);
-        toast.info(`You have ${userToken - tokenUsed} tokens left.`);
+        toast.info(`You have ${state.userToken - tokenUsed} tokens left.`);
       } catch (error) {
         toast.error("Error occurred while generating the story.");
       } finally {
-        setIsLoading(false);
+        dispatch({ type: "SET_LOADING", payload: false });
       }
     } else {
       toast.warn("You do not have enough tokens to generate a story.");
@@ -58,23 +75,18 @@ const Chat = ({ token, daily_free_translations, paid_tokens }) => {
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        draggable
-        theme="colored"
       />
       <ChatForm
         onSubmit={handleSubmit}
-        isLoading={isLoading}
-        userToken={userToken}
-        dailyFreeTranslations={userDailyFreeTranslations}
-        paidTokens={paidTokens}
+        isLoading={state.isLoading}
+        userToken={state.userToken}
+        dailyFreeTranslations={state.userDailyFreeTranslations}
+        paidTokens={state.paidTokens}
       />
       <StoryDisplay
-        isLoading={isLoading}
-        englishSentences={englishSentences}
-        finnishSentences={finnishSentences}
+        isLoading={state.isLoading}
+        englishSentences={state.englishSentences}
+        finnishSentences={state.finnishSentences}
       />
     </div>
   );
